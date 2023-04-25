@@ -75,7 +75,7 @@ static int cmd_info(char *args) {
   } else if (strcmp(token, "w") == 0) { // 打印监视点信息
     printWP();
   } else {
-    printf("info参数不对输入:w或r\n");
+    Log("info参数不对输入:w或r\n");
   }
   return 0;
 }
@@ -88,7 +88,7 @@ static int cmd_x(char *args) {
   }
   token = strtok(NULL, " "); // 表达式
   if (token == NULL) {
-    printf("x 需要参数,例如x 4 0x80000000, x 4 $pc");
+    Log("x 需要参数,例如x 4 0x80000000, x 4 $pc");
   }
   bool v;
   word_t padd = expr(token, &v);
@@ -106,24 +106,24 @@ static int cmd_x(char *args) {
 
 static int cmd_p(char *args) {
   if (args == NULL) {
-    printf("p 需要参数,例如p $pc");
+    Log("p 需要参数,例如p $pc");
   }
   bool v;
   word_t pval = expr(args, &v);
-  printf("0x%08x\n", pval);
+  Log("0x%08x\n", pval);
   return 0;
 }
 
 // 设置监视点
 static int cmd_w(char *args) {
   if (args == NULL) {
-    printf("w 应该加上参数,可以是变量或者表达式,内存地址,$寄存器名字");
+    Log("w 应该加上参数,可以是变量或者表达式,内存地址,$寄存器名字");
     return 0;
   }
   bool success = false;
   word_t val = expr(args, &success);
   if (success == false) {
-    printf("表达式不合法\n");
+    Log("表达式不合法\n");
   } else {
     new_wp(val, args);
     Log("当前的val是0x%08x\n", val);
@@ -134,7 +134,7 @@ static int cmd_w(char *args) {
 // 删除对应的监视点,不再进行监视
 static int cmd_d(char *args) {
   if (args == NULL) {
-    printf("d后面应该添加 info w 的NO\n");
+    Log("d后面应该添加 info w 的NO\n");
   }
   int num = atoi(args);
   free_wp(num);
