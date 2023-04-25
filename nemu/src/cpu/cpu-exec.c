@@ -43,9 +43,12 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   if (g_print_step) {
     IFDEF(CONFIG_ITRACE, puts(_this->logbuf));
   }
+
+  // 每一条指令执行之后都需要进行difftest_step和断点的检测
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   IFDEF(CONFIG_WATCHPOINT, find_watch());
 
+  // 如果出现了错误打印最近的函数调用和指令集和
   if (nemu_state.state == NEMU_ABORT) {
     IFDEF(CONFIG_FTRACE, print_fun_buf());
     IFDEF(CONFIG_IRINGBUF, printIringBuf());
