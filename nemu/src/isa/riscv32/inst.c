@@ -220,13 +220,13 @@ static int decode_exec(Decode *s) {
           cpu.gpr[7] = cpu.mepc;);
   INSTPAT("0011000 00000 00110 001 00000 1110011", csrw_mstatus, I,
           cpu.mstatus = cpu.gpr[6]);
-  // INSTPAT("0011010 00001 00111 001 00000 1110011", wmepc, I,
-  //         cpu.mepc = cpu.gpr[7]);
+  INSTPAT("0011010 00001 00111 001 00000 1110011", wmepc, I,
+          cpu.mepc = cpu.gpr[7]);
   // 存储80000550 <__am_asm_trap>地址到sr.mtvec变量中
   INSTPAT("0011000 00101 01111 001 00000 1110011", csrw_mtvec, I,
           cpu.mtvec = cpu.gpr[15];);
-  // INSTPAT("0011000 00010 00000 000 00000 1110011", mret, I,
-  //         s->dnpc = cpu.mepc;);
+  INSTPAT("0011000 00010 00000 000 00000 1110011", mret, I,
+          s->dnpc = cpu.mepc;);
   INSTPAT("0000000 00001 00000 000 00000 1110011", ebreak, N,
           NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ???????", inv, N, INV(s->pc));

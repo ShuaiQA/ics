@@ -2,8 +2,8 @@
 #define ARCH_H__
 
 struct Context {
-  // TODO: fix the order of these members to match trap.S
-  uintptr_t mepc, mcause, gpr[32], mstatus;
+  // 根据__am_asm_trap函数进行重组数据结构
+  uintptr_t gpr[32], mcause, mstatus, mepc;
   void *pdir;
 };
 
