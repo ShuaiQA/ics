@@ -218,8 +218,8 @@ static int decode_exec(Decode *s) {
           cpu.gpr[6] = cpu.mstatus;);
   INSTPAT("0011010 00001 00000 010 00111 1110011", csrr_mepc, I,
           cpu.gpr[7] = cpu.mepc;);
-  // INSTPAT("0011000 00000 00110 001 00000 1110011", wmstatus, I,
-  //         cpu.mstatus = cpu.gpr[6]);
+  INSTPAT("0011000 00000 00110 001 00000 1110011", csrw_mstatus, I,
+          cpu.mstatus = cpu.gpr[6]);
   // INSTPAT("0011010 00001 00111 001 00000 1110011", wmepc, I,
   //         cpu.mepc = cpu.gpr[7]);
   // 存储80000550 <__am_asm_trap>地址到sr.mtvec变量中
