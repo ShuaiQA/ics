@@ -59,6 +59,7 @@ static void key_enqueue(uint32_t am_scancode) {
   Assert(key_r != key_f, "key queue overflow!");
 }
 
+// 其中key_f和key_r是从哪里进行修改的?
 static uint32_t key_dequeue() {
   uint32_t key = _KEY_NONE;
   if (key_f != key_r) {
