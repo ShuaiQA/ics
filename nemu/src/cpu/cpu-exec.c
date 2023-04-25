@@ -14,6 +14,7 @@
  ***************************************************************************************/
 
 #include "../monitor/sdb/sdb.h"
+#include "utils.h"
 #include <cpu/cpu.h>
 #include <cpu/decode.h>
 #include <cpu/difftest.h>
@@ -44,7 +45,9 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   IFDEF(CONFIG_WATCHPOINT, find_watch());
-  IFDEF(CONFIG_IRINGBUF, printIringBuf());
+  if (nemu_state.state == NEMU_ABORT) {
+    IFDEF(CONFIG_IRINGBUF, printIringBuf());
+  }
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {

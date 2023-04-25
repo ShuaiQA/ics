@@ -21,10 +21,6 @@ void new_isa(word_t pc, word_t isa_val) {
   disassemble(buf[pos].action, 50, MUXDEF(CONFIG_ISA_x86, pc + 4, pc),
               (uint8_t *)&isa_val, 4);
 
-  /* printf("[0x%08x]: %s   ", buf[pos].pc, buf[pos].action); */
-  /* print_isa(buf[pos].isa_val, 0); */
-  /* printf("\n"); */
-
   pos = (pos + 1) % SIZE_ISA_BUF;
 }
 
