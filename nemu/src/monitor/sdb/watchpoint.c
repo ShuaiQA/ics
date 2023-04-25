@@ -15,7 +15,14 @@
 
 #include "sdb.h"
 
-#define NR_WP 32
+#define NR_WP 1
+
+typedef struct watchpoint {
+  int NO;
+  struct watchpoint *next;
+  word_t value;  // 保存older_value
+  char what[40]; // 保存监视的是什么名字
+} WP;
 
 static WP wp_pool[NR_WP] = {};
 static WP *head = NULL, *free_ = NULL;
@@ -32,7 +39,7 @@ void init_wp_pool() {
 }
 
 // 从free_链表中返回一个空闲的监视点结构,添加到head
-WP *new_wp(word_t value, char *what) {
+void new_wp(word_t value, char *what) {
   if (free_ == NULL) {
     assert(0);
   }
@@ -42,8 +49,8 @@ WP *new_wp(word_t value, char *what) {
   free_ = free_->next;
   temp->next = head;
   head = temp;
-  return head;
 }
+
 // 将WP归还到free_链表中,删除查找head中的位置进行删除
 void free_wp(int no) {
   if (head == NULL) {

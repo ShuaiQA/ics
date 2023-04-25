@@ -19,17 +19,10 @@
 #include <common.h>
 #include <memory/paddr.h>
 
-typedef struct watchpoint {
-  int NO;
-  struct watchpoint *next;
-  word_t value;  // 保存older_value
-  char what[40]; // 保存监视的是什么名字
-} WP;
-
 // 输出所有的断点集合   info w
 void printWP();
 // 创建一个断点         w $pc
-WP *new_wp(word_t value, char *what);
+void new_wp(word_t value, char *what);
 // 释放一个断点         d 1
 void free_wp(int no);
 // 查看当前的值是否与断点值不一样    cpu_exec
@@ -49,4 +42,7 @@ void print_fun_buf();
 word_t expr(char *e, bool *success);
 
 void set_elf_file(char *elf);
+
+void new_device_trace(word_t pc, word_t addr);
+void print_device_trace();
 #endif
