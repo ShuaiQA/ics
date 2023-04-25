@@ -126,7 +126,7 @@ static int cmd_w(char *args) {
     printf("表达式不合法\n");
   } else {
     new_wp(val, args);
-    printf("当前的val是0x%08x\n", val);
+    Log("当前的val是0x%08x\n", val);
   }
   return 0;
 }
