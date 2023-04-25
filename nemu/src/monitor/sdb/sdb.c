@@ -104,6 +104,43 @@ static int cmd_x(char *args) {
   return 0;
 }
 
+static int cmd_p(char *args) {
+  if (args == NULL) {
+    printf("p 需要参数,例如p $pc");
+  }
+  bool v;
+  word_t pval = expr(args, &v);
+  printf("0x%08x\n", pval);
+  return 0;
+}
+
+// 设置监视点
+static int cmd_w(char *args) {
+  if (args == NULL) {
+    printf("w 应该加上参数,可以是变量或者表达式,内存地址,$寄存器名字");
+    return 0;
+  }
+  bool success = false;
+  word_t val = expr(args, &success);
+  if (success == false) {
+    printf("表达式不合法\n");
+  } else {
+    new_wp(val, args);
+    printf("当前的val是0x%08x\n", val);
+  }
+  return 0;
+}
+
+// 删除对应的监视点,不再进行监视
+static int cmd_d(char *args) {
+  if (args == NULL) {
+    printf("d后面应该添加 info w 的NO\n");
+  }
+  int num = atoi(args);
+  free_wp(num);
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -117,6 +154,9 @@ static struct {
     {"si", "让程序单步执行N条指令后暂停执行, 当N没有给出时, 缺省为1", cmd_si},
     {"info", "打印寄存器状态或打印监视点信息", cmd_info},
     {"x", "扫描内存", cmd_x},
+    {"p", "表达式求值", cmd_p},
+    {"w", "监视点", cmd_w},
+    {"d", "删除监测点", cmd_d},
 
 };
 
