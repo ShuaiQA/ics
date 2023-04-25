@@ -48,5 +48,5 @@ void print_fun_buf();
 // 根据字符串e和设置字符串e是否符合规定success,判断返回值word_t
 word_t expr(char *e, bool *success);
 
-void load_elf(char *elf_file);
+void set_elf_file(char *elf);
 #endif

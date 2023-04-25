@@ -134,7 +134,7 @@ void init_monitor(int argc, char *argv[]) {
 
   /* Initialize devices. */
   IFDEF(CONFIG_DEVICE, init_device());
-  IFDEF(CONFIG_FTRACE, load_elf(elf_file));
+  IFDEF(CONFIG_FTRACE, set_elf_file(elf_file));
 
   /* Perform ISA dependent initialization. */
   init_isa();

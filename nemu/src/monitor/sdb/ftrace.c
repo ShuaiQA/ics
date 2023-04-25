@@ -24,8 +24,12 @@ static funcs buf[10000]; // 记录当前有多少个函数
 static size_t num = 0;
 static funtrace ff[20]; // 环形缓冲区记录函数调用过程
 static size_t cnt = 0;
+static char *elf_file = NULL;
 
 void print_fun_buf() {
+  if (elf_file == NULL) {
+    return;
+  }
   int i = cnt;
   do {
     printf("%08x\t%s\n", ff[i].val, ff[i].name);
@@ -35,6 +39,9 @@ void print_fun_buf() {
 
 // 根据传入的pc的值,根据pc值来确定函数的路径并添加到ff数组中
 void new_fun(uint32_t pc) {
+  if (elf_file == NULL) {
+    return;
+  }
   int pos = -1;
   for (int i = 0; i < num; i++) {
     if (pc >= buf[i].st_value && pc <= buf[i].st_value + buf[i].st_size) {
@@ -56,9 +63,8 @@ void new_fun(uint32_t pc) {
 
 // 该函数主要是为了解析elf文件然后将获取的函数的起始地址、大小、函数名
 // 放到函数缓冲区中,为了以后执行命令的时候进行函数的判断
-void load_elf(char *elf_file) {
+void load_elf() {
   if (elf_file == NULL) {
-    printf("no elf file\n");
     return;
   }
   int fd;
@@ -114,4 +120,9 @@ void load_elf(char *elf_file) {
   // }
   (void)munmap(file_mmbase, fsize);
   (void)close(fd);
+}
+
+void set_elf_file(char *elf) {
+  elf_file = elf;
+  load_elf();
 }
