@@ -62,6 +62,7 @@ void difftest_skip_dut(int nr_ref, int nr_dut) {
 
 // 初始化REF的状态
 void init_difftest(char *ref_so_file, long img_size, int port) {
+  cpu.mstatus = 0x1800;
   assert(ref_so_file != NULL);
 
   void *handle;
@@ -89,7 +90,6 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
       "the performance. "
       "If it is not necessary, you can turn it off in menuconfig.",
       ref_so_file);
-  cpu.mstatus = 0x1800;
 
   ref_difftest_init(port);
   ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size,
