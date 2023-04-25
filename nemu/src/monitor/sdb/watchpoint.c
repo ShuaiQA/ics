@@ -14,6 +14,7 @@
  ***************************************************************************************/
 
 #include "sdb.h"
+#include "utils.h"
 
 #define NR_WP 32
 
@@ -88,7 +89,7 @@ void printWP() {
   }
 }
 
-bool find_watch() {
+void find_watch() {
   WP *p = head;
   bool v = false; // 判断但前是否含有监测点
   while (p != NULL) {
@@ -103,5 +104,7 @@ bool find_watch() {
     }
     p = p->next;
   }
-  return v;
+  if (v) {
+    nemu_state.state = NEMU_STOP;
+  }
 }

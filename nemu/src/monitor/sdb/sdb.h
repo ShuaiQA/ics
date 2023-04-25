@@ -26,7 +26,7 @@ void new_wp(word_t value, char *what);
 // 释放一个断点         d 1
 void free_wp(int no);
 // 查看当前的值是否与断点值不一样    cpu_exec
-bool find_watch();
+void find_watch();
 
 // cpu_exec 将最近执行的指令放到缓冲区中
 void new_isa(word_t pc, word_t isa_val);
