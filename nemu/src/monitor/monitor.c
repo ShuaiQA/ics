@@ -129,7 +129,7 @@ void init_monitor(int argc, char *argv[]) {
   /* Open the log file. */
   init_log(log_file);
 
-  /* Initialize memory. */
+  /* Initialdefineize memory. */
   init_mem();
 
   /* Initialize devices. */
