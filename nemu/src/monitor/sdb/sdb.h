@@ -34,6 +34,17 @@ void free_wp(int no);
 // 查看当前的值是否与断点值不一样    cpu_exec
 bool find_watch();
 
+typedef struct isa {
+  word_t isa_val;
+  word_t pc;
+  char action[50];
+} ISAbuf;
+
+// cpu_exec 将最近执行的指令放到缓冲区中
+void new_isa(word_t pc, word_t isa_val);
+// cpu_exec 打印出最近执行的指令
+void printIringBuf();
+
 word_t expr(char *e, bool *success);
 
 word_t paddr_read(paddr_t addr, int len);
