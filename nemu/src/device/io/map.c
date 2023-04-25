@@ -59,6 +59,9 @@ void init_map() {
   p_space = io_space;
 }
 
+// 我们观察到对于内存地址的读取,首先会调用callback函数,该函数的主要目的是先对对应的内存空间进行修改
+// 例如timer我们首先会调用callback先对对应位置进行更新时间
+// 然后在调用对应的读取地址进行读取对应的信息
 word_t map_read(paddr_t addr, int len, IOMap *map) {
   assert(len >= 1 && len <= 8);
   check_bound(map, addr);
@@ -70,6 +73,8 @@ word_t map_read(paddr_t addr, int len, IOMap *map) {
   return ret;
 }
 
+// 同理对于写数据,以serial为例,我们应该先将数据写到对应的地址空间,例如串口的对应的位置
+// 然后调用对应的callback函数,该函数回到对应的内存地址处取出相应的数据然后进行对应的函数处理
 void map_write(paddr_t addr, int len, word_t data, IOMap *map) {
   assert(len >= 1 && len <= 8);
   check_bound(map, addr);

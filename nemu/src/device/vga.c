@@ -79,6 +79,8 @@ void vga_update_screen() {
   }
 }
 
+// vgactl的内存映射8字节,低4个字节以某种方式记录着屏幕的宽和高
+// 之后的4个字节是记录着同步寄存器
 void init_vga() {
   vgactl_port_base = (uint32_t *)new_space(8);
   vgactl_port_base[0] = (screen_width() << 16) | screen_height();
@@ -88,6 +90,7 @@ void init_vga() {
   add_mmio_map("vgactl", CONFIG_VGA_CTL_MMIO, vgactl_port_base, 8, NULL);
 #endif
 
+  // vmem初始化300*400屏幕大小个int数据(每一个像素使用int字节表示)
   vmem = new_space(screen_size());
   add_mmio_map("vmem", CONFIG_FB_ADDR, vmem, screen_size(), NULL);
   IFDEF(CONFIG_VGA_SHOW_SCREEN, init_screen());
