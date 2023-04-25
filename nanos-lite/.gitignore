@@ -5,4 +5,5 @@
 !*.[cSh]
 !.gitignore
 !README.md
+!compile_commands.json
 !resources/logo.txt
