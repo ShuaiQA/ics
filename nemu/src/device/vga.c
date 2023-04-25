@@ -70,9 +70,9 @@ static inline void update_screen() {
 #endif
 #endif
 
+// 如果同步寄存器被指令摄制成1的时候需要进行更新屏幕
+// 疑问什么函数调用该函数,什么时候进行更新(按照一定的时间)?
 void vga_update_screen() {
-  // TODO: call `update_screen()` when the sync register is non-zero,
-  // then zero out the sync register
   if (vgactl_port_base[1] != 0) {
     update_screen();
     vgactl_port_base[1] = 0;

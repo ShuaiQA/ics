@@ -50,9 +50,11 @@ static uint32_t keymap[256] = {};
 static void init_keymap() { MAP(_KEYS, SDL_KEYMAP) }
 
 #define KEY_QUEUE_LEN 1024
+// 保存按键的队列集合,key_r是右边界,key_f是左边界
 static int key_queue[KEY_QUEUE_LEN] = {};
 static int key_f = 0, key_r = 0;
 
+// 将传递的数据进行添加到对应的key_dequeue队列中
 static void key_enqueue(uint32_t am_scancode) {
   key_queue[key_r] = am_scancode;
   key_r = (key_r + 1) % KEY_QUEUE_LEN;
@@ -60,6 +62,9 @@ static void key_enqueue(uint32_t am_scancode) {
 }
 
 // 其中key_f和key_r是从哪里进行修改的?
+// 由下面的函数和上面的函数进行提供
+// 当key_f == key_r的时候代表的是没有数据直接返回_KEY_NONE
+// 否则将队列中的数据进行取出来进行返回
 static uint32_t key_dequeue() {
   uint32_t key = _KEY_NONE;
   if (key_f != key_r) {
@@ -69,6 +74,7 @@ static uint32_t key_dequeue() {
   return key;
 }
 
+// 根据SDL库检测到的数据进行组合成对应的32位数据放到key_dequeue队列中
 void send_key(uint8_t scancode, bool is_keydown) {
   if (nemu_state.state == NEMU_RUNNING && keymap[scancode] != _KEY_NONE) {
     uint32_t am_scancode = keymap[scancode] | (is_keydown ? KEYDOWN_MASK : 0);
