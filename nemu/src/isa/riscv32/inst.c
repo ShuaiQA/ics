@@ -216,8 +216,8 @@ static int decode_exec(Decode *s) {
           cpu.gpr[5] = cpu.mcause;);
   INSTPAT("0011000 00000 00000 010 00110 1110011", csrr_mstatus, I,
           cpu.gpr[6] = cpu.mstatus;);
-  // INSTPAT("0011010 00001 00000 010 00111 1110011", rmepc, I,
-  //         cpu.gpr[7] = cpu.mepc;);
+  INSTPAT("0011010 00001 00000 010 00111 1110011", csrr_mepc, I,
+          cpu.gpr[7] = cpu.mepc;);
   // INSTPAT("0011000 00000 00110 001 00000 1110011", wmstatus, I,
   //         cpu.mstatus = cpu.gpr[6]);
   // INSTPAT("0011010 00001 00111 001 00000 1110011", wmepc, I,
