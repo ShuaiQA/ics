@@ -65,6 +65,7 @@ void new_fun(uint32_t pc) {
 void load_elf(char *elf_file) {
   if (elf_file == NULL) {
     printf("no elf file\n");
+#undef CONFIG_FTRACE
     return;
   }
   int fd;
