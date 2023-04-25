@@ -53,6 +53,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
     IFDEF(CONFIG_FTRACE, print_fun_buf());
     IFDEF(CONFIG_IRINGBUF, printIringBuf());
     IFDEF(CONFIG_DTRACE, print_device_trace());
+    IFDEF(CONFIG_ETRACE, print_etrace());
   }
 }
 

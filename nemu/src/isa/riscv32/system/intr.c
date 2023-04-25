@@ -13,16 +13,15 @@
  * See the Mulan PSL v2 for more details.
  ***************************************************************************************/
 
+#include "../../monitor/sdb/sdb.h"
 #include <isa.h>
 
 // 设置异常号以及保存当前的pc值到mepc
 // 返回异常入口地址
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
-  /* TODO: Trigger an interrupt/exception with ``NO''.
-   * Then return the address of the interrupt/exception vector.
-   */
   cpu.mepc = epc;
   cpu.mcause = NO;
+  IFDEF(CONFIG_ETRACE, new_etrace(epc, NO));
   return cpu.mtvec;
 }
 

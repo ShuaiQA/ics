@@ -45,4 +45,7 @@ void set_elf_file(char *elf);
 
 void new_device_trace(word_t pc, word_t addr, word_t data, const char *name);
 void print_device_trace();
+
+void new_etrace(word_t pc, word_t No);
+void print_etrace();
 #endif
