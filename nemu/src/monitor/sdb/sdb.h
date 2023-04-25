@@ -43,6 +43,6 @@ word_t expr(char *e, bool *success);
 
 void set_elf_file(char *elf);
 
-void new_device_trace(word_t pc, word_t addr);
+void new_device_trace(word_t pc, word_t addr, word_t data, const char *name);
 void print_device_trace();
 #endif

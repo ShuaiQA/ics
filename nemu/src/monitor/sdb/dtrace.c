@@ -3,9 +3,10 @@
 #include "sdb.h"
 
 typedef struct {
+  const char *name;
   word_t pc;
   word_t addr;
-  char name[10];
+  word_t data;
 } device;
 
 #define SIZE_DEV_BUF 16
@@ -13,10 +14,11 @@ static device buf[SIZE_DEV_BUF];
 static int pos = 0;
 
 // 传入的内容是当前的pc和访问内存的地址
-void new_device_trace(word_t pc, word_t addr) {
+void new_device_trace(word_t pc, word_t addr, word_t data, const char *name) {
   buf[pos].pc = pc;
   buf[pos].addr = addr;
-
+  buf[pos].name = name;
+  buf[pos].data = data;
   pos = (pos + 1) % SIZE_DEV_BUF;
 }
 
@@ -24,6 +26,8 @@ void new_device_trace(word_t pc, word_t addr) {
 void print_device_trace() {
   int i = pos;
   do {
+    printf("device name [%s] pc [0x%x] addr [0x%x] data [0x%x]\n", buf[i].name,
+           buf[i].pc, buf[i].addr, buf[i].data);
     i = (i + 1) % SIZE_DEV_BUF;
   } while (i != pos);
 }

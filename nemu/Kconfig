@@ -154,10 +154,15 @@ config IRINGBUF
   bool "Enable iringbuf tracer"
   default y
 
+config DTRACE
+  depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
+  bool "Enable dtrace tracer"
+  default n
+
 config FTRACE
   depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
   bool "Enable ftrace tracer"
-  default y
+  default n
 
 config ITRACE_COND
   depends on ITRACE
