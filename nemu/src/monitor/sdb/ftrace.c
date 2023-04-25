@@ -20,8 +20,8 @@ typedef struct funcbuf { // 标记函数的起始位置
   int pos;
 } funtrace;
 
-funcs buf[10000]; // 记录当前有多少个函数
-size_t num = 0;
+static funcs buf[10000]; // 记录当前有多少个函数
+static size_t num = 0;
 static funtrace ff[20]; // 环形缓冲区记录函数调用过程
 static size_t cnt = 0;
 
@@ -42,21 +42,15 @@ void new_fun(uint32_t pc) {
     }
   }
   assert(pos != -1);
-  if (cnt == 0) {
+
+  // 获取前一个pos的对应位置,查看当前是否对应
+  funtrace pre = ff[(cnt + 19) % 20];
+  if (pc < buf[pre.pos].st_value ||
+      pc > buf[pre.pos].st_value + buf[pre.pos].st_size) {
     ff[cnt].val = pc;
     strcpy(ff[cnt].name, buf[pos].name);
     ff[cnt].pos = pos;
-    cnt++;
-  } else {
-    // 获取前一个pos的对应位置,查看当前是否对应
-    funtrace pre = ff[cnt - 1];
-    if (pc < buf[pre.pos].st_value ||
-        pc > buf[pre.pos].st_value + buf[pre.pos].st_size) {
-      ff[cnt].val = pc;
-      strcpy(ff[cnt].name, buf[pos].name);
-      ff[cnt].pos = pos;
-      cnt++;
-    }
+    cnt = (cnt + 1) % 20;
   }
 }
 
