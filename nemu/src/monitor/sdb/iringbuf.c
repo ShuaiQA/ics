@@ -1,5 +1,11 @@
 #include "sdb.h"
 
+typedef struct isa {
+  word_t isa_val;
+  word_t pc;
+  char action[50];
+} ISAbuf;
+
 #define SIZE_ISA_BUF 16
 static ISAbuf buf[SIZE_ISA_BUF];
 static int pos = 0;

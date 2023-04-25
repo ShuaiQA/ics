@@ -17,6 +17,7 @@
 #define __SDB_H__
 
 #include <common.h>
+#include <memory/paddr.h>
 
 typedef struct watchpoint {
   int NO;
@@ -34,19 +35,18 @@ void free_wp(int no);
 // 查看当前的值是否与断点值不一样    cpu_exec
 bool find_watch();
 
-typedef struct isa {
-  word_t isa_val;
-  word_t pc;
-  char action[50];
-} ISAbuf;
-
 // cpu_exec 将最近执行的指令放到缓冲区中
 void new_isa(word_t pc, word_t isa_val);
 // cpu_exec 打印出最近执行的指令
 void printIringBuf();
 
+// 查看当前的函数是否是属于函数集合范围
+void new_fun(uint32_t pc);
+// 输出函数调用路径
+void print_fun_buf();
+
+// 根据字符串e和设置字符串e是否符合规定success,判断返回值word_t
 word_t expr(char *e, bool *success);
 
-word_t paddr_read(paddr_t addr, int len);
-void paddr_write(paddr_t addr, int len, word_t data);
+void load_elf(char *elf_file);
 #endif

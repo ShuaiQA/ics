@@ -16,6 +16,8 @@
 #include <isa.h>
 #include <memory/paddr.h>
 
+#include "sdb/sdb.h"
+
 void init_rand();
 void init_log(const char *log_file);
 void init_mem();
@@ -45,6 +47,7 @@ void sdb_set_batch_mode();
 static char *log_file = NULL;
 static char *diff_so_file = NULL;
 static char *img_file = NULL;
+static char *elf_file = NULL;
 static int difftest_port = 1234;
 
 static long load_img() {
@@ -75,6 +78,7 @@ static int parse_args(int argc, char *argv[]) {
       {"log", required_argument, NULL, 'l'},
       {"diff", required_argument, NULL, 'd'},
       {"port", required_argument, NULL, 'p'},
+      {"elf", required_argument, NULL, 'e'},
       {"help", no_argument, NULL, 'h'},
       {0, 0, NULL, 0},
   };
@@ -93,6 +97,9 @@ static int parse_args(int argc, char *argv[]) {
     case 'd':
       diff_so_file = optarg;
       break;
+    case 'e': // -e xxxx
+      elf_file = optarg;
+      break;
     case 1:
       img_file = optarg;
       return 0;
@@ -101,6 +108,7 @@ static int parse_args(int argc, char *argv[]) {
       printf("\t-b,--batch              run with batch mode\n");
       printf("\t-l,--log=FILE           output log to FILE\n");
       printf("\t-d,--diff=REF_SO        run DiffTest with reference REF_SO\n");
+      printf("\t-e,--elf=FILE           input elf FILE\n");
       printf("\t-p,--port=PORT          run DiffTest with port PORT\n");
       printf("\n");
       exit(0);
@@ -126,6 +134,7 @@ void init_monitor(int argc, char *argv[]) {
 
   /* Initialize devices. */
   IFDEF(CONFIG_DEVICE, init_device());
+  IFDEF(CONFIG_FTRACE, load_elf(elf_file));
 
   /* Perform ISA dependent initialization. */
   init_isa();
