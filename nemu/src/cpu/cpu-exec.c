@@ -46,8 +46,8 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   IFDEF(CONFIG_WATCHPOINT, find_watch());
 
-  IFDEF(CONFIG_FTRACE, print_fun_buf());
   if (nemu_state.state == NEMU_ABORT) {
+    IFDEF(CONFIG_FTRACE, print_fun_buf());
     IFDEF(CONFIG_IRINGBUF, printIringBuf());
   }
 }

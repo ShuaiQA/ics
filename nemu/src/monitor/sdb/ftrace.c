@@ -107,11 +107,11 @@ void load_elf(char *elf_file) {
       }
     }
   }
-  printf("num is %zu\n", num);
-  // 查看都有哪些函数
-  for (int i = 0; i < num; i++) {
-    printf("%08x\t%d\t%s\n", buf[i].st_value, buf[i].st_size, buf[i].name);
-  }
+  // 查看当前的函数集合
+  // printf("num is %zu\n", num);
+  // for (int i = 0; i < num; i++) {
+  //   printf("%08x\t%d\t%s\n", buf[i].st_value, buf[i].st_size, buf[i].name);
+  // }
   (void)munmap(file_mmbase, fsize);
   (void)close(fd);
 }
