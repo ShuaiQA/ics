@@ -204,6 +204,29 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 010 ????? 0000011", lw, I,
           R(rd) = Mr(src1 + imm, 4));
 
+  // ecall指令会将寄存器a7(异常号)和pc的值放到变量中跳转到
+  // __am_asm_trap(void);汇编代码中,汇编代码主要的作用是,首先将寄存器中的数据保存到栈中,
+  // 然后将mcause,mstatus,mepc变量保存到寄存器t0,t1,t2中,然后将t0,t1,t2保存到栈中,
+  // 之后调用__am_irq_handle进行异常处理,之后进入do_event函数
+  // 之后进行返回,将结构体c栈中的数据mepc,mcause传到t1,t2在将t1,t2数据传到mepc,mcause变量中
+
+  // INSTPAT("0000000 00000 00000 000 00000 1110011", ecall, I,
+  //         s->dnpc = isa_raise_intr(cpu.gpr[17], cpu.pc););
+  // INSTPAT("0011010 00010 00000 010 00101 1110011", rmcause, I,
+  //         cpu.gpr[5] = cpu.mcause;);
+  // INSTPAT("0011000 00000 00000 010 00110 1110011", rmstatus, I,
+  //         cpu.gpr[6] = cpu.mstatus;);
+  // INSTPAT("0011010 00001 00000 010 00111 1110011", rmepc, I,
+  //         cpu.gpr[7] = cpu.mepc;);
+  // INSTPAT("0011000 00000 00110 001 00000 1110011", wmstatus, I,
+  //         cpu.mstatus = cpu.gpr[6]);
+  // INSTPAT("0011010 00001 00111 001 00000 1110011", wmepc, I,
+  //         cpu.mepc = cpu.gpr[7]);
+  // 存储80000550 <__am_asm_trap>地址到sr.mtvec变量中
+  INSTPAT("0011000 00101 01111 001 00000 1110011", csrw_mtvec, I,
+          cpu.mtvec = cpu.gpr[15];);
+  // INSTPAT("0011000 00010 00000 000 00000 1110011", mret, I,
+  //         s->dnpc = cpu.mepc;);
   INSTPAT("0000000 00001 00000 000 00000 1110011", ebreak, N,
           NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ???????", inv, N, INV(s->pc));
