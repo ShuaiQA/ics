@@ -130,8 +130,6 @@ void difftest_step(vaddr_t pc, vaddr_t npc) {
     return;
   }
 
-  cpu.mstatus = 0x1800;
-
   // 让REF执行同样的一条指令
   ref_difftest_exec(1);
   ref_difftest_regcpy(&ref_r, DIFFTEST_TO_DUT);
