@@ -210,8 +210,8 @@ static int decode_exec(Decode *s) {
   // 之后调用__am_irq_handle进行异常处理,之后进入do_event函数
   // 之后进行返回,将结构体c栈中的数据mepc,mcause传到t1,t2在将t1,t2数据传到mepc,mcause变量中
 
-  // INSTPAT("0000000 00000 00000 000 00000 1110011", ecall, I,
-  //         s->dnpc = isa_raise_intr(cpu.gpr[17], cpu.pc););
+  INSTPAT("0000000 00000 00000 000 00000 1110011", ecall, I,
+          s->dnpc = isa_raise_intr(cpu.gpr[17], cpu.pc););
   // INSTPAT("0011010 00010 00000 010 00101 1110011", rmcause, I,
   //         cpu.gpr[5] = cpu.mcause;);
   // INSTPAT("0011000 00000 00000 010 00110 1110011", rmstatus, I,
