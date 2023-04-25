@@ -151,17 +151,17 @@ config WATCHPOINT
 
 config IRINGBUF
   depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
-  bool "Enable iringbuf tracer"
+  bool "Enable isa buf tracer"
   default y
 
 config DTRACE
   depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
-  bool "Enable dtrace tracer"
+  bool "Enable device trace buf"
   default n
 
 config FTRACE
   depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
-  bool "Enable ftrace tracer"
+  bool "Enable function trace buf"
   default n
 
 config ITRACE_COND
