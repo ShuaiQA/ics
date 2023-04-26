@@ -6,6 +6,7 @@
 void sys_write(Context *c, int fd, void *buf, int count) {
   char *b = (char *)buf;
   int i = 0;
+  printf("%d  %p  %d\n", fd, buf, count);
   for (; i < count; i++) {
     char t = *(b + i);
     putch(t);
