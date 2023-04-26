@@ -35,6 +35,22 @@ word_t isa_reg_str2val(const char *s, bool *success) {
     *success = true;
     return cpu.pc;
   }
+  if (strcmp(s, "mtvec") == 0) {
+    *success = true;
+    return cpu.mtvec;
+  }
+  if (strcmp(s, "mepc") == 0) {
+    *success = true;
+    return cpu.mepc;
+  }
+  if (strcmp(s, "mcause") == 0) {
+    *success = true;
+    return cpu.mcause;
+  }
+  if (strcmp(s, "mstatus") == 0) {
+    *success = true;
+    return cpu.mstatus;
+  }
   int pos = -1;
   for (int i = 0; i < 32; i++) {
     if (strcmp(s, regs[i]) == 0) {
