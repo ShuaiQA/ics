@@ -27,21 +27,13 @@ int atoi(const char *nptr) {
   return x;
 }
 
-static char *mem_heap;
-static char *mem_brk;
+extern char _heap_start;
+static char *mem_brk = &_heap_start; // 记录下一次分配的位置
 
 void *malloc(size_t size) {
   // On native, malloc() will be called during initializaion of C runtime.
   // Therefore do not call panic() here, else it will yield a dead recursion:
   //   panic() -> putchar() -> (glibc) -> malloc() -> panic()
-  // #if !(defined(__ISA_NATIVE__) && defined(__NATIVE_USE_KLIB__))
-  //   panic("Not implemented");
-  // #endif
-  if (mem_heap == NULL) {
-    mem_heap = (char *)ROUNDUP(heap.start, 8);
-    mem_brk = mem_heap;
-    return (void *)mem_brk;
-  }
   char *old_brk = mem_brk;
   mem_brk += size;
   return (void *)old_brk;
