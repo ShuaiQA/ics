@@ -62,7 +62,7 @@ void difftest_skip_dut(int nr_ref, int nr_dut) {
 
 // 初始化REF的状态
 void init_difftest(char *ref_so_file, long img_size, int port) {
-  cpu.mstatus = 0x1880;
+  cpu.mstatus = 0x1800;
   assert(ref_so_file != NULL);
 
   void *handle;
