@@ -10,6 +10,7 @@ Context *__am_irq_handle(Context *c) {
     switch (c->mcause) {
     case 11: // 当前ecall的mcause,打包成对应的EVENT_YIELD事件
       ev.event = EVENT_YIELD;
+      c->mepc += 4;
       break;
     default:
       ev.event = EVENT_ERROR;
