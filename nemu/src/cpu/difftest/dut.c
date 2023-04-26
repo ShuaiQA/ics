@@ -130,6 +130,7 @@ void difftest_step(vaddr_t pc, vaddr_t npc) {
     is_skip_ref = false;
     return;
   }
+  cpu.mstatus = 0x1800;
 
   // 让REF执行同样的一条指令
   ref_difftest_exec(1);
