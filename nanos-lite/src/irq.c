@@ -6,7 +6,6 @@
 void sys_write(Context *c, int fd, void *buf, int count) {
   char *b = (char *)buf;
   int i = 0;
-  printf("%d  %p  %d\n", fd, buf, count);
   for (; i < count; i++) {
     char t = *(b + i);
     putch(t);
@@ -23,7 +22,7 @@ static Context *do_event(Event e, Context *c) {
     halt(0);
     break;
   case EVENT_WRITE:
-    sys_write(c, c->GPR1, (void *)c->GPR2, c->GPR3);
+    sys_write(c, c->GPR2, (void *)c->GPR3, c->GPR4);
     break;
   default:
     panic("Unhandled event ID = %d", e.event);
