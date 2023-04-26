@@ -10,6 +10,9 @@ static Context *do_event(Event e, Context *c) {
   case EVENT_NULL:
     halt(0);
     break;
+  case EVENT_WRITE:
+    putch('a');
+    break;
   default:
     panic("Unhandled event ID = %d", e.event);
   }
