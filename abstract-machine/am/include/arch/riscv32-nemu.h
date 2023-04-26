@@ -11,7 +11,7 @@ struct Context {
 #define GPR2 gpr[5]
 #define GPR3 gpr[6]
 #define GPR4 gpr[7]
-#define GPRx gpr[5]
+#define GPRx gpr[5] + 4
 
 // intptr_t _syscall_(intptr_t type, intptr_t a0, intptr_t a1, intptr_t a2) {
 //   register intptr_t _gpr1 asm (GPR1) = type;
