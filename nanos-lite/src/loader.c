@@ -23,6 +23,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   for (int i = 0; i < hd->e_phnum; i++) {
     Elf_Phdr ph = phs[i];
     if (ph.p_type == PT_LOAD) {
+      // printf("%x  %x  %x", ph.p_vaddr, ph.p_offset, ph.p_filesz);
       memmove((void *)ph.p_vaddr, date + ph.p_offset, ph.p_filesz);
       char *next = (char *)malloc(ph.p_memsz - ph.p_filesz);
       memset(next, 0, ph.p_memsz - ph.p_filesz);
