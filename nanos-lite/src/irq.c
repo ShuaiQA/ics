@@ -22,7 +22,7 @@ static Context *do_event(Event e, Context *c) {
     halt(0);
     break;
   case EVENT_WRITE:
-    putch('a');
+    sys_write(c, c->GPR1, (void *)c->GPR2, c->GPR3);
     break;
   default:
     panic("Unhandled event ID = %d", e.event);
