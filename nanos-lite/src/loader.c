@@ -17,8 +17,8 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   Elf_Ehdr *hd = (Elf_Ehdr *)date;
   assert(*(uint32_t *)hd->e_ident == 0x464c457f);
   uintptr_t entry = hd->e_entry;
-  // printf("entry is %x num is %d offset is
-  // %x\n",entry,hd->e_phnum,hd->e_phoff);
+  printf("entry is %x num is %d offset is %x\n", entry, hd->e_phnum,
+         hd->e_phoff);
   Elf_Phdr *phs = (Elf_Phdr *)(date + hd->e_phoff);
   for (int i = 0; i < hd->e_phnum; i++) {
     Elf_Phdr ph = phs[i];
