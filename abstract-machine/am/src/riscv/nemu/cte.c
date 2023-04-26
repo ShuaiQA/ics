@@ -1,12 +1,14 @@
 #include <am.h>
 #include <klib.h>
 #include <riscv/riscv.h>
+#include <stdio.h>
 
 static Context *(*user_handler)(Event, Context *) = NULL;
 
 Context *__am_irq_handle(Context *c) {
   if (user_handler) {
     Event ev = {0};
+    printf("mcause is %d \n", c->mcause);
     switch (c->mcause) {
     case EVENT_YIELD: // 当前ecall的mcause,打包成对应的EVENT_YIELD事件
       ev.event = EVENT_YIELD;
