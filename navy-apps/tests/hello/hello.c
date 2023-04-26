@@ -1,5 +1,4 @@
 #include <stdint.h>
-#include <stdio.h>
 
 #ifdef __ISA_NATIVE__
 #error can not support ISA=native
@@ -9,7 +8,6 @@ extern int _write(int fd, void *buf, int count);
 
 int main() {
   char *a = "hello";
-  printf("%p\n", a);
   return _write(1, a, 5);
 }
 // #include <stdio.h>
