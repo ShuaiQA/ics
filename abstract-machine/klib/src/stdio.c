@@ -66,6 +66,8 @@ int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
     case 'p':
       temp = va_arg(ap, uint32_t);
       i = 0;
+      *out++ = '0';
+      *out++ = 'x';
       while (temp != 0) {
         int yu = temp % 16;
         if (yu < 10) {
