@@ -20,7 +20,7 @@
 // 返回异常入口地址
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   cpu.mepc = epc;
-  cpu.mcause = NO;
+  cpu.mcause = NO + 0xa;
   IFDEF(CONFIG_ETRACE, new_etrace(epc, NO));
   return cpu.mtvec;
 }
