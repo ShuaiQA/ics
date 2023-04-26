@@ -44,7 +44,7 @@ static struct rule {
 } rules[] = {
     {" ", TK_NOTYPE},
     {"0x([0-9a-f]+)", TK_0XNUM},
-    {"\\$[0-9a-f]+", TK_REG},
+    {"\\$([0-9a-f]+)", TK_REG},
     {"&&", TK_YUYU},
     {"==", TK_EQ},
     {"!=", TK_NEQ},
