@@ -21,7 +21,7 @@
 // mcause并不是直接的a7寄存器的值而是需要进一步的解释,怎么进行解释?
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   cpu.mepc = epc;
-  cpu.mcause = 0xb;
+  cpu.mcause = NO;
   IFDEF(CONFIG_ETRACE, new_etrace(epc, NO));
   return cpu.mtvec;
 }
