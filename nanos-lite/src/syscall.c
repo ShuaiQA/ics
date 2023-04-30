@@ -17,7 +17,7 @@ void SYS_write(Context *c) {
       putch(c);
     }
   }
-  c->GPRx = -1;
+  c->GPRx = arg2;
   printf("nanos %d  %d  %p  %d %d\n", c->GPR1, c->GPR2, c->GPR3, c->GPR4,
          c->GPRx);
 }
