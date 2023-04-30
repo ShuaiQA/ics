@@ -60,7 +60,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
 }
 
 // yield的a7应该是1吧
-void yield() { asm volatile("li a7, 1; ecall"); }
+void yield() { asm volatile("li a7, -1; ecall"); }
 
 bool ienabled() { return false; }
 
