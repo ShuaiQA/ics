@@ -19,7 +19,8 @@ static Context *do_event(Event e, Context *c) {
     printf("yield\n");
     break;
   case EVENT_NULL:
-    halt(0);
+    printf("gpr2 is [%d]\n", c->GPR2);
+    halt(c->GPR2);
     break;
   default:
     panic("Unhandled event ID = %d", e.event);
