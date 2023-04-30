@@ -4,8 +4,8 @@
 
 void SYS_yield(Context *c) {
   printf("yield\n");
-  // yield();
-  c->GPRx = 0;
+  // yield();   // 直接调用yield不是会无限循环,调用ecall指令啊
+  c->GPRx = 10;
 }
 
 void do_syscall(Context *c) {
