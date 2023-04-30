@@ -4,7 +4,7 @@
 
 void SYS_yield(Context *c) {
   printf("yield\n");
-  yield();
+  // yield();
   c->GPRx = 0;
 }
 
