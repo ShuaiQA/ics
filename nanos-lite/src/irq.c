@@ -1,5 +1,6 @@
 #include "am.h"
 #include "arch/riscv32-nemu.h"
+#include "syscall.h"
 #include <common.h>
 
 void sys_write(Context *c, int fd, void *buf, int count) {
@@ -13,18 +14,7 @@ void sys_write(Context *c, int fd, void *buf, int count) {
 }
 
 static Context *do_event(Event e, Context *c) {
-  switch (e.event) {
-  case EVENT_YIELD:
-    printf("yield\n");
-    break;
-  case EVENT_NULL:
-    printf("gpr2 is [%d]\n", c->GPR2);
-    halt(c->GPR2);
-    break;
-  default:
-    panic("Unhandled event ID = %d", e.event);
-  }
-
+  do_syscall(c);
   return c;
 }
 
