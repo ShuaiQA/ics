@@ -1,7 +1,6 @@
 #include "am.h"
 #include "arch/riscv32-nemu.h"
 #include <common.h>
-#include <stdio.h>
 
 void sys_write(Context *c, int fd, void *buf, int count) {
   char *b = (char *)buf;
