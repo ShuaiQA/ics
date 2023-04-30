@@ -1,5 +1,12 @@
 #include "syscall.h"
+#include "am.h"
 #include <common.h>
+
+void SYS_yield(Context *c) {
+  printf("yield\n");
+  yield();
+  c->GPRx = 0;
+}
 
 void do_syscall(Context *c) {
   uintptr_t a[4];
@@ -7,7 +14,7 @@ void do_syscall(Context *c) {
 
   switch (a[0]) {
   case EVENT_YIELD:
-    printf("yield\n");
+    SYS_yield(c);
     break;
   case EVENT_NULL:
     printf("gpr2 is [%d]\n", c->GPR2);
