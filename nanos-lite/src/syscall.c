@@ -5,8 +5,10 @@
 void SYS_yield(Context *c) {
   printf("yield\n");
   // yield();   // 直接调用yield不是会无限循环,调用ecall指令啊
-  c->GPRx = 10;
+  c->GPRx = 0; // 设置GPRx的返回值
 }
+
+void SYS_exit(Context *c) { halt(c->GPR2); }
 
 void do_syscall(Context *c) {
   uintptr_t a[4];
@@ -17,8 +19,7 @@ void do_syscall(Context *c) {
     SYS_yield(c);
     break;
   case EVENT_NULL:
-    printf("gpr2 is [%d]\n", c->GPR2);
-    halt(c->GPR2);
+    SYS_exit(c);
     break;
   default:
     panic("Unhandled syscall ID = %d", a[0]);
