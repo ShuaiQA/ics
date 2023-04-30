@@ -2,6 +2,7 @@
 #include "am.h"
 #include "klib-macros.h"
 #include <common.h>
+#include <stddef.h>
 
 void SYS_yield(Context *c) {
   printf("yield\n");
@@ -9,17 +10,13 @@ void SYS_yield(Context *c) {
   c->GPRx = 0; // 设置GPRx的返回值
 }
 
-void SYS_write(Context *c) {
-  uint32_t arg0 = c->GPR2, arg1 = c->GPR3, arg2 = c->GPR4;
-  if (arg0 == 1 || arg0 == 2) { // 代表的是stdout,stderr,输出到串口中
-    for (int i = 0; i < arg2; i++) {
-      char c = *((char *)arg1 + i);
-      putch(c);
+int SYS_write(int fd, char *buf, size_t count) {
+  if (fd == 1 || fd == 2) { // 代表的是stdout,stderr,输出到串口中
+    for (size_t i = 0; i < count; i++) {
+      putch(buf[i]);
     }
   }
-  c->GPRx = 0;
-  printf("nanos %d  %d  %p  %d %d\n", c->GPR1, c->GPR2, c->GPR3, c->GPR4,
-         c->GPRx);
+  return count;
 }
 
 void SYS_exit(Context *c) { halt(c->GPR2); }
@@ -36,7 +33,7 @@ void do_syscall(Context *c) {
     SYS_exit(c);
     break;
   case EVENT_WRITE:
-    SYS_write(c);
+    c->GPRx = SYS_write(c->GPR2, (char *)c->GPR3, c->GPR4);
     break;
   default:
     panic("Unhandled syscall ID = %d", a[0]);
