@@ -7,8 +7,6 @@ void SYS_yield(Context *c) {
   printf("yield\n");
   // yield();   // 直接调用yield不是会无限循环,调用ecall指令啊
   c->GPRx = 0; // 设置GPRx的返回值
-  printf("nanos %d  %d  %p  %d %d\n", c->GPR1, c->GPR2, c->GPR3, c->GPR4,
-         c->GPRx);
 }
 
 void SYS_write(Context *c) {
