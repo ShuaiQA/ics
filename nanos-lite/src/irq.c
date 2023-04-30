@@ -21,9 +21,6 @@ static Context *do_event(Event e, Context *c) {
   case EVENT_NULL:
     halt(0);
     break;
-  case EVENT_WRITE:
-    sys_write(c, c->GPR2, (void *)c->GPR3, c->GPR4);
-    break;
   default:
     panic("Unhandled event ID = %d", e.event);
   }
