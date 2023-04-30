@@ -20,6 +20,24 @@ typedef struct {
 // Arch-dependent processor context
 typedef struct Context Context;
 
+/**
+ * mcause 可能的值
+ * Instruction address misaligned
+ * Instruction access fault
+ * Illegal Instruction
+ * Breakpoint
+ * Load address misaligned
+ * Load access fault
+ * Store/AMO address misaligned
+ * Store/AMO access fault
+ * Environment call from U-mode
+ * Environment call from S-mode
+ * Environment call from M-mode   11
+ * Instruction page fault
+ * Load page fault
+ * Store/AMO page fault
+ */
+
 // An event of type @event, caused by @cause of pointer @ref
 typedef struct {
   enum {
