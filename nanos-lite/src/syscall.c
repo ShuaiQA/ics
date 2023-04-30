@@ -13,7 +13,7 @@ void SYS_write(Context *c) {
   uint32_t arg0 = c->GPR2, arg1 = c->GPR3, arg2 = c->GPR4;
   if (arg0 == 1 || arg0 == 2) { // 代表的是stdout,stderr,输出到串口中
     for (int i = 0; i < arg2; i++) {
-      char c = *(char *)arg1;
+      char c = *((char *)arg1 + i);
       putch(c);
     }
   }
