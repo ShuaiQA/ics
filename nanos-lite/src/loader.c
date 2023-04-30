@@ -17,13 +17,13 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   Elf_Ehdr *hd = (Elf_Ehdr *)date;
   assert(*(uint32_t *)hd->e_ident == 0x464c457f);
   uintptr_t entry = hd->e_entry;
-  printf("entry is %x num is %d offset is %x\n", entry, hd->e_phnum,
-         hd->e_phoff);
+  // printf("entry is %x num is %d offset is %x\n", entry, hd->e_phnum,
+  //        hd->e_phoff);
   Elf_Phdr *phs = (Elf_Phdr *)(date + hd->e_phoff);
   for (int i = 0; i < hd->e_phnum; i++) {
     Elf_Phdr ph = phs[i];
     if (ph.p_type == PT_LOAD) {
-      printf("%x  %x  %x\n", ph.p_vaddr, ph.p_offset, ph.p_filesz);
+      // printf("%x  %x  %x\n", ph.p_vaddr, ph.p_offset, ph.p_filesz);
       memmove((void *)ph.p_vaddr, date + ph.p_offset, ph.p_filesz);
       char *next = (char *)malloc(ph.p_memsz - ph.p_filesz);
       memset(next, 0, ph.p_memsz - ph.p_filesz);
