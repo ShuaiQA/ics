@@ -10,6 +10,7 @@ Context *__am_irq_handle(Context *c) {
     printf("%d  %d  %p  %d\n", c->GPR1, c->GPR2, c->GPR3, c->GPR4);
     switch (c->GPR1) {
     case EVENT_YIELD:
+      c->mepc += 4;
       ev.event = EVENT_YIELD;
       break;
     default:
