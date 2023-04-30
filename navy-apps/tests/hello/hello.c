@@ -1,15 +1,3 @@
-// #include <stdint.h>
-//
-// #ifdef __ISA_NATIVE__
-// #error can not support ISA=native
-// #endif
-//
-// extern int _write(int fd, void *buf, int count);
-//
-// int main() {
-//   char *a = "hello";
-//   return _write(1, a, 5);
-// }
 #include <stdio.h>
 #include <unistd.h>
 
