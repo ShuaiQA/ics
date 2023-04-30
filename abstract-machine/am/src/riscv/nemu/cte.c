@@ -8,7 +8,9 @@ Context *__am_irq_handle(Context *c) {
     Event ev = {0};
     printf("mcause is %d \n", c->mcause);
     printf("%d  %d  %p  %d\n", c->GPR1, c->GPR2, c->GPR3, c->GPR4);
-    switch (c->mcause) {
+    switch (c->GPR1) {
+    case EVENT_YIELD:
+      ev.event = EVENT_YIELD;
     default:
       ev.event = EVENT_ERROR;
       break;
@@ -47,7 +49,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
 }
 
 // yield的a7应该是1吧
-void yield() { asm volatile("li a7, -1; ecall"); }
+void yield() { asm volatile("li a7, 1; ecall"); }
 
 bool ienabled() { return false; }
 
