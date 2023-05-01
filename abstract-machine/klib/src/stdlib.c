@@ -31,6 +31,7 @@ extern char _heap_start;
 static char *mem_brk = &_heap_start; // 记录下一次分配的位置
 
 void *malloc(size_t size) {
+  printf("old_brk is %p\n", mem_brk);
   char *old_brk = mem_brk;
   mem_brk += size;
   return (void *)old_brk;
