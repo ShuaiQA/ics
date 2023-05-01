@@ -28,7 +28,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   }
   printf("add buf is %s\n", keyname[ev.keycode]);
   strcpy(buf, keyname[ev.keycode]);
-  return 0;
+  return 1;
 }
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) { return 0; }
