@@ -27,7 +27,7 @@ int NDL_PollEvent(char *buf, int len) {
 }
 
 void NDL_LoadWH(int *w, int *h) {
-  FILE *fd = fopen("/dev/events", "r");
+  FILE *fd = fopen("/dev/fb", "r");
   int buf[2];
   fread(buf, 4, 2, fd);
   *w = buf[0];
