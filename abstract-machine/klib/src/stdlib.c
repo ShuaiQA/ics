@@ -31,9 +31,6 @@ extern char _heap_start;
 static char *mem_brk = &_heap_start; // 记录下一次分配的位置
 
 void *malloc(size_t size) {
-  // On native, malloc() will be called during initializaion of C runtime.
-  // Therefore do not call panic() here, else it will yield a dead recursion:
-  //   panic() -> putchar() -> (glibc) -> malloc() -> panic()
   char *old_brk = mem_brk;
   mem_brk += size;
   return (void *)old_brk;

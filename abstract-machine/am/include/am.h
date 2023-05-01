@@ -46,6 +46,7 @@ typedef struct {
     EVENT_SYSCALL,
     EVENT_PAGEFAULT,
     EVENT_WRITE,
+    EVENT_BRK,
     EVENT_ERROR,
     EVENT_IRQ_TIMER,
     EVENT_IRQ_IODEV,

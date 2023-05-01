@@ -2,7 +2,6 @@
 #include "am.h"
 #include "klib-macros.h"
 #include <common.h>
-#include <stddef.h>
 
 void SYS_yield(Context *c) {
   printf("yield\n");
@@ -21,6 +20,11 @@ int SYS_write(int fd, char *buf, size_t count) {
 
 void SYS_exit(Context *c) { halt(c->GPR2); }
 
+int SYS_brk(uint32_t size) {
+  malloc(size);
+  return 0;
+}
+
 void do_syscall(Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;
@@ -31,6 +35,9 @@ void do_syscall(Context *c) {
     break;
   case EVENT_NULL:
     SYS_exit(c);
+    break;
+  case EVENT_BRK:
+    c->GPRx = SYS_brk(c->GPR2);
     break;
   case EVENT_WRITE:
     c->GPRx = SYS_write(c->GPR2, (char *)c->GPR3, c->GPR4);
