@@ -49,6 +49,9 @@ int fs_open(const char *pathname, int flags, int mode) {
 
 // 从下标fd中读取相关的字符len的长度,读取到buf中
 size_t fs_read(int fd, void *buf, size_t len) {
+  if (file_table[fd].read != NULL) {
+    return file_table[fd].read(buf, 0, len);
+  }
   size_t offset = file_table[fd].disk_offset;
   size_t size = file_table[fd].size;
   size_t open_offset = file_table[fd].open_offset;
