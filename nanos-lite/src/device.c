@@ -38,6 +38,7 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   int *temp = (int *)buf;
   temp[0] = w;
   temp[1] = h;
+  printf("%d  %d", w, h);
   return 8;
 }
 
