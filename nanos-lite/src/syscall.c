@@ -2,6 +2,7 @@
 #include "klib-macros.h"
 #include <common.h>
 #include <fs.h>
+#include <stdio.h>
 
 void SYS_yield(Context *c) {
   printf("yield\n");
@@ -48,6 +49,7 @@ void do_syscall(Context *c) {
     c->GPRx = (uint32_t)SYS_brk(c->GPR2);
     break;
   case EVENT_LSEEK:
+    printf("%d  %d  %d \n", c->GPR2, c->GPR3, c->GPR4);
     c->GPRx = fs_lseek(c->GPR2, c->GPR3, c->GPR4);
     break;
   default:
