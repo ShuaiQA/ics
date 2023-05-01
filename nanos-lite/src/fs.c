@@ -55,10 +55,12 @@ size_t fs_read(int fd, void *buf, size_t len) {
   if (open_offset <= size) { // 文件的偏移量需要小于文件的大小才可以读取
     if (open_offset + len < size) { // 文件的偏移量加上读取的数字小于size
       ramdisk_read(buf, offset + open_offset, len);
+      file_table[fd].open_offset += len;
       return len;
     } else { // 文件的偏移量加上长度大于size
       int read_cnt = size - open_offset;
       ramdisk_read(buf, offset + open_offset, read_cnt);
+      file_table[fd].open_offset += len;
       return read_cnt;
     }
   }
@@ -68,6 +70,7 @@ size_t fs_read(int fd, void *buf, size_t len) {
 
 // 按照手册的说法即使是offset跳过了超出了文件的长度也应该写入
 size_t fs_write(int fd, const void *buf, size_t len) {
+  file_table[fd].open_offset += len;
   return ramdisk_write(
       buf, file_table[fd].disk_offset + file_table[fd].open_offset, len);
 }
