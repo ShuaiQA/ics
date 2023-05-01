@@ -26,7 +26,7 @@ void new_device_trace(word_t pc, word_t addr, word_t data, const char *name) {
 void print_device_trace() {
   int i = pos;
   do {
-    printf("device name [%s] pc [0x%x] addr [0x%x] data [0x%c]\n", buf[i].name,
+    printf("device name [%s] pc [0x%x] addr [0x%x] data [0x%x]\n", buf[i].name,
            buf[i].pc, buf[i].addr, buf[i].data);
     i = (i + 1) % SIZE_DEV_BUF;
   } while (i != pos);
