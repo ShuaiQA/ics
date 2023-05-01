@@ -2,7 +2,9 @@
 #include "klib-macros.h"
 #include <common.h>
 #include <fs.h>
-#include <stdio.h>
+#include <sys/time.h>
+
+void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime);
 
 void SYS_yield(Context *c) {
   printf("yield\n");
@@ -13,6 +15,14 @@ void SYS_yield(Context *c) {
 void SYS_exit(Context *c) { halt(c->GPR2); }
 
 void *SYS_brk(uint32_t size) { return (void *)malloc(size); }
+
+int SYS_gettimeofday(struct timeval *tv, struct timezone *tz) {
+  AM_TIMER_UPTIME_T rtc;
+  __am_timer_uptime(&rtc);
+  tv->tv_sec = rtc.us / 1000000;
+  tv->tv_usec = rtc.us % 1000000;
+  return 0;
+}
 
 void do_syscall(Context *c) {
   uintptr_t a[4];
@@ -44,7 +54,8 @@ void do_syscall(Context *c) {
     c->GPRx = fs_lseek(c->GPR2, c->GPR3, c->GPR4);
     break;
   case EVENT_GETTIMEOFDAY:
-    c->GPRx = fs_lseek(c->GPR2, c->GPR3, c->GPR4);
+    c->GPRx =
+        SYS_gettimeofday((struct timeval *)c->GPR2, (struct timezone *)c->GPR3);
     break;
   default:
     panic("Unhandled syscall ID = %d", a[0]);
