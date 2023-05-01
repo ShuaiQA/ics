@@ -41,7 +41,6 @@ void do_syscall(Context *c) {
     c->GPRx = fs_close(c->GPR2);
     break;
   case EVENT_LSEEK:
-    printf("%d  %d  %d \n", c->GPR2, c->GPR3, c->GPR4);
     c->GPRx = fs_lseek(c->GPR2, c->GPR3, c->GPR4);
     break;
   default:
