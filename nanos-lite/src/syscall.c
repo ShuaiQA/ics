@@ -34,6 +34,7 @@ void do_syscall(Context *c) {
     SYS_yield(c);
     break;
   case EVENT_OPEN:
+    printf("gpr2 is %p  %p  %p \n", c->GPR2, c->GPR3, c->GPR4);
     c->GPRx = fs_open((char *)c->GPR2, c->GPR3, c->GPR4);
     break;
   case EVENT_WRITE:
