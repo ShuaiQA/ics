@@ -1,14 +1,11 @@
+#include <NDL.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <sys/time.h>
 
 const unsigned long Converter = 1000 * 1000; // 1s == 1000 * 1000 us
 
-int NDL_Init(uint32_t flags);
-uint32_t NDL_GetTicks();
-
 int main() {
-  NDL_Init(0);
   uint32_t pre = NDL_GetTicks();
   while (1) {
     uint32_t next = NDL_GetTicks();
