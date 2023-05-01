@@ -14,6 +14,8 @@ int SYS_write(int fd, char *buf, size_t count) {
     for (size_t i = 0; i < count; i++) {
       putch(buf[i]);
     }
+  } else {
+    fs_write(fd, buf, count);
   }
   return count;
 }
@@ -42,6 +44,9 @@ void do_syscall(Context *c) {
     break;
   case EVENT_BRK:
     c->GPRx = (uint32_t)SYS_brk(c->GPR2);
+    break;
+  case EVENT_LSEEK:
+    c->GPRx = fs_lseek(c->GPR2, c->GPR3, c->GPR4);
     break;
   default:
     panic("Unhandled syscall ID = %d", a[0]);

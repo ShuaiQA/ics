@@ -50,6 +50,7 @@ typedef struct {
     EVENT_ERROR,
     EVENT_SYSCALL,
     EVENT_PAGEFAULT,
+    EVENT_LSEEK,
     EVENT_IRQ_TIMER,
     EVENT_IRQ_IODEV,
   } event;

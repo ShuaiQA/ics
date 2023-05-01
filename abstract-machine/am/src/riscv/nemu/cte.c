@@ -29,6 +29,10 @@ Context *__am_irq_handle(Context *c) {
       c->mepc += 4;
       ev.event = EVENT_BRK;
       break;
+    case EVENT_LSEEK:
+      c->mepc += 4;
+      ev.event = EVENT_LSEEK;
+      break;
     default:
       ev.event = EVENT_ERROR;
       break;
