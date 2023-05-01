@@ -37,6 +37,7 @@ void do_syscall(Context *c) {
     SYS_exit(c);
     break;
   case EVENT_BRK:
+    SYS_write(1, "aaaaa", 5);
     c->GPRx = SYS_brk(c->GPR2);
     break;
   case EVENT_WRITE:
