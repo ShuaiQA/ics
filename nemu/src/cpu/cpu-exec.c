@@ -110,12 +110,10 @@ static void statistic() {
 void assert_fail_msg() {
   isa_reg_display();
   // 如果出现了错误打印最近的函数调用和指令集和
-  if (nemu_state.state == NEMU_ABORT) {
-    IFDEF(CONFIG_FTRACE, print_fun_buf());
-    IFDEF(CONFIG_IRINGBUF, printIringBuf());
-    IFDEF(CONFIG_DTRACE, print_device_trace());
-    IFDEF(CONFIG_ETRACE, print_etrace());
-  }
+  IFDEF(CONFIG_FTRACE, print_fun_buf());
+  IFDEF(CONFIG_IRINGBUF, printIringBuf());
+  IFDEF(CONFIG_DTRACE, print_device_trace());
+  IFDEF(CONFIG_ETRACE, print_etrace());
   statistic();
 }
 
