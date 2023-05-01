@@ -100,6 +100,7 @@ int fs_close(int fd) { return 0; }
 
 // 初始化主要是对文件相关的读写指针进行初始化,比如说FD_STDIN,FD_STDOUT,FD_STDERR文件
 // 和其余的文件的读写是不一样的,我们需要对相应的确定的文件描述符指定确定的读写函数
+// 对文件记录表中/dev/fb的大小进行初始化
 void init_fs() {
   // TODO: initialize the size of /dev/fb
 }

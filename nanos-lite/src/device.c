@@ -38,10 +38,10 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   int *temp = (int *)buf;
   temp[0] = w;
   temp[1] = h;
-  printf("%d  %d", w, h);
   return 8;
 }
 
+// 把buf中的len字节写到屏幕上offset处,需要计算offset对应屏幕中的坐标
 size_t fb_write(const void *buf, size_t offset, size_t len) { return 0; }
 
 void init_device() {
