@@ -43,7 +43,6 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   if (g_print_step) {
     IFDEF(CONFIG_ITRACE, puts(_this->logbuf));
   }
-
   // 每一条指令执行之后都需要进行difftest_step和断点的检测
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   IFDEF(CONFIG_WATCHPOINT, find_watch());
