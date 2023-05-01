@@ -18,6 +18,7 @@ void NDL_CloseAudio();
 int NDL_PlayAudio(void *buf, int len);
 int NDL_QueryAudio();
 
+void NDL_LoadWH(int *w, int *h);
 #ifdef __cplusplus
 }
 #endif

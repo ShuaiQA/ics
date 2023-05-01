@@ -26,6 +26,14 @@ int NDL_PollEvent(char *buf, int len) {
   return fread(buf, 1, 1, fd);
 }
 
+void NDL_LoadWH(int *w, int *h) {
+  FILE *fd = fopen("/dev/events", "r");
+  int buf[2];
+  fread(buf, 4, 2, fd);
+  *w = buf[0];
+  *h = buf[1];
+}
+
 void NDL_OpenCanvas(int *w, int *h) {
   if (getenv("NWM_APP")) {
     int fbctl = 4;
