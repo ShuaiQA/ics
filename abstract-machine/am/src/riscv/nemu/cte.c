@@ -9,13 +9,17 @@ Context *__am_irq_handle(Context *c) {
     // printf("%d  %d  %p  %d %d\n", c->GPR1, c->GPR2, c->GPR3, c->GPR4,
     // c->GPRx);
     switch (c->GPR1) { // 此处感觉应该是GPR1,而不是mcause
+    case EVENT_NULL:
+      c->mepc += 4;
+      ev.event = EVENT_NULL;
+      break;
     case EVENT_YIELD:
       c->mepc += 4;
       ev.event = EVENT_YIELD;
       break;
-    case EVENT_NULL:
+    case EVENT_OPEN:
       c->mepc += 4;
-      ev.event = EVENT_NULL;
+      ev.event = EVENT_OPEN;
       break;
     case EVENT_WRITE:
       c->mepc += 4;

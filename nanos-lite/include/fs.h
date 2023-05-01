@@ -9,6 +9,7 @@
 #ifndef SEEK_SET
 enum { SEEK_SET, SEEK_CUR, SEEK_END };
 #endif
+#define ARRLEN(arr) (int)(sizeof(arr) / sizeof(arr[0]))
 
 size_t ramdisk_read(void *buf, size_t offset, size_t len);
 size_t ramdisk_write(const void *buf, size_t offset, size_t len);

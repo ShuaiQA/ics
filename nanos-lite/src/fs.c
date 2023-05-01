@@ -24,7 +24,6 @@ size_t invalid_write(const void *buf, size_t offset, size_t len) {
   return 0;
 }
 
-#define ARRLEN(arr) (int)(sizeof(arr) / sizeof(arr[0]))
 #define NR_REGEX ARRLEN(file_table)
 
 /* This is the information about all files in disk. */
