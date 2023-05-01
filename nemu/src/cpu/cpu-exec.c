@@ -47,6 +47,12 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   // 每一条指令执行之后都需要进行difftest_step和断点的检测
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   IFDEF(CONFIG_WATCHPOINT, find_watch());
+  if (nemu_state.state == NEMU_ABORT) {
+    IFDEF(CONFIG_FTRACE, print_fun_buf());
+    IFDEF(CONFIG_IRINGBUF, printIringBuf());
+    IFDEF(CONFIG_DTRACE, print_device_trace());
+    IFDEF(CONFIG_ETRACE, print_etrace());
+  }
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {
