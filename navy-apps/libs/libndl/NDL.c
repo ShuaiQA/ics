@@ -33,7 +33,8 @@ void NDL_OpenCanvas(int *w, int *h) {
   fread(whbuf, 4, 2, fd);
   *w = whbuf[0];
   *h = whbuf[1];
-  printf("%p\n", getenv("NWM_APP"));
+
+  printf("%d  %d  %p\n", *w, *h, getenv("NWM_APP"));
 
   if (getenv("NWM_APP")) {
     int fbctl = 4;
