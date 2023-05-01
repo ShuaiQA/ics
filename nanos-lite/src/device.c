@@ -21,12 +21,12 @@ size_t serial_write(const void *buf, size_t offset, size_t len) {
   return len;
 }
 
+// 根据keycode获取keyname,按下一次包含输出2次(按下和弹起)
 size_t events_read(void *buf, size_t offset, size_t len) {
   AM_INPUT_KEYBRD_T ev = io_read(AM_INPUT_KEYBRD);
   if (ev.keycode == AM_KEY_NONE) {
     return 0;
   }
-  printf("add buf is %s\n", keyname[ev.keycode]);
   strcpy(buf, keyname[ev.keycode]);
   return 1;
 }
