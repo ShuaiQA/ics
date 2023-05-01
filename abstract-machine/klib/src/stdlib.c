@@ -28,11 +28,10 @@ int atoi(const char *nptr) {
 }
 
 extern char _heap_start;
-extern char _end;
-static char *mem_brk = &_end; // 记录下一次分配的位置
+static char *mem_brk = &_heap_start; // 记录下一次分配的位置
 
 void *malloc(size_t size) {
-  printf("old_brk is %p\n", _end);
+  printf("old_brk is %p\n", _heap_start);
   char *old_brk = mem_brk;
   mem_brk += size;
   return (void *)old_brk;
