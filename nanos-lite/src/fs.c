@@ -68,11 +68,22 @@ size_t fs_read(int fd, void *buf, size_t len) {
   return -1;
 }
 
-// 按照手册的说法即使是offset跳过了超出了文件的长度也应该写入
+// 按照手册的说法即使是offset跳过了超出了文件的长度也应该写入(但是这里限制了文件的长度)
 size_t fs_write(int fd, const void *buf, size_t len) {
-  file_table[fd].open_offset += len;
-  return ramdisk_write(
-      buf, file_table[fd].disk_offset + file_table[fd].open_offset, len);
+  char *temp = (char *)buf;
+  if (fd == 1 || fd == 2) { // 代表的是stdout,stderr,输出到串口中
+    for (size_t i = 0; i < len; i++) {
+      putch(temp[i]);
+    }
+    return len;
+  } else {
+    size_t remain_size = file_table[fd].size - file_table[fd].open_offset;
+    remain_size = remain_size > len ? len : remain_size;
+    ramdisk_write(buf, file_table[fd].disk_offset + file_table[fd].open_offset,
+                  remain_size);
+    file_table[fd].open_offset += remain_size;
+    return remain_size;
+  }
 }
 
 size_t fs_lseek(int fd, size_t offset, int whence) {

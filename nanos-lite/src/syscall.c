@@ -10,17 +10,6 @@ void SYS_yield(Context *c) {
   c->GPRx = 0; // 设置GPRx的返回值
 }
 
-int SYS_write(int fd, char *buf, size_t count) {
-  if (fd == 1 || fd == 2) { // 代表的是stdout,stderr,输出到串口中
-    for (size_t i = 0; i < count; i++) {
-      putch(buf[i]);
-    }
-  } else {
-    fs_write(fd, buf, count);
-  }
-  return count;
-}
-
 void SYS_exit(Context *c) { halt(c->GPR2); }
 
 void *SYS_brk(uint32_t size) { return (void *)malloc(size); }
@@ -43,7 +32,7 @@ void do_syscall(Context *c) {
     c->GPRx = fs_read(c->GPR2, (void *)c->GPR3, c->GPR4);
     break;
   case EVENT_WRITE:
-    c->GPRx = SYS_write(c->GPR2, (char *)c->GPR3, c->GPR4);
+    c->GPRx = fs_write(c->GPR2, (char *)c->GPR3, c->GPR4);
     break;
   case EVENT_BRK:
     c->GPRx = (uint32_t)SYS_brk(c->GPR2);
