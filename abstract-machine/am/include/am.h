@@ -49,8 +49,9 @@ typedef struct {
     EVENT_BRK,
     EVENT_ERROR,
     EVENT_SYSCALL,
-    EVENT_PAGEFAULT,
+    EVENT_CLOSE,
     EVENT_LSEEK,
+    EVENT_PAGEFAULT,
     EVENT_IRQ_TIMER,
     EVENT_IRQ_IODEV,
   } event;

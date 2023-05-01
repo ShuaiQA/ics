@@ -33,6 +33,10 @@ Context *__am_irq_handle(Context *c) {
       c->mepc += 4;
       ev.event = EVENT_BRK;
       break;
+    case EVENT_CLOSE:
+      c->mepc += 4;
+      ev.event = EVENT_CLOSE;
+      break;
     case EVENT_LSEEK:
       c->mepc += 4;
       ev.event = EVENT_LSEEK;

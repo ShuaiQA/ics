@@ -31,7 +31,6 @@ int main() {
   for (i = 0; i < 500; i++) {
     fscanf(fp, "%d", &n);
     assert(n == i + 1 + 1000);
-    printf("cur i is %d \n", i);
   }
 
   fclose(fp);
