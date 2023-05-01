@@ -29,8 +29,8 @@ size_t invalid_write(const void *buf, size_t offset, size_t len) {
 /* This is the information about all files in disk. */
 static Finfo file_table[] __attribute__((used)) = {
     [FD_STDIN] = {"stdin", 0, 0, invalid_read, invalid_write},
-    [FD_STDOUT] = {"stdout", 0, 0, invalid_read, invalid_write},
-    [FD_STDERR] = {"stderr", 0, 0, invalid_read, invalid_write},
+    [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write},
+    [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write},
 #include "files.h"
 };
 
@@ -69,20 +69,15 @@ size_t fs_read(int fd, void *buf, size_t len) {
 
 // 按照手册的说法即使是offset跳过了超出了文件的长度也应该写入(但是这里限制了文件的长度)
 size_t fs_write(int fd, const void *buf, size_t len) {
-  char *temp = (char *)buf;
-  if (fd == 1 || fd == 2) { // 代表的是stdout,stderr,输出到串口中
-    for (size_t i = 0; i < len; i++) {
-      putch(temp[i]);
-    }
-    return len;
-  } else {
-    size_t remain_size = file_table[fd].size - file_table[fd].open_offset;
-    remain_size = remain_size > len ? len : remain_size;
-    ramdisk_write(buf, file_table[fd].disk_offset + file_table[fd].open_offset,
-                  remain_size);
-    file_table[fd].open_offset += remain_size;
-    return remain_size;
+  if (file_table[fd].write != NULL) {
+    return file_table[fd].write(buf, 0, len);
   }
+  size_t remain_size = file_table[fd].size - file_table[fd].open_offset;
+  remain_size = remain_size > len ? len : remain_size;
+  ramdisk_write(buf, file_table[fd].disk_offset + file_table[fd].open_offset,
+                remain_size);
+  file_table[fd].open_offset += remain_size;
+  return remain_size;
 }
 
 size_t fs_lseek(int fd, size_t offset, int whence) {
@@ -98,6 +93,8 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
 
 int fs_close(int fd) { return 0; }
 
+// 初始化主要是对文件相关的读写指针进行初始化,比如说FD_STDIN,FD_STDOUT,FD_STDERR文件
+// 和其余的文件的读写是不一样的,我们需要对相应的确定的文件描述符指定确定的读写函数
 void init_fs() {
   // TODO: initialize the size of /dev/fb
 }
