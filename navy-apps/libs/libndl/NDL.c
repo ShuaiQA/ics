@@ -29,10 +29,10 @@ int NDL_PollEvent(char *buf, int len) {
 void NDL_OpenCanvas(int *w, int *h) {
   // 根据文件设置相关的w,h
   FILE *fd = fopen("/dev/fb", "r");
-  int buf[2];
-  fread(buf, 4, 2, fd);
-  *w = buf[0];
-  *h = buf[1];
+  int whbuf[2];
+  fread(whbuf, 4, 2, fd);
+  *w = whbuf[0];
+  *h = whbuf[1];
 
   if (getenv("NWM_APP")) {
     int fbctl = 4;
