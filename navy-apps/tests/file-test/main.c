@@ -18,6 +18,7 @@ int main() {
   }
 
   fseek(fp, 0, SEEK_SET);
+  // 向文件开始输入内容
   for (i = 0; i < 500; i++) {
     fprintf(fp, "%4d\n", i + 1 + 1000);
   }
