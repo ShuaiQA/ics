@@ -95,11 +95,6 @@ static void execute(uint64_t n) {
 }
 
 static void statistic() {
-  // 如果出现了错误打印最近的函数调用和指令集和
-  IFDEF(CONFIG_FTRACE, print_fun_buf());
-  IFDEF(CONFIG_IRINGBUF, printIringBuf());
-  IFDEF(CONFIG_DTRACE, print_device_trace());
-  IFDEF(CONFIG_ETRACE, print_etrace());
   IFNDEF(CONFIG_TARGET_AM, setlocale(LC_NUMERIC, ""));
 #define NUMBERIC_FMT MUXDEF(CONFIG_TARGET_AM, "%", "%'") PRIu64
   Log("host time spent = " NUMBERIC_FMT " us", g_timer);
@@ -114,6 +109,11 @@ static void statistic() {
 
 void assert_fail_msg() {
   isa_reg_display();
+  // 如果出现了错误打印最近的函数调用和指令集和
+  IFDEF(CONFIG_FTRACE, print_fun_buf());
+  IFDEF(CONFIG_IRINGBUF, printIringBuf());
+  IFDEF(CONFIG_DTRACE, print_device_trace());
+  IFDEF(CONFIG_ETRACE, print_etrace());
   statistic();
 }
 

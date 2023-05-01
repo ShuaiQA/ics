@@ -1,6 +1,7 @@
 #include "am.h"
 #include "klib-macros.h"
 #include <common.h>
+#include <fs.h>
 
 void SYS_yield(Context *c) {
   printf("yield\n");
@@ -26,17 +27,20 @@ void do_syscall(Context *c) {
   a[0] = c->GPR1;
 
   switch (a[0]) {
-  case EVENT_YIELD:
-    SYS_yield(c);
-    break;
   case EVENT_NULL:
     SYS_exit(c);
     break;
-  case EVENT_BRK:
-    c->GPRx = (uint32_t)SYS_brk(c->GPR2);
+  case EVENT_YIELD:
+    SYS_yield(c);
+    break;
+  case EVENT_OPEN:
+    c->GPRx = fs_open((char *)c->GPR2, c->GPR3, c->GPR4);
     break;
   case EVENT_WRITE:
     c->GPRx = SYS_write(c->GPR2, (char *)c->GPR3, c->GPR4);
+    break;
+  case EVENT_BRK:
+    c->GPRx = (uint32_t)SYS_brk(c->GPR2);
     break;
   default:
     panic("Unhandled syscall ID = %d", a[0]);
