@@ -43,6 +43,9 @@ void do_syscall(Context *c) {
   case EVENT_LSEEK:
     c->GPRx = fs_lseek(c->GPR2, c->GPR3, c->GPR4);
     break;
+  case EVENT_GETTIMEOFDAY:
+    c->GPRx = fs_lseek(c->GPR2, c->GPR3, c->GPR4);
+    break;
   default:
     panic("Unhandled syscall ID = %d", a[0]);
   }

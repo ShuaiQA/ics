@@ -54,6 +54,7 @@ typedef struct {
     EVENT_PAGEFAULT,
     EVENT_IRQ_TIMER,
     EVENT_IRQ_IODEV,
+    EVENT_GETTIMEOFDAY = 19
   } event;
   uintptr_t cause, ref;
   const char *msg;

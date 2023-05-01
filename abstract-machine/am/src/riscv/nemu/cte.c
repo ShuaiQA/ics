@@ -41,6 +41,10 @@ Context *__am_irq_handle(Context *c) {
       c->mepc += 4;
       ev.event = EVENT_LSEEK;
       break;
+    case EVENT_GETTIMEOFDAY:
+      c->mepc += 4;
+      ev.event = EVENT_GETTIMEOFDAY;
+      break;
     default:
       ev.event = EVENT_ERROR;
       break;
