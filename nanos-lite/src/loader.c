@@ -1,5 +1,7 @@
 #include <elf.h>
+#include <fs.h>
 #include <proc.h>
+#include <stdlib.h>
 
 #ifdef __LP64__
 #define Elf_Ehdr Elf64_Ehdr
@@ -9,11 +11,14 @@
 #define Elf_Phdr Elf32_Phdr
 #endif
 
+// 根据文件的名字
 static uintptr_t loader(PCB *pcb, const char *filename) {
-  size_t size = get_ramdisk_size();
-  // printf("size is %x\n",size);
-  char *date = (char *)malloc(size);
-  ramdisk_read(date, 0, size);
+  int fd = fs_open(filename, 0, 0);
+  size_t size = fs_lseek(fd, 0, SEEK_SET) - fs_lseek(fd, 0, SEEK_END);
+  fs_lseek(fd, 0, SEEK_SET);
+  char *date = malloc(size);
+  fs_read(fd, date, size);
+
   Elf_Ehdr *hd = (Elf_Ehdr *)date;
   assert(*(uint32_t *)hd->e_ident == 0x464c457f);
   uintptr_t entry = hd->e_entry;
@@ -35,7 +40,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 }
 
 void naive_uload(PCB *pcb, const char *filename) {
-  uintptr_t entry = loader(pcb, filename);
+  uintptr_t entry = loader(pcb, "/bin/hello");
   Log("Jump to entry = %p", entry);
   ((void (*)())entry)();
 }

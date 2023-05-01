@@ -1,8 +1,6 @@
-#include "syscall.h"
 #include "am.h"
 #include "klib-macros.h"
 #include <common.h>
-#include <stdint.h>
 
 void SYS_yield(Context *c) {
   printf("yield\n");

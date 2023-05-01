@@ -43,11 +43,13 @@ typedef struct {
   enum {
     EVENT_NULL = 0,
     EVENT_YIELD,
-    EVENT_SYSCALL,
-    EVENT_PAGEFAULT,
+    EVENT_OPEN,
+    EVENT_READ,
     EVENT_WRITE,
     EVENT_BRK,
     EVENT_ERROR,
+    EVENT_SYSCALL,
+    EVENT_PAGEFAULT,
     EVENT_IRQ_TIMER,
     EVENT_IRQ_IODEV,
   } event;
