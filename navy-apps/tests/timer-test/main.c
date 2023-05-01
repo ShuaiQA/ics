@@ -1,25 +1,20 @@
+#include <stdint.h>
 #include <stdio.h>
 #include <sys/time.h>
 
 const unsigned long Converter = 1000 * 1000; // 1s == 1000 * 1000 us
 
-int main() {
-  struct timeval pre;
-  int ret = gettimeofday(&pre, NULL);
-  if (ret == -1) {
-    printf("Error: gettimeofday()\n");
-    return ret;
-  }
+int NDL_Init(uint32_t flags);
+uint32_t NDL_GetTicks();
 
-  struct timeval next;
-  while (ret != -1) {
-    ret = gettimeofday(&next, NULL);
-    unsigned long diff = (next.tv_sec * Converter + next.tv_usec) -
-                         (pre.tv_sec * Converter + pre.tv_usec);
-    if (diff > 0.5 * Converter) {
+int main() {
+  NDL_Init(0);
+  uint32_t pre = NDL_GetTicks();
+  while (1) {
+    uint32_t next = NDL_GetTicks();
+    if (next - pre > 0.5 * Converter) {
       printf("Hello\n");
-      pre.tv_sec = next.tv_sec;
-      pre.tv_usec = next.tv_usec;
+      pre = next;
     }
   }
   return 0;
