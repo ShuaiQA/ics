@@ -20,7 +20,7 @@
 bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
   bool ans = true;
   if (ref_r->pc != cpu.pc) {
-    printf("pc is 0x%x fact is 0x%x\n", ref_r->pc, cpu.pc);
+    printf("pc expect is 0x%x fact is 0x%x\n", ref_r->pc, cpu.pc);
     ans = false;
   }
   for (int i = 0; i < 32; i = i + 1) {
