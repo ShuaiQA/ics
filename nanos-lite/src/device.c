@@ -37,10 +37,8 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   int w = io_read(AM_GPU_CONFIG).width;
   int h = io_read(AM_GPU_CONFIG).height;
-  int *temp = (int *)buf;
-  temp[0] = w;
-  temp[1] = h;
-  return 8;
+  int c = sprintf(buf, "width:%d\nheight:%d\n", w, h);
+  return c;
 }
 
 // 根据offset确定x,y. 在当前的行中写入长度为len的数据

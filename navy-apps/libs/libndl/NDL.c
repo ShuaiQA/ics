@@ -28,10 +28,8 @@ int NDL_PollEvent(char *buf, int len) {
 
 void NDL_LoadWH(int *w, int *h) {
   FILE *fd = fopen("/proc/dispinfo", "r");
-  int buf[2];
-  fread(buf, 4, 2, fd);
-  *w = buf[0];
-  *h = buf[1];
+  fscanf(fd, "width:%d\nheight:%d\n", w, h);
+  printf("%d %d\n", *w, *h);
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
