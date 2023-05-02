@@ -1,6 +1,7 @@
 #include <elf.h>
 #include <fs.h>
 #include <proc.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -37,7 +38,7 @@ uintptr_t load_segement(char *date) {
 // 根据文件的名字
 static uintptr_t loader(PCB *pcb, const char *filename) {
   int fd = fs_open(filename, 0, 0);
-  size_t size = fs_lseek(fd, 0, SEEK_SET) - fs_lseek(fd, 0, SEEK_END);
+  size_t size = getfilesize(fd);
   fs_lseek(fd, 0, SEEK_SET);
   char *date = malloc(size);
   fs_read(fd, date, size);

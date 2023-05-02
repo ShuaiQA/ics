@@ -71,10 +71,10 @@ size_t fs_write(int fd, const void *buf, size_t len) {
   }
   size_t remain_size = file_table[fd].size - file_table[fd].open_offset;
   remain_size = remain_size > len ? len : remain_size;
-  ramdisk_write(buf, file_table[fd].disk_offset + file_table[fd].open_offset,
-                remain_size);
   file_table[fd].open_offset += remain_size;
-  return remain_size;
+  return ramdisk_write(buf,
+                       file_table[fd].disk_offset + file_table[fd].open_offset,
+                       remain_size);
 }
 
 size_t fs_lseek(int fd, size_t offset, int whence) {
@@ -90,6 +90,8 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
 }
 
 int fs_close(int fd) { return 0; }
+
+size_t getfilesize(int fd) { return file_table[fd].size; }
 
 // 初始化主要是对文件相关的读写指针进行初始化,比如说FD_STDIN,FD_STDOUT,FD_STDERR文件
 // 和其余的文件的读写是不一样的,我们需要对相应的确定的文件描述符指定确定的读写函数
