@@ -7,7 +7,6 @@
 int main() {
   NDL_Init(0);
   int w, h;
-  NDL_LoadWH(&w, &h);
   void *bmp = BMP_Load("/share/pictures/projectn.bmp", &w, &h);
   assert(bmp);
   NDL_OpenCanvas(&w, &h);

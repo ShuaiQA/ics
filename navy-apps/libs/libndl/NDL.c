@@ -29,7 +29,6 @@ int NDL_PollEvent(char *buf, int len) {
 void NDL_LoadWH(int *w, int *h) {
   FILE *fd = fopen("/proc/dispinfo", "r");
   fscanf(fd, "width:%d\nheight:%d\n", w, h);
-  printf("%d %d\n", *w, *h);
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
@@ -58,7 +57,19 @@ void NDL_OpenCanvas(int *w, int *h) {
 
 // 根据相关的内容进行向屏幕中写入像素
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
-  FILE *fd = fopen("/dev/fb", "r+");
+  char buf[20];
+  int c = sprintf(buf, "x:%d y:%d w:%d h:%d", x, y, w, h);
+  FILE *fd = fopen("/proc/xywh", "r+");
+  fwrite(buf, 20, 1, fd);
+  fclose(fd);
+
+  char read[20];
+  fd = fopen("/proc/xywh", "r+");
+  int x0, y0, w0, h0;
+  fscanf(fd, "x:%d y:%d w:%d h:%d", &x0, &y0, &w0, &h0);
+  printf("%d %d %d %d\n", x0, y0, w0, h0);
+
+  // fd = fopen("/dev/fb", "r+");
 }
 
 void NDL_OpenAudio(int freq, int channels, int samples) {}
