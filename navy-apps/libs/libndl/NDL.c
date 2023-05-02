@@ -63,6 +63,7 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   fwrite(buf, 20, 1, fd);
   fclose(fd);
 
+  printf("cur %d %d %d %d\n", x, y, w, h);
   char read[20];
   fd = fopen("/proc/xywh", "r+");
   int x0, y0, w0, h0;
