@@ -45,7 +45,7 @@ void do_syscall(Context *c) {
     c->GPRx = fs_write(c->GPR2, (char *)c->GPR3, c->GPR4);
     break;
   case EVENT_BRK:
-    c->GPRx = (uint32_t)SYS_brk(c->GPR2);
+    c->GPRx = (uintptr_t)SYS_brk(c->GPR2);
     break;
   case EVENT_CLOSE:
     c->GPRx = fs_close(c->GPR2);
