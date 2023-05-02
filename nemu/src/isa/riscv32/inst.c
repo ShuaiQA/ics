@@ -95,12 +95,6 @@ static int decode_exec(Decode *s) {
                (BITS(imm, 19, 12) << 11) | (SEXT(BITS(imm, 31, 31), 1) << 19));
           R(rd) = cpu.pc + 4; s->dnpc = cpu.pc + (imm << 1));
 
-  // [0x80000ec8]: jalr      a3
-  //       0000000 00000 01101 000 00001 1100111
-  //  pc expect is 0x80000ff0 fact is 0x57bafa
-  //  pc is 0x57bafa reg ra expect is 0x80001098 fact is 0x80000ec8
-  // a3      0x57bafa
-
   INSTPAT("??????? ????? ????? 000 ????? 1100111", ret_jalr, I,
           s->dnpc = (src1 + imm) & ~1, R(rd) = cpu.pc + 4);
   // 跳转指令使用ra寄存器保存下一条返回指令
