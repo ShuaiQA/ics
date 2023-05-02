@@ -26,16 +26,16 @@ int NDL_PollEvent(char *buf, int len) {
   return fread(buf, 1, 1, fd);
 }
 
-void NDL_OpenCanvas(int *w, int *h) {
-  // 根据文件设置相关的w,h
+void NDL_LoadWH(int *w, int *h) {
   FILE *fd = fopen("/dev/fb", "r");
-  int whbuf[2];
-  fread(whbuf, 4, 2, fd);
-  *w = whbuf[0];
-  *h = whbuf[1];
+  int buf[2];
+  fread(buf, 4, 2, fd);
+  *w = buf[0];
+  *h = buf[1];
+}
 
-  printf("%d  %d  %p\n", *w, *h, getenv("NWM_APP"));
-
+void NDL_OpenCanvas(int *w, int *h) {
+  printf("hello\n");
   if (getenv("NWM_APP")) {
     int fbctl = 4;
     fbdev = 5;
@@ -44,9 +44,7 @@ void NDL_OpenCanvas(int *w, int *h) {
     char buf[64];
     int len = sprintf(buf, "%d %d", screen_w, screen_h);
     // let NWM resize the window and create the frame buffer
-    printf("hello1\n");
     write(fbctl, buf, len);
-    printf("hello2\n");
     while (1) {
       // 3 = evtdev
       int nread = read(3, buf, sizeof(buf) - 1);
