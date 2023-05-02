@@ -58,7 +58,7 @@ void NDL_OpenCanvas(int *w, int *h) {
   }
 }
 
-// 根据相关的内容进行向屏幕中写入像素
+// 根据相关的内容进行向屏幕中写入像素(图省事利用前四个像素进行传递数据)
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   pixels[0] = x;
   pixels[1] = y;

@@ -39,10 +39,10 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   return c;
 }
 
-// 根据offset确定x,y. 在当前的行中写入长度为len的数据
+// 注意我使用的是pixels数组中的前4个整数代表着对应x,y,w,h的值
+// 所以说图片的前4个像素是不准确的,但是在几万个像素中删去4个无所谓(图个省事吧...)
 size_t fb_write(const void *buf, size_t offset, size_t len) {
   uint32_t *pixels = (uint32_t *)buf;
-  printf("write len is %d\n", len);
   io_write(AM_GPU_FBDRAW, pixels[0], pixels[1], buf, pixels[2], pixels[3],
            true);
   return len;
