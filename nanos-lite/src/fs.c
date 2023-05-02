@@ -1,4 +1,6 @@
 #include <fs.h>
+#include <stddef.h>
+#include <stdio.h>
 
 typedef size_t (*ReadFn)(void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn)(const void *buf, size_t offset, size_t len);
@@ -56,20 +58,10 @@ size_t fs_read(int fd, void *buf, size_t len) {
   size_t offset = file_table[fd].disk_offset;
   size_t size = file_table[fd].size;
   size_t open_offset = file_table[fd].open_offset;
-  if (open_offset <= size) { // 文件的偏移量需要小于文件的大小才可以读取
-    if (open_offset + len < size) { // 文件的偏移量加上读取的数字小于size
-      ramdisk_read(buf, offset + open_offset, len);
-      file_table[fd].open_offset += len;
-      return len;
-    } else { // 文件的偏移量加上长度大于size
-      int read_cnt = size - open_offset;
-      ramdisk_read(buf, offset + open_offset, read_cnt);
-      file_table[fd].open_offset += len;
-      return read_cnt;
-    }
-  }
-  // 偏移量大于等于size返回-1
-  return -1;
+  size_t remain_size = size - open_offset;
+  size_t result_size = remain_size > len ? len : remain_size;
+  file_table[fd].open_offset += result_size;
+  return ramdisk_read(buf, offset + open_offset, result_size);
 }
 
 // 按照手册的说法即使是offset跳过了超出了文件的长度也应该写入(但是这里限制了文件的长度)
@@ -93,6 +85,7 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
   } else {
     file_table[fd].open_offset = file_table[fd].size + offset;
   }
+  printf("open offset %d\n ", file_table[fd].open_offset);
   return file_table[fd].open_offset;
 }
 
