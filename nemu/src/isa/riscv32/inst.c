@@ -97,6 +97,9 @@ static int decode_exec(Decode *s) {
 
   // [0x80000ec8]: jalr      a3
   //       0000000 00000 01101 000 00001 1100111
+  //  pc expect is 0x80000ff0 fact is 0x57bafa
+  //  pc is 0x57bafa reg ra expect is 0x80001098 fact is 0x80000ec8
+  // a3      0x57bafa
 
   INSTPAT("??????? ????? ????? 000 ????? 1100111", ret_jalr, I,
           s->dnpc = (src1 + imm) & ~1, R(rd) = cpu.pc + 4);
