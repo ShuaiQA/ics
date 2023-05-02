@@ -27,7 +27,7 @@ int NDL_PollEvent(char *buf, int len) {
 }
 
 void NDL_LoadWH(int *w, int *h) {
-  FILE *fd = fopen("/dev/fb", "r");
+  FILE *fd = fopen("/proc/dispinfo", "r");
   int buf[2];
   fread(buf, 4, 2, fd);
   *w = buf[0];
@@ -36,6 +36,7 @@ void NDL_LoadWH(int *w, int *h) {
 
 void NDL_OpenCanvas(int *w, int *h) {
   if (getenv("NWM_APP")) {
+    printf("NWM_APP hello");
     int fbctl = 4;
     fbdev = 5;
     screen_w = *w;
@@ -57,7 +58,10 @@ void NDL_OpenCanvas(int *w, int *h) {
   }
 }
 
-void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {}
+// 根据相关的内容进行向屏幕中写入像素
+void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
+  FILE *fd = fopen("/dev/fb", "r+");
+}
 
 void NDL_OpenAudio(int freq, int channels, int samples) {}
 

@@ -43,19 +43,12 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   return 8;
 }
 
-// 把buf中的len字节写到屏幕上offset处,需要计算offset对应屏幕中的坐标
-// 需要从offset中计算出x,y,w,h
+// 根据offset确定x,y. 在当前的行中写入长度为len的数据
 size_t fb_write(const void *buf, size_t offset, size_t len) {
-  // 我们规定offset的其中的低30位一次代表着x,y,w.
-  // 其中h可以由len/w获得
-  size_t w = offset % 1024;
-  offset /= 1024;
-  size_t y = offset % 1024;
-  offset /= 1024;
-  size_t x = offset % 1024;
-  offset /= 1024;
-  size_t h = len / w;
-  io_write(AM_GPU_FBDRAW, x, y, buf, w, h, true);
+  int w = io_read(AM_GPU_CONFIG).width;
+  size_t hang = offset / w;
+  size_t lie = offset % w;
+  io_write(AM_GPU_FBDRAW, hang, lie, buf, len, 1, true);
   return len;
 }
 
