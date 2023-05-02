@@ -1,9 +1,12 @@
 #include <assert.h>
+#include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <sys/time.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 static int evtdev = -1;
@@ -67,10 +70,10 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
     strncpy((char *)next + offset, (char *)pixels + i * w, w);
     offset += pw;
   }
-  FILE *fd = fopen("/dev/fb", "r+");
-  fwrite(next, pw * ph * sizeof(uint32_t), 1, fd);
+  int fd = open("/dev/fb", O_RDWR);
+  write(fd, next, pw * ph * sizeof(uint32_t));
   free(next);
-  fclose(fd);
+  close(fd);
 }
 
 void NDL_OpenAudio(int freq, int channels, int samples) {}
