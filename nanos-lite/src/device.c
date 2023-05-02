@@ -44,9 +44,8 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 // 根据offset确定x,y. 在当前的行中写入长度为len的数据
 size_t fb_write(const void *buf, size_t offset, size_t len) {
   int w = io_read(AM_GPU_CONFIG).width;
-  size_t hang = offset / w;
-  size_t lie = offset % w;
-  io_write(AM_GPU_FBDRAW, hang, lie, buf, len, 1, true);
+  int h = io_read(AM_GPU_CONFIG).height;
+  io_write(AM_GPU_FBDRAW, 0, 0, buf, w, h, true);
   return len;
 }
 

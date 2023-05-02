@@ -14,7 +14,7 @@ typedef struct {
   size_t open_offset;
 } Finfo;
 
-enum { FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENT, FD_FB, FD_DISPXYWH, FD_DISP };
+enum { FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENT, FD_FB, FD_DISP };
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
@@ -37,8 +37,6 @@ static Finfo file_table[] __attribute__((used)) = {
     [FD_EVENT] = {"/dev/events", 0, 0, events_read, invalid_write},
     // 屏幕大小的文件
     [FD_FB] = {"/dev/fb", 0, 0, invalid_read, fb_write},
-    // 每一次向屏幕中写入数据需要x,y,w,h数据记录当前文件中方便查找
-    [FD_DISPXYWH] = {"/proc/xywh", 20, 0, NULL, NULL},
     [FD_DISP] = {"/proc/dispinfo", 8, 0, dispinfo_read, NULL},
 
 #include "files.h"

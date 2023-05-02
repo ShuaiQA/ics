@@ -33,7 +33,7 @@ void NDL_LoadWH(int *w, int *h) {
 
 void NDL_OpenCanvas(int *w, int *h) {
   if (getenv("NWM_APP")) {
-    printf("NWM_APP hello");
+    printf("NWM_APP env?");
     int fbctl = 4;
     fbdev = 5;
     screen_w = *w;
@@ -57,8 +57,19 @@ void NDL_OpenCanvas(int *w, int *h) {
 
 // 根据相关的内容进行向屏幕中写入像素
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
-
-  // fd = fopen("/dev/fb", "r+");
+  int pw, ph;
+  NDL_LoadWH(&pw, &ph); // 获取屏幕的信息
+  uint32_t *next = malloc(pw * ph * sizeof(uint32_t));
+  // 根据相关的pixels和x,y,w,h设置next全部的内容,没有的填充0
+  int offset = pw * y + x;
+  for (int i = 0; i < h; i++) {
+    strncpy((char *)next + offset, (char *)pixels + i * w, w);
+    offset += pw;
+  }
+  FILE *fd = fopen("/dev/fb", "r+");
+  fwrite(next, pw * ph * sizeof(uint32_t), 1, fd);
+  free(next);
+  fclose(fd);
 }
 
 void NDL_OpenAudio(int freq, int channels, int samples) {}
