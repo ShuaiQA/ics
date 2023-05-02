@@ -1,7 +1,5 @@
 #include "klib-macros.h"
 #include <common.h>
-#include <stddef.h>
-#include <stdio.h>
 
 #if defined(MULTIPROGRAM) && !defined(TIME_SHARING)
 #define MULTIPROGRAM_YIELD() yield()
@@ -43,10 +41,10 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 
 // 根据offset确定x,y. 在当前的行中写入长度为len的数据
 size_t fb_write(const void *buf, size_t offset, size_t len) {
-  int w = io_read(AM_GPU_CONFIG).width;
-  int h = io_read(AM_GPU_CONFIG).height;
+  uint32_t *pixels = (uint32_t *)buf;
   printf("write len is %d\n", len);
-  io_write(AM_GPU_FBDRAW, 0, 0, buf, w, h, true);
+  io_write(AM_GPU_FBDRAW, pixels[0], pixels[1], buf, pixels[2], pixels[3],
+           true);
   return len;
 }
 

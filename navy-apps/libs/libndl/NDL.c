@@ -60,20 +60,12 @@ void NDL_OpenCanvas(int *w, int *h) {
 
 // 根据相关的内容进行向屏幕中写入像素
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
-  int pw, ph;
-  NDL_LoadWH(&pw, &ph); // 获取屏幕的信息
-  printf("%d  %d \n", pw, ph);
-  uint32_t *next = malloc(pw * ph * sizeof(uint32_t));
-  memset(next, 0, pw * ph * sizeof(uint32_t));
-  // 根据相关的pixels和x,y,w,h设置next全部的内容,没有的填充0
-  int offset = pw * y + x;
-  for (int i = 0; i < h; i++) {
-    strncpy((char *)next + offset, (char *)pixels + i * w, w);
-    offset += pw;
-  }
+  pixels[0] = x;
+  pixels[1] = y;
+  pixels[2] = w;
+  pixels[3] = h;
   int fd = open("/dev/fb", O_RDWR);
-  write(fd, next, pw * ph * sizeof(uint32_t));
-  free(next);
+  write(fd, pixels, w * h * sizeof(uint32_t));
   close(fd);
 }
 
