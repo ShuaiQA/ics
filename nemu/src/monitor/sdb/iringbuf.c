@@ -34,7 +34,7 @@ void new_isa(word_t pc, word_t isa_val) {
 void printIringBuf() {
   int i = pos;
   do {
-    printf("[0x%08x]: %s   ", buf[i].pc, buf[i].action);
+    printf("[0x%08x]: %s \t", buf[i].pc, buf[i].action);
     print_isa(buf[i].isa_val, 0);
     printf("\n");
     i = (i + 1) % SIZE_ISA_BUF;
