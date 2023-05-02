@@ -64,6 +64,7 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   NDL_LoadWH(&pw, &ph); // 获取屏幕的信息
   printf("%d  %d \n", pw, ph);
   uint32_t *next = malloc(pw * ph * sizeof(uint32_t));
+  memset(next, 0, pw * ph * sizeof(uint32_t));
   // 根据相关的pixels和x,y,w,h设置next全部的内容,没有的填充0
   int offset = pw * y + x;
   for (int i = 0; i < h; i++) {
