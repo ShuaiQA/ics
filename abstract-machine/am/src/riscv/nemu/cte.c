@@ -6,49 +6,12 @@ static Context *(*user_handler)(Event, Context *) = NULL;
 Context *__am_irq_handle(Context *c) {
   if (user_handler) {
     Event ev = {0};
-    // printf("%d  %d  %p  %d %d\n", c->GPR1, c->GPR2, c->GPR3, c->GPR4,
-    // c->GPRx);
-    switch (c->GPR1) { // 此处感觉应该是GPR1,而不是mcause
-    case EVENT_NULL:
-      c->mepc += 4;
-      ev.event = EVENT_NULL;
-      break;
-    case EVENT_YIELD:
-      c->mepc += 4;
-      ev.event = EVENT_YIELD;
-      break;
-    case EVENT_OPEN:
-      c->mepc += 4;
-      ev.event = EVENT_OPEN;
-      break;
-    case EVENT_READ:
-      c->mepc += 4;
-      ev.event = EVENT_READ;
-      break;
-    case EVENT_WRITE:
-      c->mepc += 4;
-      ev.event = EVENT_WRITE;
-      break;
-    case EVENT_BRK:
-      c->mepc += 4;
-      ev.event = EVENT_BRK;
-      break;
-    case EVENT_CLOSE:
-      c->mepc += 4;
-      ev.event = EVENT_CLOSE;
-      break;
-    case EVENT_LSEEK:
-      c->mepc += 4;
-      ev.event = EVENT_LSEEK;
-      break;
-    case EVENT_GETTIMEOFDAY:
-      c->mepc += 4;
-      ev.event = EVENT_GETTIMEOFDAY;
-      break;
-    default:
-      ev.event = EVENT_ERROR;
-      break;
-    }
+
+    // 目前都是cpu自增4的
+    c->mepc += 4;
+    // 设置异常处理情况
+    ev.event = c->GPR1;
+
     c = user_handler(ev, c);
     assert(c != NULL);
   }

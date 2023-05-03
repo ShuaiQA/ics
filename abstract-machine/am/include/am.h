@@ -20,42 +20,9 @@ typedef struct {
 // Arch-dependent processor context
 typedef struct Context Context;
 
-/**
- * mcause 可能的值
- * Instruction address misaligned
- * Instruction access fault
- * Illegal Instruction
- * Breakpoint
- * Load address misaligned
- * Load access fault
- * Store/AMO address misaligned
- * Store/AMO access fault
- * Environment call from U-mode
- * Environment call from S-mode
- * Environment call from M-mode   11
- * Instruction page fault
- * Load page fault
- * Store/AMO page fault
- */
-
 // An event of type @event, caused by @cause of pointer @ref
 typedef struct {
-  enum {
-    EVENT_NULL = 0,
-    EVENT_YIELD,
-    EVENT_OPEN,
-    EVENT_READ,
-    EVENT_WRITE,
-    EVENT_BRK,
-    EVENT_ERROR,
-    EVENT_SYSCALL,
-    EVENT_CLOSE,
-    EVENT_LSEEK,
-    EVENT_PAGEFAULT,
-    EVENT_IRQ_TIMER,
-    EVENT_IRQ_IODEV,
-    EVENT_GETTIMEOFDAY = 19
-  } event;
+  int event;
   uintptr_t cause, ref;
   const char *msg;
 } Event;
