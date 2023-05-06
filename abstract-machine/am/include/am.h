@@ -20,6 +20,16 @@ typedef struct {
 // Arch-dependent processor context
 typedef struct Context Context;
 
+enum {
+  EVENT_NULL = 0,
+  EVENT_YIELD,
+  EVENT_SYSCALL,
+  EVENT_PAGEFAULT,
+  EVENT_ERROR,
+  EVENT_IRQ_TIMER,
+  EVENT_IRQ_IODEV
+};
+
 // An event of type @event, caused by @cause of pointer @ref
 typedef struct {
   int event;
