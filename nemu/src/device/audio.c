@@ -57,8 +57,6 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
   case reg_samples * 4:
     loaded_wav_spec.samples = audio_base[reg_samples];
     break;
-  default:
-    panic("do not support offset = %d", offset);
   }
   audio_pos = sbuf;
   audio_base[reg_count] = 0;
