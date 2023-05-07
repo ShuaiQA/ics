@@ -14,6 +14,7 @@
  ***************************************************************************************/
 
 #include <SDL2/SDL.h>
+#include <assert.h>
 #include <common.h>
 #include <device/map.h>
 #include <string.h>
@@ -22,57 +23,51 @@ enum {
   reg_freq,
   reg_channels,
   reg_samples,
-  reg_sbuf_size,
+  reg_sbuf_size, // 有用音频的长度
   reg_init,
-  reg_count,
+  reg_rpos, // 下一个读取的位置下标(环形缓冲区)
   nr_reg
 };
 
 static uint32_t *audio_base = NULL; // 寄存器
 static uint8_t *sbuf = NULL;        // 缓冲区
 
-static Uint8 *audio_pos;
+SDL_AudioSpec loaded_wav_spec;
 
+// 根据环形缓冲区读取数据
 void audio_callback(void *userdata, Uint8 *stream, int len) {
-  if (audio_base[reg_count] >= audio_base[reg_sbuf_size]) {
+  if (audio_base[reg_sbuf_size] <= 0) // 当前没有数据
     return;
+  // 防止读取的长度大于总的长度,设置len
+  if (audio_base[reg_sbuf_size] < len) // 防止读取的长度超过当前数据
+    len = audio_base[reg_sbuf_size];
+  // 拷贝一定len字节到stream中
+  int remain = CONFIG_SB_SIZE - audio_base[reg_rpos];
+  if (remain < len) {
+    memcpy(stream, sbuf + audio_base[reg_rpos], remain);
+    memcpy(stream + remain, sbuf, len - remain);
+    audio_base[reg_rpos] = len - remain;
+  } else {
+    memcpy(stream, sbuf + audio_base[reg_rpos], len);
+    audio_base[reg_rpos] += len;
   }
-  if (audio_base[reg_count] + len > audio_base[reg_sbuf_size])
-    len = audio_base[reg_sbuf_size] - audio_base[reg_count];
-  memcpy(stream, audio_pos, len);
-  audio_pos += len;
-  audio_base[reg_count] += len;
+  audio_base[reg_sbuf_size] -= len;
 }
 
 // 如果偏移量在前面的三个寄存器需要设置相应的初始化
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
-  SDL_AudioSpec loaded_wav_spec;
-  switch (offset) {
-  case reg_freq * 4:
+  if (offset == 0x10 && is_write) { // 进行初始化
     loaded_wav_spec.freq = audio_base[reg_freq];
-    break;
-  case reg_channels * 4:
     loaded_wav_spec.channels = audio_base[reg_channels];
-    break;
-  case reg_samples * 4:
     loaded_wav_spec.samples = audio_base[reg_samples];
-    break;
+    loaded_wav_spec.callback = audio_callback;
+    loaded_wav_spec.userdata = sbuf;
+    SDL_OpenAudio(&loaded_wav_spec, NULL);
+  } else {
+    SDL_PauseAudio(0);
+    while (audio_base[reg_sbuf_size] > 0)
+      ;
   }
-  audio_pos = sbuf;
-  audio_base[reg_count] = 0;
-  loaded_wav_spec.callback = audio_callback;
-  loaded_wav_spec.userdata = sbuf;
-  int iscapture = 0;
-  int allowed_changes = 0;
-
-  const char *device_name = SDL_GetAudioDeviceName(0, iscapture);
-  SDL_AudioDeviceID device = SDL_OpenAudioDevice(
-      device_name, iscapture, &loaded_wav_spec, NULL, allowed_changes);
-  SDL_PauseAudioDevice(device, 0);
-  while (audio_base[reg_count] < audio_base[reg_sbuf_size]) {
-    SDL_Delay(100);
-  }
-  SDL_CloseAudioDevice(device);
 }
 
 void init_audio() {
