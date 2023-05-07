@@ -66,8 +66,6 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
     SDL_OpenAudio(&loaded_wav_spec, NULL);
   } else {
     SDL_PauseAudio(0);
-    while (audio_base[reg_sbuf_size] > 0)
-      ;
   }
 }
 
