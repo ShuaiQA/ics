@@ -48,9 +48,11 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
     memcpy(stream, sbuf + audio_base[reg_rpos], remain);
     memcpy(stream + remain, sbuf, len - remain);
     audio_base[reg_rpos] = len - remain;
+    assert(audio_base[reg_rpos] <= 0x10000);
   } else {
     memcpy(stream, sbuf + audio_base[reg_rpos], len);
     audio_base[reg_rpos] += len;
+    assert(audio_base[reg_rpos] <= 0x10000);
   }
   audio_base[reg_sbuf_size] -= len;
 }
