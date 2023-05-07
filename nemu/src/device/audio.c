@@ -17,6 +17,7 @@
 #include <assert.h>
 #include <common.h>
 #include <device/map.h>
+#include <stdio.h>
 #include <string.h>
 
 enum {
@@ -65,6 +66,7 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
     SDL_OpenAudio(&loaded_wav_spec, NULL);
   } else {
     SDL_PauseAudio(0);
+    printf("size is %d\n", audio_base[reg_sbuf_size]);
     while (audio_base[reg_sbuf_size] > 0)
       ;
   }
