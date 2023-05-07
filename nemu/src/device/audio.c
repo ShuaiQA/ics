@@ -64,7 +64,7 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
     loaded_wav_spec.callback = audio_callback;
     loaded_wav_spec.userdata = sbuf;
     SDL_OpenAudio(&loaded_wav_spec, NULL);
-  } else {
+  } else if (offset == 0x0c) {
     SDL_PauseAudio(0);
   }
 }
