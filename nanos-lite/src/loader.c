@@ -35,23 +35,19 @@ uintptr_t load_segement(char *date) {
   return entry;
 }
 
-// 根据文件的名字
-// static uintptr_t loader(PCB *pcb, const char *filename) {
-//   int fd = fs_open(filename, 0, 0);
-//   size_t size = getfilesize(fd);
-//   fs_lseek(fd, 0, SEEK_SET);
-//   char *date = malloc(size);
-//   fs_read(fd, date, size);
-//   uintptr_t entry = load_segement(date);
-//   fs_close(fd);
-//   return entry;
-// }
+static uintptr_t loader(PCB *pcb, const char *filename) {
+  int fd = fs_open(filename, 0, 0);
+  size_t size = getfilesize(fd);
+  fs_lseek(fd, 0, SEEK_SET);
+  char *date = malloc(size);
+  fs_read(fd, date, size);
+  uintptr_t entry = load_segement(date);
+  fs_close(fd);
+  return entry;
+}
 
 void naive_uload(PCB *pcb, const char *filename) {
-  // uintptr_t entry = loader(pcb, "/bin/bmp-test");
-  char buf[6000];
-  ramdisk_read(buf, 0, 5676);
-  uintptr_t entry = load_segement(buf);
+  uintptr_t entry = loader(pcb, filename);
   Log("Jump to entry = %p", entry);
   ((void (*)())entry)();
 }
