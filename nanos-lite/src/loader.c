@@ -35,6 +35,7 @@ uintptr_t load_segement(char *date) {
   return entry;
 }
 
+// 根据文件的名字
 static uintptr_t loader(PCB *pcb, const char *filename) {
   int fd = fs_open(filename, 0, 0);
   size_t size = getfilesize(fd);
