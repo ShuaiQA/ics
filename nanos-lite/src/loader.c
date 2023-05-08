@@ -50,7 +50,7 @@ uintptr_t load_segement(char *date) {
 void naive_uload(PCB *pcb, const char *filename) {
   // uintptr_t entry = loader(pcb, "/bin/bmp-test");
   char buf[6000];
-  ramdisk_read(buf, 0, 6000);
+  ramdisk_read(buf, 0, 5676);
   uintptr_t entry = load_segement(buf);
   Log("Jump to entry = %p", entry);
   ((void (*)())entry)();
