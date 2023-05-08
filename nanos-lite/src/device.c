@@ -48,7 +48,7 @@ size_t fb_write(void *buf, size_t offset, size_t len) {
   int x = offset / 4 % 400;
   int y = offset / 4 / 400;
   printf("offset x %d y %d len %d \n", x, y, len);
-  if (y > 298) {
+  if (y > 290) {
     return len;
   }
   io_write(AM_GPU_FBDRAW, x, y, buf, len, 1, true);
