@@ -42,16 +42,10 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   return c;
 }
 
-// 注意我使用的是pixels数组中的前4个整数代表着对应x,y,w,h的值
-// 所以说图片的前4个像素是不准确的,但是在几万个像素中删去4个无所谓(图个省事吧...)
 size_t fb_write(void *buf, size_t offset, size_t len) {
   int x = offset / 4 % 400;
   int y = offset / 4 / 400;
-  printf("offset x %d y %d len %d \n", x, y, len);
-  if (y > 290) {
-    return len;
-  }
-  io_write(AM_GPU_FBDRAW, x, y, buf, len, 1, true);
+  io_write(AM_GPU_FBDRAW, x, y, buf, len / 4, 1, true);
   return len;
 }
 
