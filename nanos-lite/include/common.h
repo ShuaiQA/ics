@@ -14,6 +14,8 @@
 
 #include <debug.h>
 
+#include <sys/types.h>
+
 void do_syscall(Context *c);
 
 #endif
