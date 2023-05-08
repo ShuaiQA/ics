@@ -55,7 +55,7 @@ int fs_open(const char *pathname, int flags, int mode) {
 // 从下标fd中读取相关的字符len的长度,读取到buf中
 size_t fs_read(int fd, void *buf, size_t len) {
   if (file_table[fd].read != NULL) {
-    return file_table[fd].read(buf, 0, len);
+    return file_table[fd].read(buf, file_table[fd].open_offset, len);
   }
   size_t offset = file_table[fd].disk_offset;
   size_t size = file_table[fd].size;
@@ -69,7 +69,7 @@ size_t fs_read(int fd, void *buf, size_t len) {
 // 按照手册的说法即使是offset跳过了超出了文件的长度也应该写入(但是这里限制了文件的长度)
 size_t fs_write(int fd, const void *buf, size_t len) {
   if (file_table[fd].write != NULL) {
-    return file_table[fd].write(buf, 0, len);
+    return file_table[fd].write(buf, file_table[fd].open_offset, len);
   }
   size_t remain_size = file_table[fd].size - file_table[fd].open_offset;
   remain_size = remain_size > len ? len : remain_size;
@@ -82,13 +82,10 @@ size_t fs_write(int fd, const void *buf, size_t len) {
 size_t fs_lseek(int fd, size_t offset, int whence) {
   if (whence == SEEK_SET) {
     file_table[fd].open_offset = offset;
-    printf("set offset  \n");
   } else if (whence == SEEK_CUR) {
     file_table[fd].open_offset += offset;
-    printf("set offset  \n");
   } else {
     file_table[fd].open_offset = file_table[fd].size + offset;
-    printf("set offset  \n");
   }
   // printf("open offset %d\n ", file_table[fd].open_offset);
   return file_table[fd].open_offset;
