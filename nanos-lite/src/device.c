@@ -2,6 +2,7 @@
 #include "klib-macros.h"
 #include <common.h>
 #include <stddef.h>
+#include <stdio.h>
 
 #if defined(MULTIPROGRAM) && !defined(TIME_SHARING)
 #define MULTIPROGRAM_YIELD() yield()
@@ -46,6 +47,7 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 size_t fb_write(void *buf, size_t offset, size_t len) {
   int x = offset / 4 % 400;
   int y = offset / 4 / 400;
+  printf("len is %d\n", len);
   io_write(AM_GPU_FBDRAW, x, y, buf, len, 1, true);
   return len;
 }
