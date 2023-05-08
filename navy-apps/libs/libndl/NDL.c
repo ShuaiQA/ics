@@ -25,8 +25,9 @@ uint32_t NDL_GetTicks() {
 }
 
 int NDL_PollEvent(char *buf, int len) {
-  FILE *fd = fopen("/dev/events", "r");
-  return fread(buf, 1, 1, fd);
+  int fd = open("/dev/events", O_RDONLY);
+  assert(fd);
+  return read(fd, buf, 10);
 }
 
 void NDL_LoadWH(int *w, int *h) {
@@ -34,7 +35,13 @@ void NDL_LoadWH(int *w, int *h) {
   fscanf(fd, "width:%d\nheight:%d\n", w, h);
 }
 
+// 打开一张(*w) X (*h)的画布
+// 如果*w和*h均为0, 则将系统全屏幕作为画布, 并将*w和*h分别设为系统屏幕的大小
 void NDL_OpenCanvas(int *w, int *h) {
+  if (*w == 0 && *h == 0) {
+    *w = 400;
+    *h = 300;
+  }
   if (getenv("NWM_APP")) {
     printf("NWM_APP env?");
     int fbctl = 4;
@@ -58,10 +65,12 @@ void NDL_OpenCanvas(int *w, int *h) {
   }
 }
 
-// 根据相关的内容进行向屏幕中写入像素(图省事利用前四个像素进行传递数据)
+// 主要是注意像素是使用4字节表示在写入的时候需要注意4
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   int fd = open("/dev/fb", O_RDWR);
   int sw = 400, sh = 300;
+  printf("%d %d %d %d\n", x, y, w, h);
+  printf("NDL_DrawRect\n");
   lseek(fd, (y * sw + x) * 4, SEEK_SET); // 初始的情况
   for (int i = 0; i < h; i++) {
     lseek(fd, ((y + i) * sw + x) * 4, SEEK_SET); // 初始的情况

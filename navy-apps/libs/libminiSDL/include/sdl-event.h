@@ -1,21 +1,52 @@
 #ifndef __SDL_EVENT_H__
 #define __SDL_EVENT_H__
 
-#define _KEYS(_) \
-  _(ESCAPE) _(F1) _(F2) _(F3) _(F4) _(F5) _(F6) _(F7) _(F8) _(F9) _(F10) _(F11) _(F12) \
-  _(GRAVE) _(1) _(2) _(3) _(4) _(5) _(6) _(7) _(8) _(9) _(0) _(MINUS) _(EQUALS) _(BACKSPACE) \
-  _(TAB) _(Q) _(W) _(E) _(R) _(T) _(Y) _(U) _(I) _(O) _(P) _(LEFTBRACKET) _(RIGHTBRACKET) _(BACKSLASH) \
-  _(CAPSLOCK) _(A) _(S) _(D) _(F) _(G) _(H) _(J) _(K) _(L) _(SEMICOLON) _(APOSTROPHE) _(RETURN) \
-  _(LSHIFT) _(Z) _(X) _(C) _(V) _(B) _(N) _(M) _(COMMA) _(PERIOD) _(SLASH) _(RSHIFT) \
-  _(LCTRL) _(APPLICATION) _(LALT) _(SPACE) _(RALT) _(RCTRL) \
-  _(UP) _(DOWN) _(LEFT) _(RIGHT) _(INSERT) _(DELETE) _(HOME) _(END) _(PAGEUP) _(PAGEDOWN)
+#define _KEYS(_)                                                               \
+  _(ESCAPE)                                                                    \
+  _(F1)                                                                        \
+  _(F2)                                                                        \
+  _(F3)                                                                        \
+  _(F4)                                                                        \
+  _(F5)                                                                        \
+  _(F6)                                                                        \
+  _(F7)                                                                        \
+  _(F8)                                                                        \
+  _(F9)                                                                        \
+  _(F10)                                                                       \
+  _(F11) _(F12) _(GRAVE) _(1) _(2) _(3) _(4) _(5) _(6) _(7) _(8) _(9) _(0)     \
+      _(MINUS) _(EQUALS) _(BACKSPACE) _(TAB) _(Q) _(W) _(E) _(R) _(T) _(Y)     \
+          _(U) _(I) _(O) _(P) _(LEFTBRACKET) _(RIGHTBRACKET) _(BACKSLASH)      \
+              _(CAPSLOCK) _(A) _(S) _(D) _(F) _(G) _(H) _(J) _(K) _(L)         \
+                  _(SEMICOLON) _(APOSTROPHE) _(RETURN) _(LSHIFT) _(Z) _(X)     \
+                      _(C) _(V) _(B) _(N) _(M) _(COMMA) _(PERIOD) _(SLASH)     \
+                          _(RSHIFT) _(LCTRL) _(APPLICATION) _(LALT) _(SPACE)   \
+                              _(RALT) _(RCTRL) _(UP) _(DOWN) _(LEFT) _(RIGHT)  \
+                                  _(INSERT) _(DELETE) _(HOME) _(END) _(PAGEUP) \
+                                      _(PAGEDOWN)
 
 #define enumdef(k) SDLK_##k,
 
-enum SDL_Keys {
-  SDLK_NONE = 0,
-  _KEYS(enumdef)
+static char key[85][15] = {
+    "ESCAPE",    "F1",        "F2",          "F3",          "F4",
+    "F5",        "F6",        "F7",          "F8",          "F9",
+    "F10",       "F11",       "F12",         "GRAVE",       "1",
+    "2",         "3",         "4",           "5",           "6",
+    "7",         "8",         "9",           "0",           "MINUS",
+    "EQUALS",    "BACKSPACE", "TAB",         "Q",           "W",
+    "E",         "R",         "T",           "Y",           "U",
+    "I",         "O",         "P",           "LEFTBRACKET", "RIGHTBRACKET",
+    "BACKSLASH", "CAPSLOCK",  "A",           "S",           "D",
+    "F",         "G",         "H",           "J",           "K",
+    "L",         "SEMICOLON", "APOSTROPHE",  "RETURN",      "LSHIFT",
+    "Z",         "X",         "C",           "V",           "B",
+    "N",         "M",         "COMMA",       "PERIOD",      "SLASH",
+    "RSHIFT",    "LCTRL",     "APPLICATION", "LALT",        "SPACE",
+    "RALT",      "RCTRL",     "UP",          "DOWN",        "LEFT",
+    "RIGHT",     "INSERT",    "DELETE",      "HOME",        "END",
+    "PAGEUP",    "PAGEDOWN",
 };
+
+enum SDL_Keys { SDLK_NONE = 0, _KEYS(enumdef) };
 
 enum SDL_EventType {
   SDL_KEYDOWN,
@@ -57,6 +88,6 @@ int SDL_PushEvent(SDL_Event *ev);
 int SDL_PollEvent(SDL_Event *ev);
 int SDL_WaitEvent(SDL_Event *ev);
 int SDL_PeepEvents(SDL_Event *ev, int numevents, int action, uint32_t mask);
-uint8_t* SDL_GetKeyState(int *numkeys);
+uint8_t *SDL_GetKeyState(int *numkeys);
 
 #endif
