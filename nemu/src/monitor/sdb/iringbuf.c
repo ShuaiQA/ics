@@ -23,9 +23,11 @@ void print_isa(word_t n, int cnt) {
 void new_isa(word_t pc, word_t isa_val) {
   buf[pos].pc = pc;
   buf[pos].isa_val = isa_val;
+#ifdef ITRACE
   void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
   disassemble(buf[pos].action, 50, MUXDEF(CONFIG_ISA_x86, pc + 4, pc),
               (uint8_t *)&isa_val, 4);
+#endif
 
   pos = (pos + 1) % SIZE_ISA_BUF;
 }
