@@ -5,15 +5,38 @@
 #include <stdlib.h>
 #include <string.h>
 
+// 将一张画布中的指定矩形区域复制到另一张画布的指定位置
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst,
                      SDL_Rect *dstrect) {
   assert(dst && src);
   assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
+  if (srcrect == NULL) { // 复制整个屏幕
+    SDL_UpdateRect(src, dstrect->x, dstrect->y, dstrect->w, dstrect->h);
+  }
 }
 
-void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {}
+// 往画布的指定矩形区域中填充指定的颜色
+void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
+  int *pixels = dst->pixels;
+  if (dstrect == NULL) { // 如果当前是NULL向整个屏幕进行填充颜色
+    for (int i = 0; i < dst->w * dst->h; i++) {
+      pixels[i] = color;
+    }
+    SDL_UpdateRect(dst, 0, 0, 0, 0);
+  } else {
+    for (int i = 0; i < dst->w * dst->h; i++) {
+      pixels[i] = color;
+    }
+    SDL_UpdateRect(dst, dstrect->x, dstrect->y, dstrect->w, dstrect->h);
+  }
+}
 
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
+  NDL_OpenCanvas(&w, &h);
+  if (x + s->w > w || y + s->h > h) { // 超出屏幕的范围
+    assert(0);
+  }
+  printf("Update w %d h %d\n", s->w, s->h);
   NDL_DrawRect(s->pixels, x, y, s->w, s->h);
 }
 

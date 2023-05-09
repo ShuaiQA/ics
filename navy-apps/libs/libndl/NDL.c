@@ -11,7 +11,7 @@
 
 static int evtdev = -1;
 static int fbdev = -1;
-static int screen_w = 0, screen_h = 0;
+static int screen_w = 400, screen_h = 300;
 
 // 以毫秒为单位返回系统时间
 uint32_t NDL_GetTicks() {
@@ -39,8 +39,8 @@ void NDL_LoadWH(int *w, int *h) {
 // 如果*w和*h均为0, 则将系统全屏幕作为画布, 并将*w和*h分别设为系统屏幕的大小
 void NDL_OpenCanvas(int *w, int *h) {
   if (*w == 0 && *h == 0) {
-    *w = 400;
-    *h = 300;
+    *w = screen_w;
+    *h = screen_h;
   }
   if (getenv("NWM_APP")) {
     int fbctl = 4;
