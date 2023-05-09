@@ -3,6 +3,7 @@
 #include <common.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <string.h>
 
 #if defined(MULTIPROGRAM) && !defined(TIME_SHARING)
 #define MULTIPROGRAM_YIELD() yield()
@@ -30,8 +31,13 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   if (ev.keycode == AM_KEY_NONE) {
     return 0;
   }
-  strcpy(buf, keyname[ev.keycode]);
-  return 1;
+  if ((ev.keycode & 0x8000) == 0x8000) {
+    sprintf(buf, "kd ");
+  } else {
+    sprintf(buf, "ku ");
+  }
+  sprintf(buf, "%s\n", keyname[ev.keycode]);
+  return strlen(buf);
 }
 
 // 读取屏幕大小信息,根据一定的格式向buf中写入数据
