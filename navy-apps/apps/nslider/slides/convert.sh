@@ -1,6 +1,4 @@
 #!/bin/bash
-
-
 cnt=0
 while true
 do
@@ -11,6 +9,7 @@ do
 	fi
 	let "cnt++"
 done
+
 mkdir -p $NAVY_HOME/fsimg/share/slides/
 rm $NAVY_HOME/fsimg/share/slides/*
 mv *.bmp $NAVY_HOME/fsimg/share/slides/

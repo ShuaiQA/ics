@@ -43,7 +43,6 @@ void NDL_OpenCanvas(int *w, int *h) {
     *h = 300;
   }
   if (getenv("NWM_APP")) {
-    printf("NWM_APP env?");
     int fbctl = 4;
     fbdev = 5;
     screen_w = *w;
