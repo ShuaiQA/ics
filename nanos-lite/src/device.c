@@ -37,7 +37,6 @@ size_t events_read(void *buf, size_t offset, size_t len) {
     sprintf(buf, "%s", "ku");
   }
   sprintf(buf, "%s %s\n", (char *)buf, keyname[ev.keycode]);
-  printf("%d %s \n", strlen(buf), (char *)buf);
   return strlen(buf);
 }
 
