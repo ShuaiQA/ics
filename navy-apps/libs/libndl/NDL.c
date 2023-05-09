@@ -38,11 +38,13 @@ void NDL_LoadWH(int *w, int *h) {
 // 打开一张(*w) X (*h)的画布
 // 如果*w和*h均为0, 则将系统全屏幕作为画布, 并将*w和*h分别设为系统屏幕的大小
 void NDL_OpenCanvas(int *w, int *h) {
+  assert(*w <= screen_w && *h <= screen_h); // 打开画布的大小应该小于屏幕的大小
   if (*w == 0 && *h == 0) {
     *w = screen_w;
     *h = screen_h;
   }
   if (getenv("NWM_APP")) {
+    printf("zhaos\n");
     int fbctl = 4;
     fbdev = 5;
     screen_w = *w;

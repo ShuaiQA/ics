@@ -10,8 +10,25 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst,
                      SDL_Rect *dstrect) {
   assert(dst && src);
   assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
+  // 主要是将pixels像素的修改
   if (srcrect == NULL) { // 复制整个屏幕
-    SDL_UpdateRect(src, dstrect->x, dstrect->y, dstrect->w, dstrect->h);
+    int sw = dst->w, sh = dst->h;
+    int pos = dstrect->y * sw + dstrect->x; // 找到对应的dst的像素的位置
+    assert(dst->w >= src->w && dst->h >= src->h); // 复制要比原先要大
+    for (int i = 0; i < src->h; i++) {
+      memcpy(dst->pixels + pos, src->pixels + i * src->w, src->w);
+      pos += sw;
+    }
+  } else {
+    int sw = dst->w, sh = dst->h;
+    int pos = dstrect->y * sw + dstrect->x; // 找到对应的dst的像素的位置
+    assert(dst->w >= srcrect->w && dst->h >= srcrect->h); // 复制要比原先要大
+    int spos = srcrect->x + srcrect->y * src->w;
+    for (int i = 0; i < srcrect->h; i++) {
+      memcpy(dst->pixels + pos, src->pixels + spos, src->w);
+      pos += sw;
+      spos += src->w;
+    }
   }
 }
 
@@ -31,12 +48,14 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
   }
 }
 
+// 将s画布放到从[x,y]到[x+w,y+h]的屏幕上面,如果当前的画布大小超过了屏幕给出的范围进行删减画布
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
   NDL_OpenCanvas(&w, &h);
-  if (x + s->w > w || y + s->h > h) { // 超出屏幕的范围
+  // 超出屏幕的范围,目前设置不应该超出给定的范围
+  if (x + s->w > w || y + s->h > h) {
     assert(0);
   }
-  printf("Update w %d h %d\n", s->w, s->h);
+  // printf("Update w %d h %d\n", s->w, s->h);
   NDL_DrawRect(s->pixels, x, y, s->w, s->h);
 }
 
