@@ -96,6 +96,7 @@ void video_test() {
 }
 
 int main() {
+  ioe_init();
   video_test();
   return 0;
 }
