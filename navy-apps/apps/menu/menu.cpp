@@ -64,11 +64,7 @@ static void prev() {
   }
 }
 
-static void clear_display(void) {
-  printf("screen %d %d \n", screen->w, screen->h);
-  SDL_FillRect(screen, NULL, 0xffffff);
-  SDL_Delay(3000);
-}
+static void clear_display(void) { SDL_FillRect(screen, NULL, 0xffffff); }
 
 int main(int argc, char *argv[], char *envp[]) {
   SDL_Init(0);

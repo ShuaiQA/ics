@@ -1,61 +1,65 @@
 #include <NDL.h>
 #include <assert.h>
 #include <sdl-video.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 // 将一张画布中的指定矩形区域复制到另一张画布的指定位置
+// srcrect中的宽度和高度决定了复制的矩形的大小,dstrect中仅使用位置忽略宽度和高度
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst,
                      SDL_Rect *dstrect) {
   assert(dst && src);
   assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
-  // 主要是将pixels像素的修改
-  if (srcrect == NULL) { // 复制整个屏幕
-    int sw = dst->w, sh = dst->h;
-    int pos = dstrect->y * sw + dstrect->x; // 找到对应的dst的像素的位置
-    assert(dst->w >= src->w && dst->h >= src->h); // 复制要比原先要大
-    for (int i = 0; i < src->h; i++) {
-      memcpy(dst->pixels + pos, src->pixels + i * src->w, src->w);
-      pos += sw;
-    }
+  int16_t srcx, srcy, dstx, dsty;
+  uint16_t srch, srcw;
+  if (srcrect == NULL) { // 复制整个src画布
+    srcx = 0, srcy = 0, srcw = src->w, srch = src->h;
   } else {
-    int sw = dst->w, sh = dst->h;
-    int pos = dstrect->y * sw + dstrect->x; // 找到对应的dst的像素的位置
-    assert(dst->w >= srcrect->w && dst->h >= srcrect->h); // 复制要比原先要大
-    int spos = srcrect->x + srcrect->y * src->w;
-    for (int i = 0; i < srcrect->h; i++) {
-      memcpy(dst->pixels + pos, src->pixels + spos, src->w);
-      pos += sw;
-      spos += src->w;
-    }
+    srcx = srcrect->x, srcy = srcrect->y, srcw = srcrect->w, srch = srcrect->h;
+  }
+  if (dstrect == NULL) {
+    dstx = 0, dsty = 0;
+  } else {
+    dstx = dstrect->x, dsty = dstrect->y;
+  }
+  // 目标画布是否够分
+  assert(dstx + srcw <= dst->w || dsty + srch <= dst->h);
+  // 复制的次数是此时的高度,注意下面的*4 char与uint32_t
+  for (int i = 0; i < srch; i++) {
+    memcpy(dst->pixels + 4 * ((i + dsty) * dst->w + dstx),
+           src->pixels + 4 * ((i + srcy) * src->w + srcx), 4 * srcw);
   }
 }
 
-// 往画布的指定矩形区域中填充指定的颜色
+// dst画布中的pixels中指定的dstrect范围内填充color的颜色
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
-  int *pixels = dst->pixels;
-  if (dstrect == NULL) { // 如果当前是NULL向整个屏幕进行填充颜色
-    for (int i = 0; i < dst->w * dst->h; i++) {
-      pixels[i] = color;
-    }
-    SDL_UpdateRect(dst, 0, 0, 0, 0);
+  uint32_t x, y, w, h;   // 获取填充dst画布的地方
+  if (dstrect == NULL) { // 当前是NULL向整个画布进行填充颜色
+    x = 0, y = 0, w = dst->w, h = dst->h;
   } else {
-    for (int i = 0; i < dst->w * dst->h; i++) {
-      pixels[i] = color;
+    x = dstrect->x, y = dstrect->y, w = dstrect->w, h = dstrect->h;
+  }
+  // 因为颜色是32位的所以需要将uint8_t*进行转换
+  uint32_t *pixels = dst->pixels;
+  // 更新dst的像素信息,分析如果是对[a,b]位置画布进行更新pixels下标应该是pixels[a*dst->w+b]
+  for (int i = y; i < y + h; i++) {
+    for (int j = x; j < x + w; j++) {
+      pixels[i * dst->w + j] = color;
     }
-    SDL_UpdateRect(dst, dstrect->x, dstrect->y, dstrect->w, dstrect->h);
   }
 }
 
-// 将s画布放到从[x,y]到[x+w,y+h]的屏幕上面,如果当前的画布大小超过了屏幕给出的范围进行删减画布
+// 将s画布放到从[x,y]到[x+w,y+h]的屏幕上面
+// 如果当前的画布大小超过了屏幕给出的范围进行删减画布(目前并没有处理删减画布,直接是assert)
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
-  NDL_OpenCanvas(&w, &h);
-  // 超出屏幕的范围,目前设置不应该超出给定的范围
-  if (x + s->w > w || y + s->h > h) {
-    assert(0);
+  if (w == 0 && h == 0) {
+    w = s->w;
+    h = s->h;
   }
-  // printf("Update w %d h %d\n", s->w, s->h);
+  // 超出屏幕的范围,目前设置不应该超出给定的范围,给出的范围符合要求,直接传入画布的w,h
+  assert(s->w <= w || s->h <= h);
   NDL_DrawRect(s->pixels, x, y, s->w, s->h);
 }
 

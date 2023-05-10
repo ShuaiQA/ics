@@ -36,9 +36,9 @@ ISA        = $(word 1,$(ARCH_SPLIT))
 PLATFORM   = $(word 2,$(ARCH_SPLIT))
 
 ### Check if there is something to build
-ifeq ($(flavor SRCS), undefined)
-  $(error Nothing to build)
-endif
+# ifeq ($(flavor SRCS), undefined)
+#   $(error Nothing to build)
+# endif
 
 ### Checks end here
 endif
@@ -125,6 +125,8 @@ $(DST_DIR)/%.o: %.S
 ### Rule (recursive make): build a dependent library (am, klib, ...)
 $(LIBS): %:
 	@$(MAKE) -s -C $(AM_HOME)/$* archive
+
+libs:$(LIBS)
 
 ### Rule (link): objects (`*.o`) and libraries (`*.a`) -> `IMAGE.elf`, the final ELF binary to be packed into image (ld)
 $(IMAGE).elf: $(OBJS) am $(LIBS)

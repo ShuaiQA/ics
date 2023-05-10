@@ -9,9 +9,14 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+// 相关的文件集合(包含设备文件)
 static int evtdev = -1;
 static int fbdev = -1;
-static int screen_w = 400, screen_h = 300;
+static int dispdev;
+
+// 记录屏幕的大小,以及画布的大小
+static int screen_w = 0, screen_h = 0;
+static int canvas_w, canvas_h;
 
 // 以毫秒为单位返回系统时间
 uint32_t NDL_GetTicks() {
@@ -24,27 +29,23 @@ uint32_t NDL_GetTicks() {
   return val.tv_sec * 1000000 + val.tv_usec;
 }
 
-int NDL_PollEvent(char *buf, int len) {
-  int fd = open("/dev/events", O_RDONLY);
-  assert(fd);
-  return read(fd, buf, 15);
-}
-
-void NDL_LoadWH(int *w, int *h) {
-  FILE *fd = fopen("/proc/dispinfo", "r");
-  fscanf(fd, "width:%d\nheight:%d\n", w, h);
-}
+int NDL_PollEvent(char *buf, int len) { return read(evtdev, buf, len); }
 
 // 打开一张(*w) X (*h)的画布
 // 如果*w和*h均为0, 则将系统全屏幕作为画布, 并将*w和*h分别设为系统屏幕的大小
 void NDL_OpenCanvas(int *w, int *h) {
   assert(*w <= screen_w && *h <= screen_h); // 打开画布的大小应该小于屏幕的大小
   if (*w == 0 && *h == 0) {
-    *w = screen_w;
-    *h = screen_h;
+    char buf[64];
+    read(dispdev, buf, 64);
+    sscanf(buf, "WIDTH: %d\nHEIGHT: %d\n", &canvas_w, &canvas_h);
+    *w = canvas_w;
+    *h = canvas_h;
+  } else {
+    canvas_w = *w;
+    canvas_h = *h;
   }
-  if (getenv("NWM_APP")) {
-    printf("zhaos\n");
+  if (getenv("NWM_APP")) { // 当前没有这个环境变量
     int fbctl = 4;
     fbdev = 5;
     screen_w = *w;
@@ -66,18 +67,15 @@ void NDL_OpenCanvas(int *w, int *h) {
   }
 }
 
+// 将pixels中存储的像素写到对应的fbdev文件的对应的偏移处
 // 主要是注意像素是使用4字节表示在写入的时候需要注意4
+// 是否需要判断当前的w,h超出当前的screen_w,screen_h
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
-  int fd = open("/dev/fb", O_RDWR);
-  int sw = 400, sh = 300;
-  printf("%d %d %d %d\n", x, y, w, h);
-  printf("NDL_DrawRect\n");
-  lseek(fd, (y * sw + x) * 4, SEEK_SET); // 初始的情况
+  assert(w <= screen_w || h <= screen_h);
   for (int i = 0; i < h; i++) {
-    lseek(fd, ((y + i) * sw + x) * 4, SEEK_SET); // 初始的情况
-    write(fd, pixels + w * i, w * 4);
+    lseek(fbdev, ((y + i) * screen_w + x) * 4, SEEK_SET); // 初始的情况
+    write(fbdev, pixels + w * i, w * 4);
   }
-  close(fd);
 }
 
 void NDL_OpenAudio(int freq, int channels, int samples) {}
@@ -92,7 +90,18 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
+  char buf[64];
+  dispdev = open("/proc/dispinfo", O_RDONLY);
+  fbdev = open("/dev/fb", O_RDONLY);
+  evtdev = open("/dev/events", O_RDONLY);
+
+  read(dispdev, buf, 64);
+  sscanf(buf, "WIDTH: %d\nHEIGHT: %d\n", &screen_w, &screen_h);
+  printf("%d %d\n", screen_w, screen_h);
   return 0;
 }
 
-void NDL_Quit() {}
+void NDL_Quit() {
+  close(dispdev);
+  close(fbdev);
+}
