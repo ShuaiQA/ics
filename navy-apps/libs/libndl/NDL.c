@@ -94,10 +94,9 @@ int NDL_Init(uint32_t flags) {
   dispdev = open("/proc/dispinfo", O_RDONLY);
   fbdev = open("/dev/fb", O_RDONLY);
   evtdev = open("/dev/events", O_RDONLY);
-
   read(dispdev, buf, 64);
   sscanf(buf, "WIDTH: %d\nHEIGHT: %d\n", &screen_w, &screen_h);
-  printf("%d %d\n", screen_w, screen_h);
+  printf("screen_w %d screen_h %d\n", screen_w, screen_h);
   return 0;
 }
 
