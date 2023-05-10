@@ -15,27 +15,35 @@ void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime) {
   uptime->us = now.tv_sec * 1000000 + now.tv_usec;
 }
 
+// 注意下面的操作需要进行打开和关闭相应的文件操作,单个可能不会错误
+// 与其余的库函数进行组合可能会出现错误
 void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd) {
   SDL_Event ev;
+  SDL_Init(0);
   if (!SDL_PollEvent(&ev)) { // 没有按键
     kbd->keycode = AM_KEY_NONE;
   } else {
-    kbd->keydown = ev.type;
+    kbd->keydown = !ev.type;
     kbd->keycode = ev.key.keysym.sym;
   }
+  SDL_Quit();
 }
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
   int w = 0, h = 0;
+  NDL_Init(0);
   NDL_OpenCanvas(&w, &h);
   *cfg = (AM_GPU_CONFIG_T){
       .width = w,
       .height = h,
   };
+  NDL_Quit();
 }
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
+  NDL_Init(0);
   NDL_DrawRect(ctl->pixels, ctl->x, ctl->y, ctl->w, ctl->h);
+  NDL_Quit();
 }
 
 void __am_audio_config(AM_AUDIO_CONFIG_T *cfg) {}

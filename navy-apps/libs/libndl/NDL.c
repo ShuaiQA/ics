@@ -14,6 +14,10 @@ static int evtdev = -1;
 static int fbdev = -1;
 static int dispdev;
 
+// 用于标记是否已经初始化了,因为当前的库给SDL和AM都需要提供接口
+// 避免多次初始化中文件偏移错误
+static int tag = 0;
+
 // 记录屏幕的大小,以及画布的大小
 static int screen_w = 0, screen_h = 0;
 static int canvas_w, canvas_h;
@@ -90,17 +94,23 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
-  char buf[64];
-  dispdev = open("/proc/dispinfo", O_RDONLY);
-  fbdev = open("/dev/fb", O_RDONLY);
-  evtdev = open("/dev/events", O_RDONLY);
-  read(dispdev, buf, 64);
-  sscanf(buf, "WIDTH: %d\nHEIGHT: %d\n", &screen_w, &screen_h);
-  printf("screen_w %d screen_h %d\n", screen_w, screen_h);
+  if (tag == 0) {
+    char buf[64];
+    dispdev = open("/proc/dispinfo", O_RDONLY);
+    fbdev = open("/dev/fb", O_RDONLY);
+    evtdev = open("/dev/events", O_RDONLY);
+    read(dispdev, buf, 64);
+    sscanf(buf, "WIDTH: %d\nHEIGHT: %d\n", &screen_w, &screen_h);
+    // printf("screen_w %d screen_h %d\n", screen_w, screen_h);
+    tag = 1;
+  }
   return 0;
 }
 
 void NDL_Quit() {
-  close(dispdev);
-  close(fbdev);
+  if (tag) {
+    close(dispdev);
+    close(fbdev);
+    tag = 1;
+  }
 }

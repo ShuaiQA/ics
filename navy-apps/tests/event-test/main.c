@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include <NDL.h>
+#include <stdio.h>
 
 int main() {
   NDL_Init(0);

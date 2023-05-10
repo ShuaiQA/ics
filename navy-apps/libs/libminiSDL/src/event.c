@@ -24,6 +24,7 @@ int SDL_PushEvent(SDL_Event *ev) {
 
 int SDL_PollEvent(SDL_Event *ev) {
   if (r != w) {
+    printf("get queue\n");
     *ev = queue[r];
     r = (r + 1) % LEN;
     return 1;
@@ -33,19 +34,23 @@ int SDL_PollEvent(SDL_Event *ev) {
   char val[6];
   if (NDL_PollEvent(buf, sizeof(buf))) {
     sscanf(buf, "k%c %s\n", down, val);
+    // printf("%c  %s\n", down[0], val);
     if (down[0] == 'd') {
       ev->type = SDL_KEYDOWN;
     } else {
       ev->type = SDL_KEYUP;
     }
+    // printf("ev->type is %d\n", ev->type);
     for (int i = 0; i < 85; i++) {
       if (strcmp(val, key[i]) == 0) {
         ev->key.keysym.sym = i + 1;
+        // printf("ev->keysym is %d\n", ev->key.keysym.sym);
         break;
       }
     }
     return 1;
   }
+  ev->key.keysym.sym = 0;
   return 0;
 }
 
