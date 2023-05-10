@@ -44,8 +44,8 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   int w = io_read(AM_GPU_CONFIG).width;
   int h = io_read(AM_GPU_CONFIG).height;
-  printf("w is %d h is %d\n", w, h);
-  int c = sprintf(buf, "width: %d\nheight: %d\n", w, h);
+  // printf("w is %d h is %d\n", w, h);
+  int c = sprintf(buf, "WIDTH: %d\nHEIGHT: %d\n", w, h);
   return c;
 }
 
