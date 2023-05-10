@@ -9,11 +9,10 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
   uint32_t f1 = inl(VGACTL_ADDR);
   uint32_t heigh = f1 & 0xffff;
   uint32_t width = f1 >> 16;
-  *cfg = (AM_GPU_CONFIG_T){.present = true,
-                           .has_accel = false,
-                           .width = width,
-                           .height = heigh,
-                           .vmemsz = 0};
+  *cfg = (AM_GPU_CONFIG_T){
+      .width = width,
+      .height = heigh,
+  };
 }
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
