@@ -25,6 +25,7 @@ static void sh_prompt() { sh_printf("sh> "); }
 static void sh_handle_cmd(const char *cmd) {
   char buf[40];
   sscanf(cmd, "%s\n", buf);
+  printf("buf is %s \n", buf);
   execve(buf, NULL, NULL);
 }
 
