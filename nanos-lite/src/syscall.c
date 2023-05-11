@@ -3,6 +3,7 @@
 #include "klib-macros.h"
 #include <common.h>
 #include <fs.h>
+#include <proc.h>
 #include <sys/time.h>
 
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime);
@@ -24,6 +25,11 @@ int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
   return 0;
 }
 
+int execve(const char *pathname, char *const argv[], char *const envp[]) {
+  naive_uload(NULL, pathname);
+  return 0;
+}
+
 void do_syscall(Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;
@@ -40,6 +46,9 @@ void do_syscall(Context *c) {
     break;
   case SYS_read:
     c->GPRx = fs_read(c->GPR2, (void *)c->GPR3, c->GPR4);
+    break;
+  case SYS_execve:
+    c->GPRx = execve((char *)c->GPR2, NULL, NULL);
     break;
   case SYS_write:
     c->GPRx = fs_write(c->GPR2, (char *)c->GPR3, c->GPR4);
