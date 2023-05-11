@@ -2,6 +2,7 @@
 #include <SDL_bmp.h>
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #define W 400
 #define H 300
@@ -97,6 +98,9 @@ int main() {
         next(rep);
         rep = 0;
         g = 0;
+        break;
+      case SDLK_R:
+        exit(0); // 测试批处理程序
         break;
       case SDLK_K:
       case SDLK_UP:
