@@ -53,6 +53,7 @@ void naive_uload(PCB *pcb, const char *filename) {
     entry = loader(pcb, filename);
   } else {
     size_t size = get_ramdisk_size();
+    printf("size is %d\n", size);
     char *buf = malloc(size);
     ramdisk_read(buf, 0, size);
     entry = load_segement(buf);
