@@ -48,6 +48,12 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   NDL_DrawRect(ctl->pixels, ctl->x, ctl->y, ctl->w, ctl->h);
 }
 
+void __am_timer_config(AM_TIMER_CONFIG_T *cfg) {
+  cfg->present = true;
+  cfg->has_rtc = true;
+}
+void __am_input_config(AM_INPUT_CONFIG_T *cfg) { cfg->present = true; }
+
 void __am_audio_config(AM_AUDIO_CONFIG_T *cfg) {}
 
 void __am_audio_ctrl(AM_AUDIO_CTRL_T *ctrl) {}
@@ -59,7 +65,9 @@ void __am_audio_status(AM_AUDIO_STATUS_T *stat) {}
 void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {}
 
 static void *lut[128] = {
+    [AM_TIMER_CONFIG] = __am_timer_config,
     [AM_TIMER_UPTIME] = __am_timer_uptime,
+    [AM_INPUT_CONFIG] = __am_input_config,
     [AM_INPUT_KEYBRD] = __am_input_keybrd,
     [AM_GPU_CONFIG] = __am_gpu_config,
     [AM_GPU_FBDRAW] = __am_gpu_fbdraw,
