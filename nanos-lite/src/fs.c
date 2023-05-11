@@ -48,7 +48,7 @@ int fs_open(const char *pathname, int flags, int mode) {
       return i;
     }
   }
-  panic("没有找到当前文件\n");
+  panic("没有找到当前文件");
   return -1;
 }
 

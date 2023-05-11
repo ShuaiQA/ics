@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <cstdio>
 #include <nterm.h>
 #include <stdarg.h>
 #include <unistd.h>
@@ -22,9 +23,9 @@ static void sh_prompt() { sh_printf("sh> "); }
 
 // 当前的cmd字符串是以\n进行结束的
 static void sh_handle_cmd(const char *cmd) {
-  const char *exec_argv[3];
-  exec_argv[0] = cmd;
-  execve(exec_argv[0], NULL, NULL);
+  char buf[40];
+  sscanf(cmd, "%s\n", buf);
+  execve(buf, NULL, NULL);
 }
 
 void builtin_sh_run() {
