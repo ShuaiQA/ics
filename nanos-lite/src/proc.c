@@ -39,40 +39,13 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
 }
 
 // 根据相应的参数返回一个void*地址按照给定的要求进行参数组合
-void *setArgv(char *buf, int argc, char *argv[], char *envp[]) {
-  size_t del = 0;
-  int i = 0;
-  while (envp[i] != NULL) {
-    size_t c_size = strlen(envp[i]);
-    del -= c_size;
-    memcpy(buf - del, envp[i], c_size);
-    i++;
-  }
-  int j = 0;
-  while (argv[j] != NULL) {
-    size_t c_size = strlen(argv[j]);
-    del -= c_size;
-    memcpy(buf - del, argv[j], c_size);
-    j++;
-  }
-  del -= 4;
-  uintptr_t *c = (uintptr_t *)(buf - del);
-  *c = 0;
-  int inc = 1;
-  while (i != -1) {
-    *(c - inc) = (uintptr_t)(buf - strlen(envp[i - 1]));
-    i--;
-    inc++;
-  }
-  *(c - inc) = 0;
-  inc--;
-  while (j != -1) {
-    *(c - inc) = (uintptr_t)(buf - strlen(envp[j - 1]));
-    j--;
-    inc++;
-  }
-  *(c - inc) = argc;
-  return c - inc;
+void *setArgv(char *buf, int argc, char *argv) {
+  size_t s = strlen(argv);
+  memcpy(buf - s, argv, s);
+  int *t = (int *)(buf - s);
+  *(t - 1) = 0;
+  *(t - 2) = argc;
+  return t - 2;
 }
 
 // 同理创建用户进程需要进行初始化有,1.在ucontext设置pc值,2.在当前暂时保存栈空间到a0寄存器中
@@ -81,12 +54,8 @@ Context *context_uload(PCB *pcb, char *pathname) {
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(NULL, area, entry);
   int argc = 2;
-  char *g1 = "aaa";
-  char *g2 = "bbb";
-  char *argv[2] = {g1, g2};
-  printf("hhhh\n");
-  pcb->cp->GPRx = (uintptr_t)setArgv(area.end, argc, argv, NULL);
-  printf("hhhh\n");
+  char *argv = "aaa bbb";
+  pcb->cp->GPRx = (uintptr_t)setArgv(area.end, argc, argv);
   return pcb->cp;
 }
 
