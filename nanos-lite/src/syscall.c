@@ -55,22 +55,8 @@ void do_syscall(Context *c) {
     c->GPRx = execve((char *)c->GPR2, NULL, NULL);
     break;
   case SYS_write:
-    printf("处理之前\n");
-    printf("%p\n", c);
-    for (int i = 0; i < 32; i++) {
-      printf("%p    ", c->gpr[i]);
-    }
-    printf("%p   ", c->mepc);
-    printf("\n");
     c->GPRx = fs_write(c->GPR2, (char *)c->GPR3, c->GPR4);
     c->gpr[2] = (intptr_t)c;
-    printf("处理之后\n");
-    printf("%p\n", c);
-    for (int i = 0; i < 32; i++) {
-      printf("%p    ", c->gpr[i]);
-    }
-    printf("%p   ", c->mepc);
-    printf("\n");
     break;
   case SYS_brk:
     c->GPRx = (uintptr_t)sys_brk(c->GPR2);
