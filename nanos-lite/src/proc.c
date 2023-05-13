@@ -35,7 +35,7 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
 void init_proc() {
   int a = 0x10000;
   context_kload(&pcb[0], hello_fun, (void *)a);
-  int b = 0x10000;
+  int b = 0x10;
   context_kload(&pcb[1], hello_fun, (void *)b);
   switch_boot_pcb();
   Log("Initializing processes...");
