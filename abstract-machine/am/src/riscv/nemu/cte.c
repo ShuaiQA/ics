@@ -1,5 +1,6 @@
 #include <am.h>
 #include <klib.h>
+#include <stdint.h>
 
 static Context *(*user_handler)(Event, Context *) = NULL;
 
@@ -47,6 +48,8 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   // 设置mepc也就是恢复上下文之后的pc值,以及sp寄存器的值(栈指针寄存器,用来分配局部变量)
   ans->mepc = (uintptr_t)entry;
   ans->gpr[2] = (uintptr_t)ans;
+  // 使用寄存器a0进行参数传递
+  ans->gpr[10] = (uintptr_t)arg;
   return ans;
 }
 

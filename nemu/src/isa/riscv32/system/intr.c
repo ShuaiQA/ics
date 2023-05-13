@@ -36,13 +36,9 @@
  * Load page fault                  13
  * Store/AMO page fault             15
  */
+// 需要依据权限进行设置相应的mcause,由于nemu没有设置特权mcause好像搞不对
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   cpu.mepc = epc;
-  // if (NO == 1) {
-  //   cpu.mcause = 8;
-  // } else {
-  //   cpu.mcause = 11;
-  // }
   cpu.mcause = 11;
   IFDEF(CONFIG_ETRACE, new_etrace(epc, cpu.gpr[17]));
   return cpu.mtvec;

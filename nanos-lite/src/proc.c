@@ -26,12 +26,13 @@ void hello_fun(void *arg) {
 Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
   // 创建内核线程的栈空间
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
-  pcb->cp = kcontext(area, entry, NULL);
+  pcb->cp = kcontext(area, entry, arg);
   return pcb->cp;
 }
 
 void init_proc() {
-  context_kload(&pcb[0], hello_fun, NULL);
+  int a = 10000;
+  context_kload(&pcb[0], hello_fun, (void *)a);
   switch_boot_pcb();
   Log("Initializing processes...");
 
