@@ -63,6 +63,7 @@ void do_syscall(Context *c) {
     printf("%p   ", c->mepc);
     printf("\n");
     c->GPRx = fs_write(c->GPR2, (char *)c->GPR3, c->GPR4);
+    c->gpr[2] = (intptr_t)c;
     printf("处理之后\n");
     printf("%p\n", c);
     for (int i = 0; i < 32; i++) {
