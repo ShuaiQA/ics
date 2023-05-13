@@ -5,6 +5,7 @@
 #include <fs.h>
 #include <proc.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <sys/time.h>
 
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime);
@@ -54,6 +55,7 @@ void do_syscall(Context *c) {
     c->GPRx = execve((char *)c->GPR2, NULL, NULL);
     break;
   case SYS_write:
+    printf("cur Context add is %p\n", c);
     c->GPRx = fs_write(c->GPR2, (char *)c->GPR3, c->GPR4);
     break;
   case SYS_brk:
