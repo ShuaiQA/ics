@@ -56,6 +56,7 @@ Context *context_uload(PCB *pcb, char *pathname) {
   int argc = 2;
   char *argv = "aaa bbb";
   pcb->cp->GPRx = (uintptr_t)setArgv(area.end, argc, argv);
+  printf("pcb is %p\n ", pcb->cp->GPRx);
   return pcb->cp;
 }
 
