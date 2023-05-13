@@ -37,6 +37,7 @@ void do_syscall(Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;
 
+  printf("Context c is %p\n", c);
   switch (a[0]) {
   case SYS_exit:
     sys_exit(c);

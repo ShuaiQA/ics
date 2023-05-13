@@ -1,5 +1,4 @@
 #include "am.h"
-#include <fs.h>
 #include <proc.h>
 #include <stdint.h>
 
@@ -18,7 +17,6 @@ void switch_boot_pcb() { current = &pcb_boot; }
 void hello_fun(void *arg) {
   int j = 1;
   while (1) {
-    serial_write(arg, 0, 2);
     Log("Hello World from Nanos-lite with arg '%p' for the %dth time!",
         (uintptr_t)arg, j);
     j++;
@@ -45,7 +43,7 @@ Context *context_uload(PCB *pcb, char *pathname) {
 }
 
 void init_proc() {
-  char *a = "cc";
+  int a = 0x10000;
   context_kload(&pcb[0], hello_fun, (void *)a);
   // context_uload(&pcb[1], "/bin/hello");
   switch_boot_pcb();
@@ -59,7 +57,7 @@ void init_proc() {
 Context *schedule(Context *prev) {
   // 将当前的上下文保存到current指向的pcb数组下标中
   current->cp = prev;
-  current = &pcb[0]; //  (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
   return current->cp;
 }
 
