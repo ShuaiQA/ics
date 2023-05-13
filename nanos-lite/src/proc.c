@@ -34,6 +34,7 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
 
 Context *context_uload(PCB *pcb, char *pathname) {
   void *entry = naive_uload(pcb, pathname);
+  printf("%p\n", entry);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(NULL, area, entry);
   return pcb->cp;
