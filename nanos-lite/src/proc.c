@@ -36,6 +36,7 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
   return pcb->cp;
 }
 
+// 同理创建用户进程需要进行初始化有,1.在ucontext设置pc值,2.在当前暂时保存栈空间到a0寄存器中,3.暂时没有参数
 Context *context_uload(PCB *pcb, char *pathname) {
   void *entry = naive_uload(pcb, pathname);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
@@ -46,9 +47,7 @@ Context *context_uload(PCB *pcb, char *pathname) {
 
 void init_proc() {
   context_kload(&pcb[0], hello_fun, NULL);
-  int c = 100;
-  context_kload(&pcb[1], hello_fun, (void *)c);
-  // context_uload(&pcb[0], "/bin/hello");
+  context_uload(&pcb[0], "/bin/hello");
   switch_boot_pcb();
   Log("Initializing processes...");
 
