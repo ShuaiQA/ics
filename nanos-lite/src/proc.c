@@ -37,11 +37,12 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
 }
 
 // 同理创建用户进程需要进行初始化有,1.在ucontext设置pc值,2.在当前暂时保存栈空间到a0寄存器中,3.暂时没有参数
-Context *context_uload(PCB *pcb, char *pathname) {
+Context *context_uload(PCB *pcb, char *pathname, void *arg) {
   void *entry = naive_uload(pcb, pathname);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(NULL, area, entry);
   pcb->cp->GPRx = (intptr_t)heap.end;
+  pcb->cp->GPR3 = (intptr_t)arg;
   return pcb->cp;
 }
 
@@ -56,7 +57,7 @@ Context *context_uload(PCB *pcb, char *pathname) {
 
 void init_proc() {
   context_kload(&pcb[0], hello_fun, NULL);
-  context_uload(&pcb[1], "/bin/nslider");
+  context_uload(&pcb[1], "/bin/dummy", (void *)100);
   switch_boot_pcb();
   Log("Initializing processes...");
 

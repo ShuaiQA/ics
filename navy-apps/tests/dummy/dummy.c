@@ -7,7 +7,7 @@
 #define SYS_yield 1
 extern int _syscall_(int, uintptr_t, uintptr_t, uintptr_t);
 
-int main() {
+int main(int argc, char *argv[]) {
   while (1) {
     char *buf = "aaa\n";
     _syscall_(4, 1, (uintptr_t)buf, 5);
