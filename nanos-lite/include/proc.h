@@ -18,10 +18,6 @@ typedef union {
   };
 } PCB;
 
-// 记录栈指针的范围
-extern char _stack_pointer;
-extern char _stack_top;
-
 extern PCB *current;
 
 // 返回新的上下文
