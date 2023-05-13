@@ -46,6 +46,8 @@ Context *context_uload(PCB *pcb, char *pathname) {
 
 void init_proc() {
   context_kload(&pcb[0], hello_fun, NULL);
+  int c = 100;
+  context_kload(&pcb[0], hello_fun, (void *)c);
   // context_uload(&pcb[0], "/bin/hello");
   switch_boot_pcb();
   Log("Initializing processes...");
@@ -58,7 +60,7 @@ void init_proc() {
 Context *schedule(Context *prev) {
   // 将当前的上下文保存到current指向的pcb数组下标中
   current->cp = prev;
-  current = &pcb[0]; //  (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
   return current->cp;
 }
 
