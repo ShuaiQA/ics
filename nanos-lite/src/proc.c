@@ -1,5 +1,6 @@
 #include "am.h"
 #include <proc.h>
+#include <stdint.h>
 
 #define MAX_NR_PROC 4
 
@@ -36,15 +37,14 @@ Context *context_uload(PCB *pcb, char *pathname) {
   void *entry = naive_uload(pcb, pathname);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(NULL, area, entry);
-  pcb->cp->gpr[2] = 0;
+  pcb->cp->gpr[2] = (intptr_t)heap.end;
   return pcb->cp;
 }
 
 void init_proc() {
   int a = 0x10000;
   context_kload(&pcb[0], hello_fun, (void *)a);
-  int b = 0x10;
-  context_kload(&pcb[1], hello_fun, (void *)b);
+  context_uload(&pcb[1], "/bin/hello");
   switch_boot_pcb();
   Log("Initializing processes...");
 

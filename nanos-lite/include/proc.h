@@ -20,6 +20,10 @@ typedef union {
 
 extern PCB *current;
 
+// 获取AM的堆空间,使用AM的堆空间的最后位置(heap.end) 作为用户栈
+// 因为栈是向低地址扩充不会超出内存范围,并且使用的是堆最后面的内存部分,暂时不会与操作系统的malloc进行冲突
+extern Area heap;
+
 // 返回新的上下文
 Context *schedule(Context *prev);
 
