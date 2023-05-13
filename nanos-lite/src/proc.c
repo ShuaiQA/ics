@@ -24,8 +24,11 @@ void hello_fun(void *arg) {
   }
 }
 
-// 会调用kcontext()来创建上下文
-// 并把返回的指针记录到PCB的cp中,对kcontext创建内核线程进行封装
+// 创建内核线程的栈空间,栈空间是由PCB数组提供的32k的地址空间
+// 创建的线程栈的低地址会保存pcb->cp相应的变量,高地址会创建一个Context变量用于保存当前线程的初始化的情况
+// 对于一个Context初始化需要设置1.sp寄存器(自己线程的栈空间),2.pc值,3.可能的参数情况
+// (所以在kcontext函数中)应该初始化3个部分
+// 之后将变量cp指向创建好的Context结构体
 Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
   // 创建内核线程的栈空间
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
@@ -42,15 +45,14 @@ Context *context_uload(PCB *pcb, char *pathname) {
 }
 
 void init_proc() {
-  // int a = 0x10000;
-  // context_kload(&pcb[0], hello_fun, (void *)a);
-  context_uload(&pcb[0], "/bin/hello");
+  context_kload(&pcb[0], hello_fun, NULL);
+  // context_uload(&pcb[0], "/bin/hello");
   switch_boot_pcb();
   Log("Initializing processes...");
 
   // load program here
-  void *entry = naive_uload(NULL, "/bin/hello");
-  ((void (*)())entry)();
+  // void *entry = naive_uload(NULL, "/bin/hello");
+  // ((void (*)())entry)();
 }
 
 Context *schedule(Context *prev) {

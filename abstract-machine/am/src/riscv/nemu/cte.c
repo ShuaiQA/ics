@@ -47,7 +47,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   ans->mepc = (uintptr_t)entry;
   ans->gpr[2] = (uintptr_t)ans;
   // 使用寄存器a0进行参数传递
-  ans->gpr[10] = (uintptr_t)arg;
+  ans->GPR2 = (uintptr_t)arg;
   return ans;
 }
 
