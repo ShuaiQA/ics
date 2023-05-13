@@ -47,7 +47,8 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   return entry;
 }
 
-void naive_uload(PCB *pcb, const char *filename) {
+// 加载一个filename的用户程序,返回该用户程序的最初执行的入口
+void *naive_uload(PCB *pcb, const char *filename) {
   uintptr_t entry;
   if (filename != NULL) {
     entry = loader(pcb, filename);
@@ -59,5 +60,5 @@ void naive_uload(PCB *pcb, const char *filename) {
     entry = load_segement(buf);
   }
   Log("Jump to entry = %p", entry);
-  ((void (*)())entry)();
+  return ((void (*)())entry);
 }
