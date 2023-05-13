@@ -50,7 +50,7 @@ Context *context_uload(PCB *pcb, char *pathname) {
 
 void init_proc() {
   context_kload(&pcb[0], hello_fun, NULL);
-  context_uload(&pcb[0], "/bin/hello");
+  context_uload(&pcb[0], "/bin/dummy");
   switch_boot_pcb();
   Log("Initializing processes...");
 
