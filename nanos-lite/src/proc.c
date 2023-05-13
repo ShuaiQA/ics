@@ -37,7 +37,7 @@ Context *context_uload(PCB *pcb, char *pathname) {
   void *entry = naive_uload(pcb, pathname);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(NULL, area, entry);
-  pcb->cp->gpr[2] = (intptr_t)heap.end;
+  pcb->cp->GPRx = (intptr_t)heap.end;
   return pcb->cp;
 }
 
