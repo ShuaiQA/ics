@@ -61,8 +61,8 @@ void init_proc() {
   Log("Initializing processes...");
 
   // load program here
-  // void *entry = naive_uload(NULL, "/bin/hello");
-  // ((void (*)())entry)();
+  void *entry = naive_uload(NULL, "/bin/menu");
+  ((void (*)())entry)();
 }
 
 // 会更新当前的cp指针指向相关的Context,主要的目的是为了下一次在访问该线程的时候直接调用PCB数组下标的cp就好了
