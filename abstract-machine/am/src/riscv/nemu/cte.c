@@ -40,8 +40,14 @@ bool cte_init(Context *(*handler)(Event, Context *)) {
   return true;
 }
 
+// kstack的end创建一个以entry为返回地址的上下文结构,将上下文指针进行返回
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
-  return NULL;
+  // 获取最后一个Context空间
+  Context *ans = (Context *)kstack.end - 1;
+  // 设置mepc也就是恢复上下文之后的pc值,以及sp寄存器的值(栈指针寄存器,用来分配局部变量)
+  ans->mepc = (uintptr_t)entry;
+  ans->gpr[2] = (uintptr_t)ans;
+  return ans;
 }
 
 // yield的a7应该是1吧

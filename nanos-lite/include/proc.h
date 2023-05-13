@@ -6,6 +6,8 @@
 
 #define STACK_SIZE (8 * PGSIZE)
 
+// 这是为每一个子进程创建的栈空间,开始的部分保存相关的内容
+// 结束的部分用于保存每一个进程的上下文结构
 typedef union {
   uint8_t stack[STACK_SIZE] PG_ALIGN;
   struct {
@@ -15,6 +17,10 @@ typedef union {
     uintptr_t max_brk;
   };
 } PCB;
+
+// 记录栈指针的范围
+extern char _stack_pointer;
+extern char _stack_top;
 
 extern PCB *current;
 

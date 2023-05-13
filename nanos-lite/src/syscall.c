@@ -12,8 +12,11 @@ void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime);
 // 上下文的恢复是根据寄存器sp进行恢复的,我们只需要修改sp寄存器指向其余的上下文
 // 那么就能够跳转到其余的进程了
 void sys_yield(Context *c) {
-  schedule(c);
   printf("yield\n");
+  Context *next = schedule(c);
+  // 修改sp的值(我们应该将更新sp寄存器的值添加到汇编代码中)
+  // 这样之后上下文恢复就是根据新的sp的上下文进行恢复的
+  c->gpr[2] = next->gpr[2];
   c->GPRx = 0; // 设置GPRx的返回值
 }
 

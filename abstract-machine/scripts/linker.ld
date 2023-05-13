@@ -24,6 +24,7 @@ SECTIONS {
     *(.sbss*)
     *(.scommon)
   }
+	/*注意当前的栈的范围是0x8000,局部变量是从高地址向低地址扩充的,直到相关的数据部分*/
   _stack_top = ALIGN(0x1000);
   . = _stack_top + 0x8000;
   _stack_pointer = .;
