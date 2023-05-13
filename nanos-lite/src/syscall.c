@@ -4,6 +4,7 @@
 #include <common.h>
 #include <fs.h>
 #include <proc.h>
+#include <stdint.h>
 #include <sys/time.h>
 
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime);
@@ -16,8 +17,7 @@ void sys_yield(Context *c) {
   Context *next = schedule(c);
   // 修改sp的值(我们应该将更新sp寄存器的值添加到汇编代码中)
   // 这样之后上下文恢复就是根据新的sp的上下文进行恢复的
-  c->gpr[2] = next->gpr[2];
-  c->GPRx = 0; // 设置GPRx的返回值
+  c->gpr[2] = (uintptr_t)next;
 }
 
 void sys_exit(Context *c) { halt(c->GPR2); }
