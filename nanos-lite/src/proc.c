@@ -75,7 +75,7 @@ void *setArgv(char *buf, int argc, char *argv[], char *envp[]) {
   return c - inc;
 }
 
-// 同理创建用户进程需要进行初始化有,1.在ucontext设置pc值,2.在当前暂时保存栈空间到a0寄存器中,3.暂时没有参数
+// 同理创建用户进程需要进行初始化有,1.在ucontext设置pc值,2.在当前暂时保存栈空间到a0寄存器中
 Context *context_uload(PCB *pcb, char *pathname) {
   void *entry = naive_uload(pcb, pathname);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
@@ -84,6 +84,7 @@ Context *context_uload(PCB *pcb, char *pathname) {
   char *g1 = "aaa";
   char *g2 = "bbb";
   char *argv[2] = {g1, g2};
+  printf("hhhh\n");
   pcb->cp->GPRx = (uintptr_t)setArgv(area.end, argc, argv, NULL);
   return pcb->cp;
 }
