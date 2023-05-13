@@ -72,6 +72,5 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   Context *ans = (Context *)kstack.end - 1;
   // 设置mepc也就是恢复上下文之后的pc值,以及sp寄存器的值(栈指针寄存器,用来分配局部变量)
   ans->mepc = (uintptr_t)entry;
-  ans->gpr[2] = (uintptr_t)ans;
   return ans;
 }
