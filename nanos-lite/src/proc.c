@@ -11,6 +11,8 @@ PCB *current = NULL;
 
 void switch_boot_pcb() { current = &pcb_boot; }
 
+// 很自然调用该函数的参数就是a0寄存器,在初始化上下文线程的时候将寄存器a0设置为arg
+// 执行的时候就会取出相应的值
 void hello_fun(void *arg) {
   int j = 1;
   while (1) {
@@ -31,8 +33,10 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
 }
 
 void init_proc() {
-  int a = 10000;
+  int a = 0x10000;
   context_kload(&pcb[0], hello_fun, (void *)a);
+  int b = 0x10000;
+  context_kload(&pcb[1], hello_fun, (void *)b);
   switch_boot_pcb();
   Log("Initializing processes...");
 
@@ -43,7 +47,7 @@ void init_proc() {
 Context *schedule(Context *prev) {
   // 将当前的上下文保存到current指向的pcb数组下标中
   current->cp = prev;
-  current = &pcb[0];
+  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
   return current->cp;
 }
 
