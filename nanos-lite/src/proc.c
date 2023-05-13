@@ -45,6 +45,9 @@ Context *context_uload(PCB *pcb, char *pathname) {
   return pcb->cp;
 }
 
+// 重要的一点是相对于之前的情况来说每一个系统调用都会修改trap,分析对不对,因为debug的时候发现在用户程序的异常号不是1的时候发生了错误
+// 是所有的
+
 void init_proc() {
   context_kload(&pcb[0], hello_fun, NULL);
   context_uload(&pcb[0], "/bin/hello");

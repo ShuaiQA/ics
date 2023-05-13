@@ -1,12 +1,16 @@
+#include "syscall.h"
 #include <stdio.h>
 #include <unistd.h>
 
 int main() {
-  int a = 1;
-  printf("a is %d address is %p\n", a, &a);
   while (1) {
-    write(1, "Hello World!\n", 13);
+    _syscall_(SYS_yield, NULL, NULL);
   }
+
+  // printf("a is %d address is %p\n", a, &a);
+  // while (1) {
+  //   write(1, "Hello World!\n", 13);
+  // }
   // write(1, "Hello World!\n", 13);
   // int i = 2;
   // volatile int j = 0;
