@@ -8,7 +8,11 @@
 
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime);
 
+// 当前的Context是保存的上一个上下文,根据__am_asm_trap汇编代码分析后
+// 上下文的恢复是根据寄存器sp进行恢复的,我们只需要修改sp寄存器指向其余的上下文
+// 那么就能够跳转到其余的进程了
 void sys_yield(Context *c) {
+  schedule(c);
   printf("yield\n");
   c->GPRx = 0; // 设置GPRx的返回值
 }

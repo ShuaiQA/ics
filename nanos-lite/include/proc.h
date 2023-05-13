@@ -18,8 +18,12 @@ typedef union {
 
 extern PCB *current;
 
+// 返回新的上下文
+Context *schedule(Context *prev);
+
 size_t get_ramdisk_size();
 size_t ramdisk_read(void *buf, size_t offset, size_t len);
 
 void naive_uload(PCB *pcb, const char *filename);
+
 #endif

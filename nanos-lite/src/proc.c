@@ -20,7 +20,15 @@ void hello_fun(void *arg) {
   }
 }
 
+// 会调用kcontext()来创建上下文
+// 并把返回的指针记录到PCB的cp中,对kcontext创建内核线程进行封装
+Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
+  pcb->cp = kcontext(NULL, entry, NULL);
+  return pcb->cp;
+}
+
 void init_proc() {
+  context_kload(&pcb[0], hello_fun, NULL);
   switch_boot_pcb();
   Log("Initializing processes...");
 
@@ -29,6 +37,3 @@ void init_proc() {
 }
 
 Context *schedule(Context *prev) { return NULL; }
-
-// 会调用kcontext()来创建上下文, 并把返回的指针记录到PCB的cp中
-Context *context_kload() { return NULL; }
