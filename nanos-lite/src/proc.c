@@ -55,7 +55,7 @@ Context *context_uload(PCB *pcb, char *pathname) {
 // sp,8(sp) 换句话说说对于yield异常来说需要执行,其余的异常来说不需要执行
 
 void init_proc() {
-  context_kload(&pcb[0], hello_fun, NULL);
+  context_uload(&pcb[0], "/bin/dummy");
   context_uload(&pcb[1], "/bin/nslider");
   switch_boot_pcb();
   Log("Initializing processes...");
