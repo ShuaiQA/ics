@@ -1,7 +1,9 @@
+#include "am.h"
 #include <proc.h>
 
 #define MAX_NR_PROC 4
 
+// 记录当前有多少个进程控制块
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
 static PCB pcb_boot = {};
 PCB *current = NULL;
@@ -27,3 +29,6 @@ void init_proc() {
 }
 
 Context *schedule(Context *prev) { return NULL; }
+
+// 会调用kcontext()来创建上下文, 并把返回的指针记录到PCB的cp中
+Context *context_kload() { return NULL; }
