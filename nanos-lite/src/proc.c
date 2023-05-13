@@ -36,12 +36,13 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
   return pcb->cp;
 }
 
-// 同理创建用户进程需要进行初始化有,1.在ucontext设置pc值,2.在当前暂时保存栈空间到a0寄存器中,3.暂时没有参数
+// 同理创建用户进程需要进行初始化有,1.在ucontext设置pc值,2.在当前暂时保存栈空间到a0寄存器中,
+// 3.初始化的参数放到GPRx寄存器中
 Context *context_uload(PCB *pcb, char *pathname) {
   void *entry = naive_uload(pcb, pathname);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(NULL, area, entry);
-  pcb->cp->GPRx = (intptr_t)heap.end;
+  pcb->cp->gpr[2] = (intptr_t)heap.end;
   return pcb->cp;
 }
 
@@ -55,7 +56,7 @@ Context *context_uload(PCB *pcb, char *pathname) {
 // sp,8(sp) 换句话说说对于yield异常来说需要执行,其余的异常来说不需要执行
 
 void init_proc() {
-  context_uload(&pcb[0], "/bin/dummy");
+  context_kload(&pcb[0], hello_fun, (void *)100);
   context_uload(&pcb[1], "/bin/nslider");
   switch_boot_pcb();
   Log("Initializing processes...");
