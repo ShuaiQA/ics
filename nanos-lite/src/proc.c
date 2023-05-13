@@ -86,6 +86,7 @@ Context *context_uload(PCB *pcb, char *pathname) {
   char *argv[2] = {g1, g2};
   printf("hhhh\n");
   pcb->cp->GPRx = (uintptr_t)setArgv(area.end, argc, argv, NULL);
+  printf("hhhh\n");
   return pcb->cp;
 }
 
