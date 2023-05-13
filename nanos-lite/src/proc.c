@@ -5,10 +5,10 @@
 
 // 记录当前有多少个进程控制块
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
-// static PCB pcb_boot = {};
+static PCB pcb_boot = {};
 PCB *current = NULL;
 
-void switch_boot_pcb() { current = &pcb[0]; }
+void switch_boot_pcb() { current = &pcb_boot; }
 
 void hello_fun(void *arg) {
   int j = 1;
