@@ -9,8 +9,8 @@ extern int _syscall_(int, uintptr_t, uintptr_t, uintptr_t);
 
 int main() {
   while (1) {
-    char *buf = "aaa";
-    _syscall_(4, 1, (uintptr_t)buf, 4);
+    char *buf = "aaa\n";
+    _syscall_(4, 1, (uintptr_t)buf, 5);
   }
   return 0;
 }
