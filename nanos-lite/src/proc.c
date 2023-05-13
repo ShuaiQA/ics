@@ -50,9 +50,9 @@ Context *context_uload(PCB *pcb, char *pathname) {
 // 开始进行分析,用户进程在系统调用的过程中首先会保存相关的寄存器信息保存到自己的栈空间上面
 // 在printf输出相关的Context指针地址我们也可以发现是这样的,之后就开始进行系统调用函数的处理
 // 以write异常为例进行处理,在执行到异常的时候保存当前栈上的Context然后不断的进入相关的函数
-// 直到对寄存器a0进行返回值的修改,根据指令的buf中发现在lw
-// sp,8(sp),之后就发生了错误,
-//
+// 直到对寄存器a0进行返回值的修改,根据指令的buf中发现在lw sp,8(sp)
+// 之后就发生了错误,不断的定位发现当异常号不是yield的时候,不需要在次进行lw
+// sp,8(sp) 换句话说说对于yield异常来说需要执行,其余的异常来说不需要执行
 
 void init_proc() {
   context_kload(&pcb[0], hello_fun, NULL);
