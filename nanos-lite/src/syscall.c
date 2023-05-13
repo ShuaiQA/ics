@@ -9,15 +9,11 @@
 
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime);
 
-// 当前的Context是保存的上一个上下文,根据__am_asm_trap汇编代码分析后
-// 上下文的恢复是根据寄存器sp进行恢复的,我们只需要修改sp寄存器指向其余的上下文
-// 那么就能够跳转到其余的进程了
 void sys_yield(Context *c) {
-  printf("yield\n");
-  Context *next = schedule(c);
-  // 修改sp的值(我们应该将更新sp寄存器的值添加到汇编代码中)
-  // 这样之后上下文恢复就是根据新的sp的上下文进行恢复的
-  c->gpr[2] = (uintptr_t)next;
+  // 首先确定的是寄存器sp指向的是一个上下文的结构体数据,然后根据该结构体数据进行恢复上下文
+  // 我修改了__am_asm_trap汇编代码,先让sp寄存器先加载Context结构体中sp寄存器的位置
+  // 然后在根据该位置进行恢复上下文即可完成相关的恢复工作
+  c->gpr[2] = (uintptr_t)schedule(c);
 }
 
 void sys_exit(Context *c) { halt(c->GPR2); }
