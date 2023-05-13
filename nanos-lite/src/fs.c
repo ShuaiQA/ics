@@ -69,6 +69,7 @@ size_t fs_read(int fd, void *buf, size_t len) {
 
 // 按照手册的说法即使是offset跳过了超出了文件的长度也应该写入(但是这里限制了文件的长度)
 size_t fs_write(int fd, const void *buf, size_t len) {
+  yield();
   if (file_table[fd].write != NULL) {
     return file_table[fd].write(buf, file_table[fd].open_offset, len);
   }

@@ -7,12 +7,10 @@ static Context *(*user_handler)(Event, Context *) = NULL;
 Context *__am_irq_handle(Context *c) {
   if (user_handler) {
     Event ev = {0};
-
     // 目前都是cpu自增4的
     c->mepc += 4;
     // 设置异常处理情况
     ev.event = c->GPR1;
-
     c = user_handler(ev, c);
     assert(c != NULL);
   }
