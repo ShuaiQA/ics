@@ -50,8 +50,8 @@ void init_proc() {
   Log("Initializing processes...");
 
   // load program here
-  // void *entry = naive_uload(NULL, "/bin/hello");
-  // ((void (*)())entry)();
+  void *entry = naive_uload(NULL, "/bin/hello");
+  ((void (*)())entry)();
 }
 
 Context *schedule(Context *prev) {
