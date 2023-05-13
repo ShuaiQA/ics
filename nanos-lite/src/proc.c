@@ -17,8 +17,9 @@ void switch_boot_pcb() { current = &pcb_boot; }
 void hello_fun(void *arg) {
   int j = 1;
   while (1) {
-    Log("Hello World from Nanos-lite with arg '%p' for the %dth time!",
-        (uintptr_t)arg, j);
+    Log("Hello World from Nanos-lite with arg '%p' for the %dth time! address "
+        "is %p",
+        (uintptr_t)arg, j, &j);
     j++;
     yield();
   }
@@ -29,6 +30,7 @@ void hello_fun(void *arg) {
 Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
   // 创建内核线程的栈空间
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
+  printf("rsp is begin %p\n", area.end);
   pcb->cp = kcontext(area, entry, arg);
   return pcb->cp;
 }
@@ -37,8 +39,7 @@ Context *context_uload(PCB *pcb, char *pathname) {
   void *entry = naive_uload(pcb, pathname);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(NULL, area, entry);
-  // pcb->cp->GPRx = (intptr_t)heap.end;
-  // printf("%p\n", pcb->cp);
+  pcb->cp->GPRx = (intptr_t)heap.end;
   return pcb->cp;
 }
 

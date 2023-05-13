@@ -2,6 +2,8 @@
 #include <unistd.h>
 
 int main() {
+  int a = 1;
+  printf("a is %d address is %p\n", a, &a);
   while (1) {
     write(1, "Hello World!\n", 13);
   }
