@@ -56,13 +56,13 @@ Context *context_uload(PCB *pcb, char *pathname) {
 
 void init_proc() {
   context_kload(&pcb[0], hello_fun, NULL);
-  context_uload(&pcb[1], "/bin/menu");
+  context_uload(&pcb[1], "/bin/nslider");
   switch_boot_pcb();
   Log("Initializing processes...");
 
   // load program here
-  void *entry = naive_uload(NULL, "/bin/menu");
-  ((void (*)())entry)();
+  // void *entry = naive_uload(NULL, "/bin/menu");
+  // ((void (*)())entry)();
 }
 
 // 会更新当前的cp指针指向相关的Context,主要的目的是为了下一次在访问该线程的时候直接调用PCB数组下标的cp就好了
