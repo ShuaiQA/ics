@@ -66,7 +66,7 @@ void __am_switch(Context *c) {
 
 void map(AddrSpace *as, void *va, void *pa, int prot) {}
 
-// 创建用户进程的上下文
+// 创建用户进程的上下文,注意当前是内核的PCB进程控制块的管理,目前和用户进程的设置没有关系
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   // 获取最后一个Context空间
   Context *ans = (Context *)kstack.end - 1;
