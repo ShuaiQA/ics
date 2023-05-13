@@ -50,11 +50,8 @@ __am_asm_trap:
   mv a0, sp
   jal __am_irq_handle
 # 返回处理程序之后需要让(sp+8) 放到sp寄存器中
-	addi s10,x0,1
-	bne	a7,s10,aa
 	lw	sp,8(sp)
 
-aa:
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
   csrw mstatus, t1
