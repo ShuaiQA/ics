@@ -14,13 +14,13 @@ void sys_yield(Context *c) {
   // 我修改了__am_asm_trap汇编代码,先让sp寄存器先加载Context结构体中sp寄存器的位置
   // 然后在根据该位置进行恢复上下文即可完成相关的恢复工作
   c->gpr[2] = (uintptr_t)schedule(c);
-  // printf("处理之后\n");
-  // printf("%p\n", c);
-  // for (int i = 0; i < 32; i++) {
-  //   printf("%p    ", c->gpr[i]);
-  // }
-  // printf("%p   ", c->mepc);
-  // printf("\n");
+  printf("处理之后\n");
+  printf("%p\n", c);
+  for (int i = 0; i < 32; i++) {
+    printf("%p    ", c->gpr[i]);
+  }
+  printf("%p   ", c->mepc);
+  printf("\n");
 }
 
 void sys_exit(Context *c) { halt(c->GPR2); }
