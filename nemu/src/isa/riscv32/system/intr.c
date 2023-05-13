@@ -38,11 +38,12 @@
  */
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   cpu.mepc = epc;
-  if (NO == 1) {
-    cpu.mcause = 8;
-  } else {
-    cpu.mcause = 11;
-  }
+  // if (NO == 1) {
+  //   cpu.mcause = 8;
+  // } else {
+  //   cpu.mcause = 11;
+  // }
+  cpu.mcause = 11;
   IFDEF(CONFIG_ETRACE, new_etrace(epc, cpu.gpr[17]));
   return cpu.mtvec;
 }
