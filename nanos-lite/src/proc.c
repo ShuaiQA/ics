@@ -5,6 +5,7 @@
 
 // 记录当前有多少个进程控制块
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
+// 当前的pcb_boot代表的是当前的Nanos进程
 static PCB pcb_boot = {};
 PCB *current = NULL;
 
