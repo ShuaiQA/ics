@@ -45,8 +45,10 @@ Context *context_uload(PCB *pcb, char *pathname) {
   return pcb->cp;
 }
 
-// 重要的一点是相对于之前的情况来说每一个系统调用都会修改trap,分析对不对,因为debug的时候发现在用户程序的异常号不是1的时候发生了错误
-// 是所有的
+// 分析为什么用户程序会发生系统调用的错误,首先是初始化用户程序,经过测试发现用户线程执行到系统调用之前并没有错误
+// 在系统调用会发生错误,开始进行分析,用户进程在系统调用的过程中首先会保存相关的寄存器信息保存到自己的栈空间上面
+// 在printf输出相关的Context指针地址我们也可以发现是这样的,之后就开始进行系统调用函数的处理,比如说处理到do_syscall函数
+//
 
 void init_proc() {
   context_kload(&pcb[0], hello_fun, NULL);
@@ -59,6 +61,8 @@ void init_proc() {
   // ((void (*)())entry)();
 }
 
+// 会更新当前的cp指针指向相关的Context,主要的目的是为了下一次在访问该线程的时候直接调用PCB数组下标的cp就好了
+// 返回根据相关的调度信息返回一个新的上下文,最后返回该上下文的指针
 Context *schedule(Context *prev) {
   // 将当前的上下文保存到current指向的pcb数组下标中
   current->cp = prev;
