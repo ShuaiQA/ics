@@ -48,11 +48,11 @@ Context *context_uload(PCB *pcb, char *pathname) {
 // 分析为什么用户程序会发生系统调用的错误,首先是初始化用户程序,经过测试发现用户线程执行到系统调用之前并没有错误
 // 在系统调用会发生错误,开始进行分析,用户进程在系统调用的过程中首先会保存相关的寄存器信息保存到自己的栈空间上面
 // 在printf输出相关的Context指针地址我们也可以发现是这样的,之后就开始进行系统调用函数的处理,比如说处理到do_syscall函数
-//
+// 以yield异常为例进行处理,执行
 
 void init_proc() {
   context_kload(&pcb[0], hello_fun, NULL);
-  context_uload(&pcb[0], "/bin/dummy");
+  context_uload(&pcb[1], "/bin/dummy");
   switch_boot_pcb();
   Log("Initializing processes...");
 
