@@ -39,13 +39,10 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
 }
 
 // 根据相应的参数返回一个void*地址按照给定的要求进行参数组合
-void *setArgv(char *buf, int argc, char *argv) {
+void *setArgv(char *buf, char *argv) {
   size_t s = strlen(argv);
   memcpy(buf - s, argv, s);
-  int *t = (int *)(buf - s);
-  *(t - 1) = 0;
-  *(t - 2) = argc;
-  return t - 2;
+  return buf - s;
 }
 
 // 同理创建用户进程需要进行初始化有,1.在ucontext设置pc值,2.在当前暂时保存栈空间到a0寄存器中
@@ -53,10 +50,8 @@ Context *context_uload(PCB *pcb, char *pathname) {
   void *entry = naive_uload(pcb, pathname);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(NULL, area, entry);
-  int argc = 2;
   char *argv = "aaa bbb";
-  pcb->cp->GPRx = (uintptr_t)setArgv(area.end, argc, argv);
-  printf("pcb is %p\n ", pcb->cp->GPRx);
+  pcb->cp->GPRx = (uintptr_t)setArgv(area.end, argv);
   return pcb->cp;
 }
 
