@@ -56,9 +56,7 @@ void do_syscall(Context *c) {
     break;
   case SYS_execve:
     c->GPRx = sys_execve((char *)c->GPR2, (char **)c->GPR3, (char **)c->GPR4);
-    c->gpr[2] = (intptr_t)c;
-    switch_boot_pcb();
-    yield();
+    c->gpr[2] = (intptr_t)current->cp;
     break;
   case SYS_write:
     c->GPRx = fs_write(c->GPR2, (char *)c->GPR3, c->GPR4);
