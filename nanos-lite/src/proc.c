@@ -20,8 +20,10 @@ void switch_boot_pcb() { current = &pcb_boot; }
 void hello_fun(void *arg) {
   int j = 1;
   while (1) {
-    Log("Hello World from Nanos-lite with arg '%p' for the %dth time!",
-        (uintptr_t)arg, j);
+    if (j % 2000 == 0) {
+      Log("Hello World from Nanos-lite with arg '%p' for the %dth time!",
+          (uintptr_t)arg, j);
+    }
     j++;
     yield();
   }
@@ -53,13 +55,12 @@ void *setArgv(char *buf, char *const argv[]) {
   }
   del += 4;
   *(int *)(buf - del) = i;
-  // printf("%d  %d  %p\n", del, i, buf - del);
   return buf - del;
 }
 
 // 同理创建用户进程需要进行初始化有,1.在ucontext设置pc值,2.在当前暂时保存栈空间到a0寄存器中
 Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
-                       char *const envp) {
+                       char *const envp[]) {
   void *entry = naive_uload(pcb, pathname);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(NULL, area, entry);
@@ -71,10 +72,7 @@ Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
 
 void init_proc() {
   context_kload(&pcb[0], hello_fun, NULL);
-  char *a = "aaa";
-  char *b = "bbb";
-  char *argv[3] = {a, b, NULL};
-  context_uload(&pcb[1], "/bin/hello", argv, NULL);
+  context_uload(&pcb[1], "/bin/nterm", NULL, NULL);
   switch_boot_pcb();
   Log("Initializing processes...");
 

@@ -31,5 +31,9 @@ size_t get_ramdisk_size();
 size_t ramdisk_read(void *buf, size_t offset, size_t len);
 
 void *naive_uload(PCB *pcb, const char *filename);
+Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
+                       char *const envp[]);
+
+void switch_boot_pcb();
 
 #endif

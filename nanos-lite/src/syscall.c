@@ -29,7 +29,7 @@ int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
 }
 
 int sys_execve(const char *pathname, char *const argv[], char *const envp[]) {
-  naive_uload(NULL, pathname);
+  context_uload(current, pathname, argv, envp);
   return 0;
 }
 

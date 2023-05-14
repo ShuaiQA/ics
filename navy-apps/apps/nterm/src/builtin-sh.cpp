@@ -1,7 +1,7 @@
 #include <SDL.h>
-#include <cstdio>
 #include <nterm.h>
 #include <stdarg.h>
+#include <string.h>
 #include <unistd.h>
 
 char handle_key(SDL_Event *ev);
@@ -23,10 +23,21 @@ static void sh_prompt() { sh_printf("sh> "); }
 
 // 当前的cmd字符串是以\n进行结束的
 static void sh_handle_cmd(const char *cmd) {
-  char buf[40];
+  char buf[50];
   sscanf(cmd, "%s\n", buf);
   printf("buf is %s \n", buf);
-  execve(buf, NULL, NULL);
+  char *c = strtok(buf, " ");
+  char *argv[10];
+  int i = 0;
+  while (c != NULL) {
+    argv[i] = c;
+    i++;
+    c = strtok(NULL, " ");
+  }
+  for (int j = 0; j < i; j++) {
+    printf("%s\n", argv[j]);
+  }
+  execve(argv[0], argv, NULL);
 }
 
 void builtin_sh_run() {
