@@ -42,16 +42,20 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
 // 根据相应的参数返回一个void*地址按照给定的要求进行参数组合
 void *setArgv(char *buf, char *const argv[]) {
   int del = 0;
-  for (int i = 0; argv[i] != NULL; i++) {
+  int i = 0;
+  while (argv[i] != NULL) {
     size_t size = strlen(argv[i]);
     del += size;
     memcpy(buf - del, argv[i], size);
     del += 1;
     *(buf - del) = '\0';
+    i++;
   }
   del += 4;
   *(int *)(buf - del) = del;
-  printf("%d\n", del);
+  del += 4;
+  *(int *)(buf - del) = i;
+  printf("%d  %d \n", del, i);
   return buf - del;
 }
 
@@ -70,7 +74,7 @@ void init_proc() {
   context_kload(&pcb[0], hello_fun, NULL);
   char *a = "aaa";
   char *b = "bbb";
-  char *argv[3] = {a, b, NULL};
+  char *argv[2] = {a, b};
   context_uload(&pcb[1], "/bin/hello", argv, NULL);
   switch_boot_pcb();
   Log("Initializing processes...");

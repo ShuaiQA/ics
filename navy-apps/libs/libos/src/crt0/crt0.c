@@ -10,6 +10,7 @@ extern char **environ;
 void call_main(uintptr_t *args) {
   int *buf = (int *)args;
   printf("use buf is %d point %p\n", *buf, buf);
+  char *ags = (char *)args - *buf;
   // 对字符串buf进行拆分获取argc,argv
   char *empty[] = {NULL};
   environ = empty;
