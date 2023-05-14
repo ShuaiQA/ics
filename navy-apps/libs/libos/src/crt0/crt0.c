@@ -10,13 +10,14 @@ extern char **environ;
 // 当前的args也就是相当于a0
 void call_main(uintptr_t *args) {
   int argc = *(int *)(args);
-  // printf("argc %d\n", argc);
+  printf("argc %d\n", argc);
   char *ags = (char *)args + 4;
   char *argv[argc + 1];
   for (int i = argc - 1; i >= 0; i--) {
     argv[i] = ags;
     ags += strlen(ags) + 1;
   }
+  argv[argc] = NULL;
   // for (int i = 0; i < argc; i++) {
   //   printf("use argv %s\n", argv[i]);
   // }

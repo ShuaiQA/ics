@@ -46,7 +46,7 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
 void *setArgv(char *buf, char *const argv[]) {
   int del = 0;
   int i = 0;
-  while (argv[i] != NULL) {
+  while (argv != NULL && argv[i] != NULL) {
     del += 1;
     *(buf - del) = '\0';
     size_t size = strlen(argv[i]);
