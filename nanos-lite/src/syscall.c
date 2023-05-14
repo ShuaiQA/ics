@@ -5,6 +5,7 @@
 #include <fs.h>
 #include <proc.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <sys/time.h>
 
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime);
@@ -57,6 +58,9 @@ void do_syscall(Context *c) {
     // c->GPRx不再接受返回值,防止覆盖context_uload里设置的内容
     sys_execve((char *)c->GPR2, (char **)c->GPR3, (char **)c->GPR4);
     c->gpr[2] = (intptr_t)current->cp;
+    printf("hello");
+    yield();
+    printf("hello");
     break;
   case SYS_write:
     c->GPRx = fs_write(c->GPR2, (char *)c->GPR3, c->GPR4);
