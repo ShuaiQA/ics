@@ -9,7 +9,7 @@ extern char **environ;
 // 当前的args也就是相当于a0
 void call_main(uintptr_t *args) {
   char *buf = (char *)args;
-  printf("args is %s\n", buf);
+  printf("args is %s point is %p\n", buf, args);
   char *empty[] = {NULL};
   environ = empty;
   exit(main(0, empty, empty));

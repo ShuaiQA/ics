@@ -51,7 +51,9 @@ Context *context_uload(PCB *pcb, char *pathname) {
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(NULL, area, entry);
   char *argv = "aaa bbb";
+  printf("end is %p\n", area.end);
   pcb->cp->GPRx = (uintptr_t)setArgv(area.end, argv);
+  printf("next gprx is %p\n", pcb->cp->GPRx);
   return pcb->cp;
 }
 
