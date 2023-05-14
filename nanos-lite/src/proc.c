@@ -62,6 +62,7 @@ void *setArgv(char *buf, char *const argv[]) {
 Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
                        char *const envp[]) {
   void *entry = naive_uload(pcb, pathname);
+  printf("entry is %p\n", entry);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(NULL, area, entry);
   // 调用new_page(8)获取用户栈空间
