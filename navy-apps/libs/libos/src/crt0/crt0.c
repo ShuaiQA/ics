@@ -8,6 +8,7 @@ extern char **environ;
 
 // 当前的args也就是相当于a0
 void call_main(uintptr_t *args) {
+  printf("%p\n", args);
   char *buf = (char *)args;
   int pos = *(int *)(buf);
   int argc = *(int *)(buf + 4);
