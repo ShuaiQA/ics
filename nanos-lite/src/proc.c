@@ -66,7 +66,7 @@ Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
   void *entry = naive_uload(pcb, pathname);
   Log("use entry is %p\n", entry);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
-  for (int i = 0; argv[i] != NULL; i++) {
+  for (int i = 0; argv != NULL && argv[i] != NULL; i++) {
     printf("test %s\n", argv[i]);
   }
   pcb->cp = ucontext(NULL, area, entry);
