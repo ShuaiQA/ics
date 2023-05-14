@@ -30,8 +30,6 @@ int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
 
 int sys_execve(const char *pathname, char *const argv[], char *const envp[]) {
   current->cp = context_uload(current, pathname, argv, envp);
-  switch_boot_pcb();
-  yield();
   return 0;
 }
 
@@ -58,6 +56,9 @@ void do_syscall(Context *c) {
     break;
   case SYS_execve:
     c->GPRx = sys_execve((char *)c->GPR2, (char **)c->GPR3, (char **)c->GPR4);
+    c->gpr[2] = (intptr_t)c;
+    switch_boot_pcb();
+    yield();
     break;
   case SYS_write:
     c->GPRx = fs_write(c->GPR2, (char *)c->GPR3, c->GPR4);
