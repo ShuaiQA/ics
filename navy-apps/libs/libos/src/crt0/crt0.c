@@ -8,8 +8,9 @@ extern char **environ;
 
 // 当前的args也就是相当于a0
 void call_main(uintptr_t *args) {
-  uintptr_t pos = *args;
-  uintptr_t argc = *(args + 1);
+  char *buf = (char *)args;
+  uintptr_t pos = *(int *)(buf);
+  uintptr_t argc = *(int *)(buf + 4);
   printf("use pos is %ld argc %ld\n", pos, argc);
   char *ags = (char *)args + pos;
   // 对字符串buf进行拆分获取argc,argv

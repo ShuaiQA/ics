@@ -48,7 +48,7 @@ void *setArgv(char *buf, char *const argv[]) {
     del += size;
     memcpy(buf - del, argv[i], size);
     del += 1;
-    *(buf - del) = '\0';
+    *(buf - del) = ' ';
     i++;
   }
   del += 4;
