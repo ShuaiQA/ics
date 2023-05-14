@@ -41,9 +41,8 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
 // 根据相应的参数返回一个void*地址按照给定的要求进行参数组合
 void *setArgv(char *buf, char *argv) {
   size_t s = strlen(argv);
-  memcpy(buf - s - 1, argv, s);
-  *buf = '\0';
-  return buf - s - 1;
+  memcpy(buf - s - 2, argv, s);
+  return buf - s - 2;
 }
 
 // 同理创建用户进程需要进行初始化有,1.在ucontext设置pc值,2.在当前暂时保存栈空间到a0寄存器中
