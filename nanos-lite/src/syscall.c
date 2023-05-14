@@ -29,7 +29,7 @@ int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
 }
 
 int sys_execve(const char *pathname, char *const argv[], char *const envp[]) {
-  context_uload(current, pathname, argv, envp);
+  current->cp = context_uload(current, pathname, argv, envp);
   switch_boot_pcb();
   yield();
   return 0;
