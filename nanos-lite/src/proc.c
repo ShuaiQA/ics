@@ -44,12 +44,13 @@ void *setArgv(char *buf, char *const argv[]) {
   int del = 0;
   for (int i = 0; argv[i] != NULL; i++) {
     size_t size = strlen(argv[i]);
-    del -= size;
+    del += size;
     memcpy(buf - del, argv[i], size);
   }
-  *(int *)(buf - del - 4) = del - 4;
-  printf("%d\n", del - 4);
-  return buf - del - 4;
+  del += 4;
+  *(int *)(buf - del) = del;
+  printf("%d\n", del);
+  return buf - del;
 }
 
 // 同理创建用户进程需要进行初始化有,1.在ucontext设置pc值,2.在当前暂时保存栈空间到a0寄存器中
