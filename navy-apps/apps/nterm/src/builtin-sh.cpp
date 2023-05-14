@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <cstddef>
 #include <nterm.h>
 #include <stdarg.h>
 #include <string.h>
@@ -23,11 +24,13 @@ static void sh_prompt() { sh_printf("sh> "); }
 
 // 当前的cmd字符串是以\n进行结束的
 static void sh_handle_cmd(const char *cmd) {
-  char buf[50];
   // sscanf(cmd, "%s\n", buf);
-  printf("buf is %s \n", cmd);
-  char *c = strtok(buf, " ");
+  char buf[100];
+  size_t s = strlen(cmd);
+  memcpy(buf, cmd, s);
+
   char *argv[10];
+  char *c = strtok(buf, " ");
   int i = 0;
   while (c != NULL) {
     argv[i] = c;
