@@ -3,6 +3,7 @@
 #include <proc.h>
 #include <stddef.h>
 #include <stdint.h>
+// #include <stdio.h>
 #include <string.h>
 
 #define MAX_NR_PROC 4
@@ -55,6 +56,7 @@ void *setArgv(char *buf, char *const argv[]) {
   }
   del += 4;
   *(int *)(buf - del) = i;
+  printf("%d\n", i);
   return buf - del;
 }
 
