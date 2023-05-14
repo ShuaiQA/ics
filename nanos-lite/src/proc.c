@@ -55,7 +55,7 @@ void *setArgv(char *buf, char *const argv[]) {
   *(int *)(buf - del) = i;
   del += 4;
   *(int *)(buf - del) = del;
-  printf("%d  %d  %p\n", del, i, buf - del);
+  // printf("%d  %d  %p\n", del, i, buf - del);
   return buf - del;
 }
 
@@ -66,6 +66,7 @@ Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(NULL, area, entry);
   // 调用new_page(8)获取用户栈空间
+  // 设置栈空间的最后位置
   pcb->cp->GPRx = (uintptr_t)setArgv(new_page(8) + PGSIZE * 8, argv);
   return pcb->cp;
 }
