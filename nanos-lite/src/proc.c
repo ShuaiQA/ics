@@ -21,10 +21,8 @@ void switch_boot_pcb() { current = &pcb_boot; }
 void hello_fun(void *arg) {
   int j = 1;
   while (1) {
-    if (j % 2000 == 0) {
-      Log("Hello World from Nanos-lite with arg '%p' for the %dth time!",
-          (uintptr_t)arg, j);
-    }
+    Log("Hello World from Nanos-lite with arg '%p' for the %dth time!",
+        (uintptr_t)arg, j);
     j++;
     yield();
   }
@@ -65,9 +63,6 @@ Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
   void *entry = naive_uload(pcb, pathname);
   Log("use entry is %p\n", entry);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
-  for (int i = 0; argv != NULL && argv[i] != NULL; i++) {
-    printf("test %s\n", argv[i]);
-  }
   pcb->cp = ucontext(NULL, area, entry);
   // 调用new_page(8)获取用户栈空间
   // 设置栈空间的最后位置
