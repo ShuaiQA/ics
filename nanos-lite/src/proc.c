@@ -54,6 +54,7 @@ Context *context_uload(PCB *pcb, char *pathname) {
   printf("end is %p\n", heap.end);
   pcb->cp->GPRx = (uintptr_t)setArgv(heap.end, argv);
   printf("next gprx is %p\n", pcb->cp->GPRx);
+  printf("args is %s\n", (char *)pcb->cp->GPRx);
   return pcb->cp;
 }
 
