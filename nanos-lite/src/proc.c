@@ -44,11 +44,11 @@ void *setArgv(char *buf, char *const argv[]) {
   int del = 0;
   int i = 0;
   while (argv[i] != NULL) {
+    del += 1;
+    *(buf - del) = '\0';
     size_t size = strlen(argv[i]);
     del += size;
     memcpy(buf - del, argv[i], size);
-    del += 1;
-    *(buf - del) = ' ';
     i++;
   }
   del += 4;
