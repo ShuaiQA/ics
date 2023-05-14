@@ -52,9 +52,9 @@ void *setArgv(char *buf, char *const argv[]) {
     i++;
   }
   del += 4;
-  *(int *)(buf - del) = del;
-  del += 4;
   *(int *)(buf - del) = i;
+  del += 4;
+  *(int *)(buf - del) = del;
   printf("%d  %d \n", del, i);
   return buf - del;
 }
