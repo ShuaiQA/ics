@@ -72,7 +72,9 @@ Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
 
 void init_proc() {
   context_kload(&pcb[0], hello_fun, NULL);
-  context_uload(&pcb[1], "/bin/exec-test", NULL, NULL);
+  char *c = "/bin/exec-test";
+  char *argv[] = {c, NULL};
+  context_uload(&pcb[1], "/bin/exec-test", argv, NULL);
   switch_boot_pcb();
   Log("Initializing processes...");
 
