@@ -53,8 +53,6 @@ void *setArgv(char *buf, char *const argv[]) {
   }
   del += 4;
   *(int *)(buf - del) = i;
-  del += 4;
-  *(int *)(buf - del) = del;
   // printf("%d  %d  %p\n", del, i, buf - del);
   return buf - del;
 }

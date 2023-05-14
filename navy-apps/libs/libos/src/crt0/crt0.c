@@ -9,16 +9,13 @@ extern char **environ;
 
 // 当前的args也就是相当于a0
 void call_main(uintptr_t *args) {
-  char *buf = (char *)args;
-  int pos = *(int *)(buf);
-  int argc = *(int *)(buf + 4);
-  printf("use pos is %d argc %d\n", pos, argc);
-  char *ags = (char *)args + pos;
+  int argc = *(int *)(args);
+  printf("argc %d\n", argc);
+  char *ags = (char *)args + 4;
   char *argv[argc + 1];
-  for (int i = 0; i < argc; i++) {
+  for (int i = argc - 1; i >= 0; i--) {
     argv[i] = ags;
-    size_t s = strlen(ags);
-    ags += s;
+    ags += strlen(ags) + 1;
   }
   for (int i = 0; i < argc; i++) {
     printf("use argv %s\n", argv[i]);
