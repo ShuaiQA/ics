@@ -42,6 +42,7 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
 void *setArgv(char *buf, char *argv) {
   size_t s = strlen(argv);
   memcpy(buf - s - 1, argv, s);
+  *buf = '\0';
   return buf - s - 1;
 }
 
