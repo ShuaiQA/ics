@@ -28,9 +28,8 @@ int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
   return 0;
 }
 
-int sys_execve(const char *pathname, char *const argv[], char *const envp[]) {
+void sys_execve(const char *pathname, char *const argv[], char *const envp[]) {
   current->cp = context_uload(current, pathname, argv, envp);
-  return 0;
 }
 
 void do_syscall(Context *c) {
@@ -55,7 +54,8 @@ void do_syscall(Context *c) {
     c->gpr[2] = (intptr_t)c;
     break;
   case SYS_execve:
-    c->GPRx = sys_execve((char *)c->GPR2, (char **)c->GPR3, (char **)c->GPR4);
+    // c->GPRx不再接受返回值,防止覆盖context_uload里设置的内容
+    sys_execve((char *)c->GPR2, (char **)c->GPR3, (char **)c->GPR4);
     c->gpr[2] = (intptr_t)current->cp;
     break;
   case SYS_write:
