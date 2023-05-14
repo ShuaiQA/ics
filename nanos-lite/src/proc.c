@@ -1,4 +1,5 @@
 #include "am.h"
+#include "memory.h"
 #include <proc.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -39,35 +40,35 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
 }
 
 // 根据相应的参数返回一个void*地址按照给定的要求进行参数组合
-void *setArgv(char *buf, char *argv) {
-  size_t s = strlen(argv);
-  memcpy(buf - s - 2, argv, s);
-  *(buf - 1) = '\0';
-  return buf - s - 2;
+void *setArgv(char *buf, char *const argv[]) {
+  int del = 0;
+  for (int i = 0; argv[i] != NULL; i++) {
+    size_t size = strlen(argv[i]);
+    del -= size;
+    memcpy(buf - del, argv[i], size);
+  }
+  *(int *)(buf - del - 4) = del - 4;
+  printf("%d\n", del - 4);
+  return buf - del - 4;
 }
 
 // 同理创建用户进程需要进行初始化有,1.在ucontext设置pc值,2.在当前暂时保存栈空间到a0寄存器中
-Context *context_uload(PCB *pcb, char *pathname) {
+Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
+                       char *const envp) {
   void *entry = naive_uload(pcb, pathname);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(NULL, area, entry);
-  char *argv = "aaa bbb\0";
-  pcb->cp->GPRx = (uintptr_t)setArgv(heap.end, argv);
+  // 调用new_page(8)获取用户栈空间
+  pcb->cp->GPRx = (uintptr_t)setArgv(new_page(8), argv);
   return pcb->cp;
 }
 
-// 分析为什么用户程序会发生系统调用的错误,首先是初始化用户程序,经过测试发现用户线程执行到系统调用之前并没有错误
-// 在系统调用会发生错误(除了用户进程yield会执行正确,其余的系统调用都是错误的)
-// 开始进行分析,用户进程在系统调用的过程中首先会保存相关的寄存器信息保存到自己的栈空间上面
-// 在printf输出相关的Context指针地址我们也可以发现是这样的,之后就开始进行系统调用函数的处理
-// 以write异常为例进行处理,在执行到异常的时候保存当前栈上的Context然后不断的进入相关的函数
-// 直到对寄存器a0进行返回值的修改,根据指令的buf中发现在lw sp,8(sp)
-// 之后就发生了错误,不断的定位发现当异常号不是yield的时候,不需要在次进行lw
-// sp,8(sp) 换句话说说对于yield异常来说需要执行,其余的异常来说不需要执行
-
 void init_proc() {
   context_kload(&pcb[0], hello_fun, NULL);
-  context_uload(&pcb[1], "/bin/hello");
+  char *a = "aaa";
+  char *b = "bbb";
+  char *argv[3] = {a, b, NULL};
+  context_uload(&pcb[1], "/bin/hello", argv, NULL);
   switch_boot_pcb();
   Log("Initializing processes...");
 
@@ -93,3 +94,12 @@ Context *schedule(Context *prev) {
 // 由schedule可以发现,该cp会指向该进程里的一个新的Context由__am_asm_trap新创建的
 // 之后获取新的pcb数组,然后返回一个Context上下文,执行别的线程流
 // 上面介绍了线程的Context的初始化的过程,以及线程运行中Context的更新过程,选择下一个上下文更新的过程
+//
+// 分析为什么用户程序会发生系统调用的错误,首先是初始化用户程序,经过测试发现用户线程执行到系统调用之前并没有错误
+// 在系统调用会发生错误(除了用户进程yield会执行正确,其余的系统调用都是错误的)
+// 开始进行分析,用户进程在系统调用的过程中首先会保存相关的寄存器信息保存到自己的栈空间上面
+// 在printf输出相关的Context指针地址我们也可以发现是这样的,之后就开始进行系统调用函数的处理
+// 以write异常为例进行处理,在执行到异常的时候保存当前栈上的Context然后不断的进入相关的函数
+// 直到对寄存器a0进行返回值的修改,根据指令的buf中发现在lw sp,8(sp)
+// 之后就发生了错误,不断的定位发现当异常号不是yield的时候,不需要在次进行lw
+// sp,8(sp) 换句话说说对于yield异常来说需要执行,其余的异常来说不需要执行

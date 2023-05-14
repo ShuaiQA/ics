@@ -28,7 +28,7 @@ int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
   return 0;
 }
 
-int execve(const char *pathname, char *const argv[], char *const envp[]) {
+int sys_execve(const char *pathname, char *const argv[], char *const envp[]) {
   naive_uload(NULL, pathname);
   return 0;
 }
@@ -55,7 +55,7 @@ void do_syscall(Context *c) {
     c->gpr[2] = (intptr_t)c;
     break;
   case SYS_execve:
-    c->GPRx = execve((char *)c->GPR2, NULL, NULL);
+    c->GPRx = sys_execve((char *)c->GPR2, (char **)c->GPR3, (char **)c->GPR4);
     c->gpr[2] = (intptr_t)c;
     break;
   case SYS_write:
