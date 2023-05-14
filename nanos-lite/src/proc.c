@@ -50,7 +50,7 @@ Context *context_uload(PCB *pcb, char *pathname) {
   void *entry = naive_uload(pcb, pathname);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(NULL, area, entry);
-  char *argv = "aaa bbb";
+  char *argv = "aaa bbb\0";
   printf("end is %p\n", heap.end);
   pcb->cp->GPRx = (uintptr_t)setArgv(heap.end, argv);
   printf("next gprx is %p\n", pcb->cp->GPRx);
