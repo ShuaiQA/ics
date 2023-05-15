@@ -50,6 +50,7 @@ static char *img_file = NULL;
 static char *elf_file = NULL;
 static int difftest_port = 1234;
 
+// 加载对应的客户端程序.bin文件,将其加载到对应的内存大数组的位置
 static long load_img() {
   if (img_file == NULL) {
     Log("No image is given. Use the default build-in image.");

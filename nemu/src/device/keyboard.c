@@ -45,8 +45,9 @@
 enum { _KEY_NONE = 0, MAP(_KEYS, _KEY_NAME) };
 
 #define SDL_KEYMAP(k) keymap[concat(SDL_SCANCODE_, k)] = concat(_KEY_, k);
+// 定义SDL与自定义的key的映射关系
 static uint32_t keymap[256] = {};
-
+// 初始化映射关系
 static void init_keymap() { MAP(_KEYS, SDL_KEYMAP) }
 
 #define KEY_QUEUE_LEN 1024
@@ -75,7 +76,7 @@ static uint32_t key_dequeue() {
 }
 
 // 根据SDL库检测到的数据进行组合成对应的32位数据放到key_dequeue队列中
-// ASCII码表示8位数据就够了,另一位表示是否是按下或者弹起
+// ASCII码表示8位数据就够了,另一位表示是否是按下或者弹起,
 void send_key(uint8_t scancode, bool is_keydown) {
   if (nemu_state.state == NEMU_RUNNING && keymap[scancode] != _KEY_NONE) {
     uint32_t am_scancode = keymap[scancode] | (is_keydown ? KEYDOWN_MASK : 0);

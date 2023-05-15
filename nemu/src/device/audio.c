@@ -35,7 +35,8 @@ static uint8_t *sbuf = NULL;        // 缓冲区
 
 SDL_AudioSpec loaded_wav_spec;
 
-// 根据环形缓冲区读取数据
+// 根据环形缓冲区读取数据,音频回调函数的目的是将len长度的音频数据写入到stream数据流中
+// 需要根据reg_sbuf_size寄存器的剩余数据和环形缓冲区数据结构来读取音频数据
 void audio_callback(void *userdata, Uint8 *stream, int len) {
   if (audio_base[reg_sbuf_size] <= 0) // 当前没有数据
     return;
@@ -58,22 +59,26 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
 }
 
 // 如果偏移量在前面的三个寄存器需要设置相应的初始化
+// 音频回调函数,当修改相关的寄存器,音频设备需要做出相应的回应
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
-  if (offset == 0x10 && is_write) { // 进行初始化
+  assert(offset >= 0 && offset <= 24);
+  assert(is_write);
+  if (offset == reg_init * 4) { // 对init寄存器进行修改触发音频初始化函数
     loaded_wav_spec.freq = audio_base[reg_freq];
     loaded_wav_spec.channels = audio_base[reg_channels];
     loaded_wav_spec.samples = audio_base[reg_samples];
     loaded_wav_spec.callback = audio_callback;
     loaded_wav_spec.userdata = sbuf;
     SDL_OpenAudio(&loaded_wav_spec, NULL);
-  } else if (offset == 0x0c) {
+  } else if (offset == reg_sbuf_size * 4) { // 修改缓冲区大小,需要进行音频的播放
     SDL_PauseAudio(0);
   }
 }
 
 void init_audio() {
   uint32_t space_size = sizeof(uint32_t) * nr_reg;
-  audio_base = (uint32_t *)new_space(space_size);
+  audio_base = (uint32_t *)new_space(space_size); // 24B
+  // 初始状态音频缓冲区中是没有数据的,pos指向0
   audio_base[reg_sbuf_size] = 0;
   audio_base[reg_rpos] = 0;
 #ifdef CONFIG_HAS_PORT_IO

@@ -1,3 +1,4 @@
+#include "common.h"
 #include "debug.h"
 #include "sdb.h"
 #include <assert.h>
@@ -9,21 +10,22 @@
 #include <unistd.h>
 
 typedef struct Elf { // 记录函数的起始位置、函数的大小、名字
-  uint32_t st_value;
-  uint32_t st_size;
+  word_t st_value;
+  word_t st_size;
   char name[30];
 } funcs;
 
 typedef struct funcbuf { // 标记函数的起始位置
-  uint32_t val;
+  word_t val;
   char name[30];
-  int pos;
+  word_t pos;
 } funtrace;
 
 static funcs buf[10000]; // 记录当前有多少个函数
-static size_t num = 0;
+static word_t num = 0;
 static funtrace ff[20]; // 环形缓冲区记录函数调用过程
-static size_t cnt = 0;
+static word_t cnt = 0;
+// 使用当前的变量主要是为了,有可能输入参数可能没有elf_file
 static char *elf_file = NULL;
 
 void print_fun_buf() {
@@ -32,7 +34,7 @@ void print_fun_buf() {
   }
   int i = cnt;
   do {
-    printf("%08x\t%s\n", ff[i].val, ff[i].name);
+    Log("" FMT_WORD "\t%s\n", ff[i].val, ff[i].name);
     i = (i + 1) % 20;
   } while (i != cnt);
 }
@@ -114,9 +116,11 @@ void load_elf() {
     }
   }
   // 查看当前的函数集合
-  // printf("num is %zu\n", num);
+  // Log("func num is " FMT_WORD, num);
   // for (int i = 0; i < num; i++) {
-  //   printf("%08x\t%d\t%s\n", buf[i].st_value, buf[i].st_size, buf[i].name);
+  //   Log("" FMT_PADDR "\t" FMT_PADDR "\t%s\n", buf[i].st_value,
+  //   buf[i].st_size,
+  //       buf[i].name);
   // }
   (void)munmap(file_mmbase, fsize);
   (void)close(fd);
