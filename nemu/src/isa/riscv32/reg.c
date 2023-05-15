@@ -23,13 +23,15 @@ const char *regs[] = {"$0", "ra", "sp",  "gp",  "tp", "t0", "t1", "t2",
                       "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"};
 
 void isa_reg_display() {
-  printf("pc\t0x%-8x\n", cpu.pc);
+  printf("pc\t:" FMT_WORD "\n", cpu.pc);
   for (int i = 0; i < 32; i = i + 4) {
-    printf("%s\t0x%-8x\t%s\t0x%-8x\t%s\t0x%-8x\t%s\t0x%-8x\n", regs[i],
-           cpu.gpr[i], regs[i + 1], cpu.gpr[i + 1], regs[i + 2], cpu.gpr[i + 2],
-           regs[i + 3], cpu.gpr[i + 3]);
+    printf("%s\t" FMT_WORD "\t%s\t" FMT_WORD "\t%s\t" FMT_WORD "\t%s\t" FMT_WORD
+           "\n",
+           regs[i], cpu.gpr[i], regs[i + 1], cpu.gpr[i + 1], regs[i + 2],
+           cpu.gpr[i + 2], regs[i + 3], cpu.gpr[i + 3]);
   }
-  printf("mtvec  [0x%x] mepc  [0x%x] mcause  [0x%x]  mstatus  [0x%x]\n",
+  printf("mtvec  [" FMT_WORD "] mepc  [" FMT_WORD "] mcause  [" FMT_WORD
+         "]  mstatus  [" FMT_WORD "]\n",
          cpu.mtvec, cpu.mepc, cpu.mcause, cpu.mstatus);
 }
 
@@ -37,22 +39,6 @@ word_t isa_reg_str2val(const char *s, bool *success) {
   if (strcmp(s, "pc") == 0) {
     *success = true;
     return cpu.pc;
-  }
-  if (strcmp(s, "mtvec") == 0) {
-    *success = true;
-    return cpu.mtvec;
-  }
-  if (strcmp(s, "mepc") == 0) {
-    *success = true;
-    return cpu.mepc;
-  }
-  if (strcmp(s, "mcause") == 0) {
-    *success = true;
-    return cpu.mcause;
-  }
-  if (strcmp(s, "mstatus") == 0) {
-    *success = true;
-    return cpu.mstatus;
   }
   int pos = -1;
   for (int i = 0; i < 32; i++) {

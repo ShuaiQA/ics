@@ -42,6 +42,7 @@ static struct rule {
   const char *regex;
   int token_type;
 } rules[] = {
+    // 寄存器的reg解析暂时是$..
     {" ", TK_NOTYPE},     {"0x([0-9a-f]+)", TK_0XNUM},
     {"\\$..", TK_REG},    {"&&", TK_YUYU},
     {"==", TK_EQ},        {"!=", TK_NEQ},
@@ -105,12 +106,6 @@ static bool make_token(char *e) {
            i, rules[i].regex, position, substr_len, substr_len, substr_start);
          */
         position += substr_len;
-        /* TODO: Now a new token is recognized with rules[i]. Add codes
-         * to record the token in the array `tokens'. For certain types
-         * of tokens, some extra actions should be performed.
-         * 现在已经识别了一个新的token在rules[i]中,现在将其添加到tokens中
-         * 对于一些token还需要添加额外的信息
-         */
         switch (rules[i].token_type) {
         case TK_ADD: //"+"
           tokens[nr_token++].type = TK_ADD;
@@ -165,7 +160,7 @@ static bool make_token(char *e) {
     }
     // 在匹配token中没有找到与当前匹配的token输出没有找到
     if (i == NR_REGEX) {
-      printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
+      Log("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
       return false;
     }
   }

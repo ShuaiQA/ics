@@ -1,3 +1,4 @@
+#include "common.h"
 #include "sdb.h"
 
 typedef struct isa {
@@ -8,7 +9,7 @@ typedef struct isa {
 
 #define SIZE_ISA_BUF 16
 static ISAbuf buf[SIZE_ISA_BUF];
-static int pos = 0;
+static word_t pos = 0;
 
 void print_isa(word_t n, int cnt) {
   if (cnt < 31) {
@@ -36,7 +37,7 @@ void new_isa(word_t pc, word_t isa_val) {
 void printIringBuf() {
   int i = pos;
   do {
-    printf("[0x%08x]: %s\t    ", buf[i].pc, buf[i].action);
+    printf("[" FMT_WORD "]: %s\t    ", buf[i].pc, buf[i].action);
     print_isa(buf[i].isa_val, 0);
     printf("\n");
     i = (i + 1) % SIZE_ISA_BUF;

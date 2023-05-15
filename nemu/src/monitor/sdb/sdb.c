@@ -59,8 +59,6 @@ static int cmd_si(char *args) {
   if (token == NULL) {
     cpu_exec(1);
   } else {
-    // 如果输入的字符串不能够转换成数字n不会执行
-    // si一个负数会将程序执行完毕
     int n = atoi(token);
     cpu_exec(n);
   }
@@ -70,11 +68,26 @@ static int cmd_si(char *args) {
 // 查看所有的寄存器的值,或者是监视点
 static int cmd_info(char *args) {
   char *token = strtok(args, " ");
-  if (strcmp(token, "r") == 0) { // 打印寄存器信息
+  switch (token[0]) {
+  case 'r':
     isa_reg_display();
-  } else if (strcmp(token, "w") == 0) { // 打印监视点信息
+    break;
+  case 'w':
     printWP();
-  } else {
+    break;
+  case 'i':
+    IFDEF(CONFIG_IRINGBUF, printIringBuf());
+    break;
+  case 'f':
+    IFDEF(CONFIG_FTRACE, print_fun_buf());
+    break;
+  case 'e':
+    IFDEF(CONFIG_ETRACE, print_etrace());
+    break;
+  case 'd':
+    IFDEF(CONFIG_DTRACE, print_device_trace());
+    break;
+  default:
     Log("info参数不对输入:w或r\n");
   }
   return 0;
@@ -94,7 +107,7 @@ static int cmd_x(char *args) {
   word_t padd = expr(token, &v);
   for (int i = 0; i < cnt; i++) {
     word_t pval = paddr_read(padd, 4);
-    printf("[0x%08x]:\t0x%08x\t ", padd, pval);
+    printf("[" FMT_WORD "]:\t" FMT_WORD "\t ", padd, pval);
     padd += 4;
     if ((i + 1) % 4 == 0) {
       printf("\n");
@@ -110,7 +123,7 @@ static int cmd_p(char *args) {
   }
   bool v;
   word_t pval = expr(args, &v);
-  Log("0x%08x\n", pval);
+  Log("" FMT_WORD, pval);
   return 0;
 }
 
@@ -123,10 +136,10 @@ static int cmd_w(char *args) {
   bool success = false;
   word_t val = expr(args, &success);
   if (success == false) {
-    Log("表达式不合法\n");
+    Log("表达式不合法,重新输入\n");
   } else {
     new_wp(val, args);
-    Log("当前的val是0x%08x\n", val);
+    Log("当前的val是" FMT_WORD, val);
   }
   return 0;
 }
@@ -209,6 +222,7 @@ void sdb_mainloop() {
       args = NULL;
     }
 
+    // 防止当前的调试输出到event_queue中
 #ifdef CONFIG_DEVICE
     extern void sdl_clear_event_queue();
     sdl_clear_event_queue();

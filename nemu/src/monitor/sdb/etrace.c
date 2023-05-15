@@ -1,4 +1,5 @@
 // 设备访问环形缓冲区
+#include "common.h"
 #include "sdb.h"
 
 typedef struct {
@@ -8,7 +9,7 @@ typedef struct {
 
 #define SIZE_ETR_BUF 16
 static etrace buf[SIZE_ETR_BUF];
-static int pos = 0;
+static word_t pos = 0;
 
 void new_etrace(word_t pc, word_t No) {
   buf[pos].pc = pc;
@@ -20,7 +21,7 @@ void new_etrace(word_t pc, word_t No) {
 void print_etrace() {
   int i = pos;
   do {
-    printf("pc [0x%x] No [0x%x]\n", buf[i].pc, buf[i].No);
+    printf("pc [" FMT_WORD "] No [" FMT_WORD "]\n", buf[i].pc, buf[i].No);
     i = (i + 1) % SIZE_ETR_BUF;
   } while (i != pos);
 }

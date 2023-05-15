@@ -13,13 +13,14 @@
  * See the Mulan PSL v2 for more details.
  ***************************************************************************************/
 
+#include "debug.h"
 #include "sdb.h"
 #include "utils.h"
 
 #define NR_WP 32
 
 typedef struct watchpoint {
-  int NO;
+  word_t NO;
   struct watchpoint *next;
   word_t value;  // 保存older_value
   char what[40]; // 保存监视的是什么名字
@@ -55,7 +56,7 @@ void new_wp(word_t value, char *what) {
 // 将WP归还到free_链表中,删除查找head中的位置进行删除
 void free_wp(int no) {
   if (head == NULL) {
-    printf("观察点队列中没有no,输入info w查看所有的no");
+    Log("观察点队列中没有no,输入info w查看所有的no");
     return;
   }
   WP *p = head; // 定位到wp的前一个节点
@@ -70,7 +71,7 @@ void free_wp(int no) {
     p = p->next;
   }
   if (p->next == NULL) {
-    printf("观察点队列中没有no,输入info w查看所有的no");
+    Log("观察点队列中没有no,输入info w查看所有的no");
     return;
   }
   WP *wp = p->next;
@@ -83,8 +84,8 @@ void free_wp(int no) {
 void printWP() {
   WP *p = head;
   while (p != NULL) {
-    printf("NO:[%d]   older value is [0x%08x]   表达式:[%s]\n", p->NO, p->value,
-           p->what);
+    Log("NO:" FMT_WORD " older value is " FMT_WORD " 表达式:[%s]\n", p->NO,
+        p->value, p->what);
     p = p->next;
   }
 }
@@ -97,7 +98,8 @@ void find_watch() {
     bool temp = false;
     word_t val = expr(p->what, &temp);
     if (val != p->value) {
-      printf("NO:[%d],表达式:[%s],older_value:[0x%08x],new_value:[0x%08x]\n",
+      printf("NO:" FMT_WORD ",表达式:[%s],older_value:[" FMT_WORD
+             "],new_value:[" FMT_WORD "]\n",
              p->NO, p->what, p->value, val);
       p->value = val; // 更新val的值
       v = true;

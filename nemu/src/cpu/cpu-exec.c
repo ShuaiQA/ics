@@ -28,6 +28,7 @@
 #define MAX_INST_TO_PRINT 10
 
 CPU_state cpu = {};
+// 记录着指令执行的条数和时间
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
@@ -47,12 +48,6 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   // 每一条指令执行之后都需要进行difftest_step和断点的检测
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   IFDEF(CONFIG_WATCHPOINT, find_watch());
-  if (nemu_state.state == NEMU_ABORT) {
-    IFDEF(CONFIG_FTRACE, print_fun_buf());
-    IFDEF(CONFIG_IRINGBUF, printIringBuf());
-    IFDEF(CONFIG_DTRACE, print_device_trace());
-    IFDEF(CONFIG_ETRACE, print_etrace());
-  }
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {
@@ -96,7 +91,7 @@ static void execute(uint64_t n) {
     trace_and_difftest(&s, cpu.pc);
     if (nemu_state.state != NEMU_RUNNING)
       break;
-    IFDEF(CONFIG_DEVICE, device_update());
+    IFDEF(CONFIG_DEVICE, device_update()); // 设备会根据一定时间间隔进行更新
   }
 }
 
@@ -111,15 +106,16 @@ static void statistic() {
   else
     Log("Finish running in less than 1 us and can not calculate the simulation "
         "frequency");
+  if (nemu_state.state == NEMU_ABORT) {
+    IFDEF(CONFIG_FTRACE, print_fun_buf());
+    IFDEF(CONFIG_IRINGBUF, printIringBuf());
+    IFDEF(CONFIG_DTRACE, print_device_trace());
+    IFDEF(CONFIG_ETRACE, print_etrace());
+  }
 }
 
 void assert_fail_msg() {
   isa_reg_display();
-  // 如果出现了错误打印最近的函数调用和指令集和
-  IFDEF(CONFIG_FTRACE, print_fun_buf());
-  IFDEF(CONFIG_IRINGBUF, printIringBuf());
-  IFDEF(CONFIG_DTRACE, print_device_trace());
-  IFDEF(CONFIG_ETRACE, print_etrace());
   statistic();
 }
 
