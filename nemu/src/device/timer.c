@@ -19,9 +19,8 @@
 
 static uint32_t *rtc_port_base = NULL;
 
-// 外部设备来读取当前位置的时间信息
-// 首先偏移量必须是0或者4,并且是读事件
-// 只有读取偏移量是4的时候才进行修改对应位置的时间信息
+// 记录时间的设备,确保偏移量是4或0,只能读取当前的时间
+// 注意访问offset=4的时候才进行时间的更新,所以获取时间应该先访问高四位地址
 static void rtc_io_handler(uint32_t offset, int len, bool is_write) {
   assert(offset == 0 || offset == 4);
   if (!is_write && offset == 4) {
@@ -48,5 +47,5 @@ void init_timer() {
 #else
   add_mmio_map("rtc", CONFIG_RTC_MMIO, rtc_port_base, 8, rtc_io_handler);
 #endif
-  IFNDEF(CONFIG_TARGET_AM, add_alarm_handle(timer_intr));
+  IFNDEF(CONFIG_TARGET_AM, add_alarm_handle(timer_intr)); // ?
 }

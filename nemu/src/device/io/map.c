@@ -26,9 +26,10 @@ static uint8_t *io_space = NULL;
 // 标记当前已经映射的内存的地址空间
 static uint8_t *p_space = NULL;
 
+// 以一个页面(4KB)为单位进行分配IO映射空间
 uint8_t *new_space(int size) {
   uint8_t *p = p_space;
-  // page aligned;
+  // page aligned(页面对齐)
   size = (size + (PAGE_SIZE - 1)) & ~PAGE_MASK;
   p_space += size;
   assert(p_space - io_space < IO_SPACE_MAX);

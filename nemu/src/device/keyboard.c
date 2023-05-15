@@ -75,6 +75,7 @@ static uint32_t key_dequeue() {
 }
 
 // 根据SDL库检测到的数据进行组合成对应的32位数据放到key_dequeue队列中
+// ASCII码表示8位数据就够了,另一位表示是否是按下或者弹起
 void send_key(uint8_t scancode, bool is_keydown) {
   if (nemu_state.state == NEMU_RUNNING && keymap[scancode] != _KEY_NONE) {
     uint32_t am_scancode = keymap[scancode] | (is_keydown ? KEYDOWN_MASK : 0);

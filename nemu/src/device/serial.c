@@ -28,14 +28,14 @@ static void serial_putc(char ch) {
   MUXDEF(CONFIG_TARGET_AM, putch(ch), putc(ch, stderr));
 }
 
-// 应该向串口的内存地址空间进行写数据并且字节长度是1字节
+// 为什么会有回调函数,这是因为我们模拟的设备具有相关的功能,比如说我们向串口中写入相关的数据
+// 那么串口这个设备就会进行输出相关的数据,为了模拟串口这个设备,我们向相应的内存空间写入数据的时候
+// 很自然的想到设备应该做什么,那么回调函数就会发生什么,需要考虑读写偏移权限
 static void serial_io_handler(uint32_t offset, int len, bool is_write) {
   assert(len == 1);
   switch (offset) {
     /* We bind the serial port with the host stderr in NEMU. */
-    // off对于串口的起始位置的偏移量是0
   case CH_OFFSET:
-    // 只可以向串口中写数据
     if (is_write)
       serial_putc(serial_base[0]);
     else
