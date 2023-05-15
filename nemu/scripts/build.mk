@@ -27,14 +27,11 @@ LDFLAGS := -O2 $(LDFLAGS)
 
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o) $(CXXSRC:%.cc=$(OBJ_DIR)/%.o)
 
-$(OBJ_DIR)/%.a: %.c
-	@echo + CC $<
-	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) -E -o $@ $<
-	$(call call_fixdep, $(@:.o=.d), $@)
+c:
+	@$(CC) $(CFLAGS) -E -o aa src/device/keyboard.c
 
 # Compilation patterns
-$(OBJ_DIR)/%.o: %.c
+$(OBJ_DIR)/%.o: %.c c
 	@echo + CC $<
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c -o $@ $<
