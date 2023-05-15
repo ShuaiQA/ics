@@ -21,7 +21,9 @@
 
 #define IO_SPACE_MAX (2 * 1024 * 1024)
 
+// 用于记录io内存空间的起始地址
 static uint8_t *io_space = NULL;
+// 标记当前已经映射的内存的地址空间
 static uint8_t *p_space = NULL;
 
 uint8_t *new_space(int size) {
@@ -53,6 +55,7 @@ static void invoke_callback(io_callback_t c, paddr_t offset, int len,
   }
 }
 
+// 初始化2MB空间
 void init_map() {
   io_space = malloc(IO_SPACE_MAX);
   assert(io_space);
