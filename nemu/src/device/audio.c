@@ -62,7 +62,6 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
 // 音频回调函数,当修改相关的寄存器,音频设备需要做出相应的回应
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
   assert(offset >= 0 && offset <= 24);
-  assert(is_write);
   if (offset == reg_init * 4) { // 对init寄存器进行修改触发音频初始化函数
     loaded_wav_spec.freq = audio_base[reg_freq];
     loaded_wav_spec.channels = audio_base[reg_channels];

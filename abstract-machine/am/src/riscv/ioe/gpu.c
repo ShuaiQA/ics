@@ -24,6 +24,8 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
       fb[i + j * 400] = p[cnt++];
     }
   }
+  for (int i = ctl->y; i < ctl->y + ctl->h; i++) {
+  }
   if (ctl->sync) {
     outl(SYNC_ADDR, 1); // 直接根据对应的内存地址对nemu的[1]下标进行修改
   }

@@ -88,7 +88,7 @@ static int cmd_info(char *args) {
     IFDEF(CONFIG_DTRACE, print_device_trace());
     break;
   default:
-    Log("info参数不对输入:w或r\n");
+    Log("info参数不对输入:w,r,i,f,e,d\n");
   }
   return 0;
 }

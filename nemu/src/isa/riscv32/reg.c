@@ -23,15 +23,15 @@ const char *regs[] = {"$0", "ra", "sp",  "gp",  "tp", "t0", "t1", "t2",
                       "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"};
 
 void isa_reg_display() {
-  printf("pc\t:" FMT_WORD "\n", cpu.pc);
+  printf("pc\t" FMT_WORD "\n", cpu.pc);
   for (int i = 0; i < 32; i = i + 4) {
     printf("%s\t" FMT_WORD "\t%s\t" FMT_WORD "\t%s\t" FMT_WORD "\t%s\t" FMT_WORD
            "\n",
            regs[i], cpu.gpr[i], regs[i + 1], cpu.gpr[i + 1], regs[i + 2],
            cpu.gpr[i + 2], regs[i + 3], cpu.gpr[i + 3]);
   }
-  printf("mtvec  [" FMT_WORD "] mepc  [" FMT_WORD "] mcause  [" FMT_WORD
-         "]  mstatus  [" FMT_WORD "]\n",
+  printf("mtvec\t" FMT_WORD "\tmepc" FMT_WORD "\tmcause" FMT_WORD
+         "\tmstatus" FMT_WORD "\n",
          cpu.mtvec, cpu.mepc, cpu.mcause, cpu.mstatus);
 }
 
