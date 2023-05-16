@@ -24,10 +24,9 @@ static void sh_prompt() { sh_printf("sh> "); }
 
 // 当前的cmd字符串是以\n进行结束的
 static void sh_handle_cmd(const char *cmd) {
-  // sscanf(cmd, "%s\n", buf);
   char buf[100];
   size_t s = strlen(cmd);
-  memcpy(buf, cmd, s);
+  memcpy(buf, cmd, s - 1);
 
   char *argv[10];
   char *c = strtok(buf, " ");
