@@ -43,45 +43,35 @@ void do_syscall(Context *c) {
   switch (a[0]) {
   case SYS_exit:
     sys_exit(c);
-    c->gpr[2] = (intptr_t)c;
     break;
   case SYS_yield:
     sys_yield(c);
     break;
   case SYS_open:
     c->GPRx = fs_open((char *)c->GPR2, c->GPR3, c->GPR4);
-    c->gpr[2] = (intptr_t)c;
     break;
   case SYS_read:
     c->GPRx = fs_read(c->GPR2, (void *)c->GPR3, c->GPR4);
-    c->gpr[2] = (intptr_t)c;
     break;
   case SYS_execve:
     // c->GPRx不再接受返回值,防止覆盖context_uload里设置的内容
     sys_execve((char *)c->GPR2, (char **)c->GPR3, (char **)c->GPR4);
-    c->gpr[2] = (intptr_t)current->cp;
-    yield();
     break;
   case SYS_write:
     c->GPRx = fs_write(c->GPR2, (char *)c->GPR3, c->GPR4);
-    c->gpr[2] = (intptr_t)c;
     break;
   case SYS_brk:
     c->GPRx = (uintptr_t)sys_brk(c->GPR2);
-    c->gpr[2] = (intptr_t)c;
     break;
   case SYS_close:
     c->GPRx = fs_close(c->GPR2);
-    c->gpr[2] = (intptr_t)c;
     break;
   case SYS_lseek:
     c->GPRx = fs_lseek(c->GPR2, c->GPR3, c->GPR4);
-    c->gpr[2] = (intptr_t)c;
     break;
   case SYS_gettimeofday:
     c->GPRx =
         sys_gettimeofday((struct timeval *)c->GPR2, (struct timezone *)c->GPR3);
-    c->gpr[2] = (intptr_t)c;
     break;
   default:
     panic("Unhandled syscall ID = %d", a[0]);
