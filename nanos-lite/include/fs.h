@@ -21,9 +21,10 @@ size_t fs_lseek(int fd, size_t offset, int whence);
 int fs_open(const char *pathname, int flags, int mode);
 size_t getfilesize(int fd);
 
-size_t serial_write(const void *buf, size_t offset, size_t len);
 size_t events_read(void *buf, size_t offset, size_t len);
 size_t dispinfo_read(void *buf, size_t offset, size_t len);
+size_t serial_write(const void *buf, size_t offset, size_t len);
 size_t fb_write(const void *buf, size_t offset, size_t len);
+size_t sb_write(const void *buf, size_t offset, size_t len);
 
 #endif

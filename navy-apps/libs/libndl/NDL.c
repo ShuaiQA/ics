@@ -12,7 +12,7 @@
 // 相关的文件集合(包含设备文件)
 static int evtdev = -1;
 static int fbdev = -1;
-static int dispdev;
+static int dispdev = -1;
 
 // 用于标记是否已经初始化了,因为当前的库给SDL和AM都需要提供接口
 // 避免多次初始化中文件偏移错误
@@ -101,6 +101,7 @@ int NDL_Init(uint32_t flags) {
     evtdev = open("/dev/events", O_RDONLY);
     read(dispdev, buf, 64);
     sscanf(buf, "WIDTH: %d\nHEIGHT: %d\n", &screen_w, &screen_h);
+    close(dispdev);
     // printf("screen_w %d screen_h %d\n", screen_w, screen_h);
     tag = 1;
   }
@@ -109,8 +110,8 @@ int NDL_Init(uint32_t flags) {
 
 void NDL_Quit() {
   if (tag) {
-    close(dispdev);
     close(fbdev);
-    tag = 1;
+    close(evtdev);
+    tag = 0;
   }
 }

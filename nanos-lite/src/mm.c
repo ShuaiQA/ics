@@ -1,5 +1,5 @@
-#include "am.h"
-#include "debug.h"
+#include <am.h>
+#include <debug.h>
 #include <memory.h>
 
 static void *pf = NULL;

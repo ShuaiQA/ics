@@ -3,8 +3,6 @@
 #include "klib-macros.h"
 #include <common.h>
 #include <stddef.h>
-#include <stdio.h>
-#include <string.h>
 
 #if defined(MULTIPROGRAM) && !defined(TIME_SHARING)
 #define MULTIPROGRAM_YIELD() yield()
@@ -18,7 +16,7 @@ static const char *keyname[256]
     __attribute__((used)) = {[AM_KEY_NONE] = "NONE", AM_KEYS(NAME)};
 
 // 串口写入操作
-size_t serial_write(const void *buf, size_t offset, size_t len) {
+size_t serial_write(void *buf, size_t offset, size_t len) {
   char *temp = (char *)buf;
   for (size_t i = 0; i < len; i++) {
     putch(temp[i]);
@@ -32,13 +30,12 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   if (ev.keycode == AM_KEY_NONE) {
     return 0;
   }
-  if (ev.keydown == 1) {
+  if (ev.keydown) {
     sprintf(buf, "%s", "kd");
   } else {
     sprintf(buf, "%s", "ku");
   }
-  sprintf(buf, "%s %s\n", (char *)buf, keyname[ev.keycode]);
-  return strlen(buf);
+  return sprintf(buf, "%s %s\n", (char *)buf, keyname[ev.keycode]);
 }
 
 // 读取屏幕大小信息,根据一定的格式向buf中写入数据
@@ -46,14 +43,19 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   int w = io_read(AM_GPU_CONFIG).width;
   int h = io_read(AM_GPU_CONFIG).height;
   // printf("w is %d h is %d\n", w, h);
-  int c = sprintf(buf, "WIDTH: %d\nHEIGHT: %d\n", w, h);
-  return c;
+  return sprintf(buf, "WIDTH: %d\nHEIGHT: %d\n", w, h);
 }
 
 size_t fb_write(void *buf, size_t offset, size_t len) {
   int x = offset / 4 % 400;
   int y = offset / 4 / 400;
   io_write(AM_GPU_FBDRAW, x, y, buf, len / 4, 1, true);
+  return len;
+}
+
+size_t sb_write(void *buf, size_t offset, size_t len) {
+  Area area = {buf, buf + len};
+  ioe_write(AM_AUDIO_PLAY, &area);
   return len;
 }
 
