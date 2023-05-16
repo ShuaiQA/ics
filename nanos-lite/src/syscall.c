@@ -15,6 +15,7 @@ void sys_yield(Context *c) {
   // 首先确定的是寄存器sp指向的是一个上下文的结构体数据,然后根据该结构体数据进行恢复上下文
   // 我修改了__am_asm_trap汇编代码,先让sp寄存器先加载Context结构体中sp寄存器的位置
   // 然后在根据该位置进行恢复上下文即可完成相关的恢复工作
+  Log("run yield");
   c->gpr[2] = (uintptr_t)schedule(c);
 }
 
@@ -38,6 +39,7 @@ void sys_execve(const char *pathname, char *const argv[], char *const envp[]) {
 void do_syscall(Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;
+  Log("GPR1 is %d\n", a[0]);
   Log("%p\n", c);
 
   switch (a[0]) {
