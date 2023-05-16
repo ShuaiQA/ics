@@ -63,6 +63,7 @@ int fs_open(const char *pathname, int flags, int mode) {
       file_table[i].open_offset = 0;
       return i;
     }
+    printf("%s  %s  %s\n", buf, file_table[i].name, pathname);
   }
   panic("没有找到当前文件");
   return -1;
