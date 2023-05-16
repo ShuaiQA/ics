@@ -50,9 +50,8 @@ __am_asm_trap:
   mv a0, sp
   jal __am_irq_handle
 # 返回处理程序之后需要让(sp+8) 放到sp寄存器中
-	lw t0, 0(a7)   
 	li t1, 1       
-	bne t0, t1, skip  
+	bne a7, t1, skip  
 	lw	sp, 40(sp)
 skip:
 
