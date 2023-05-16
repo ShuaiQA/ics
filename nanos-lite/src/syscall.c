@@ -14,9 +14,8 @@ void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime);
 // 首先确定的是寄存器sp指向的是一个上下文的结构体数据,然后根据该结构体数据进行恢复上下文
 // 我修改了__am_asm_trap汇编代码,先让sp寄存器先加载Context结构体中a0寄存器的位置
 // 然后在根据该位置进行恢复上下文即可完成相关的恢复工作
-uintptr_t sys_yield(Context *c) {
-  return (uintptr_t)schedule(c); // GPRx返回新的指针
-}
+
+void sys_yield(Context *c) { asm volatile("mv sp, %0" : : "r"(schedule(c))); }
 
 void sys_exit(Context *c) { halt(c->GPR2); }
 
@@ -46,7 +45,7 @@ void do_syscall(Context *c) {
     sys_exit(c);
     break;
   case SYS_yield:
-    c->GPRx = sys_yield(c);
+    sys_yield(c);
     break;
   case SYS_open:
     c->GPRx = fs_open((char *)c->GPR2, c->GPR3, c->GPR4);
