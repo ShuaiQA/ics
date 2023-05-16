@@ -13,10 +13,11 @@ void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime);
 // 我修改了__am_asm_trap汇编代码,先让sp寄存器先加载Context结构体中a0寄存器的位置
 // 然后在根据该位置进行恢复上下文即可完成相关的恢复工作
 
-void sys_yield(Context *c) {
+int sys_yield(Context *c) {
   uintptr_t sp = (uintptr_t)schedule(c);
   Log("sp is %p", sp);
   asm volatile("mv sp, %0" : : "r"(sp));
+  return 0;
 }
 
 void sys_exit(Context *c) { halt(c->GPR2); }
@@ -47,7 +48,7 @@ void do_syscall(Context *c) {
     sys_exit(c);
     break;
   case SYS_yield:
-    sys_yield(c);
+    c->GPRx = sys_yield(c);
     break;
   case SYS_open:
     c->GPRx = fs_open((char *)c->GPR2, c->GPR3, c->GPR4);
