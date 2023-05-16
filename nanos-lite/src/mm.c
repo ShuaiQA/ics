@@ -1,3 +1,5 @@
+#include "am.h"
+#include "debug.h"
 #include <memory.h>
 
 static void *pf = NULL;
@@ -20,10 +22,10 @@ void free_page(void *p) { panic("not implement yet"); }
 /* The brk() system call handler. */
 int mm_brk(uintptr_t brk) { return 0; }
 
-// 初始化pf使其指向一个地址大约是0x83000000位置处(按照页面对齐)
 void init_mm() {
   pf = (void *)ROUNDUP(heap.start, PGSIZE);
-  Log("free physical pages starting from %p", pf);
+  Log("heap.start address is %p free physical pages starting from %p",
+      heap.start, pf);
 
 #ifdef HAS_VME
   vme_init(pg_alloc, free_page);

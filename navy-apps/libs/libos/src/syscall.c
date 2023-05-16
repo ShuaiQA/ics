@@ -76,7 +76,8 @@ char *pb = &_end;
 void *_sbrk(intptr_t increment) {
   char *old = pb;
   pb += increment;
-  _syscall_(SYS_brk, increment, 0, 0);
+  // 将新的pb传到操作系统中,查看申请之后的进程空间是否和其余的有冲突
+  _syscall_(SYS_brk, (intptr_t)pb, 0, 0);
   return old;
 }
 

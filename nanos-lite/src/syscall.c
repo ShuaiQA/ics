@@ -19,7 +19,8 @@ void sys_yield(Context *c) {
 
 void sys_exit(Context *c) { halt(c->GPR2); }
 
-void *sys_brk(uint32_t size) { return 0; }
+// 判断当前的addr是否和其余的程序有冲突
+void *sys_brk(uint32_t addr) { return 0; }
 
 int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
   AM_TIMER_UPTIME_T rtc;

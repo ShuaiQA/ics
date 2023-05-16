@@ -1,7 +1,6 @@
 #include "am.h"
+#include "debug.h"
 #include <fs.h>
-#include <stddef.h>
-#include <stdio.h>
 
 typedef size_t (*ReadFn)(void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn)(const void *buf, size_t offset, size_t len);
@@ -29,7 +28,7 @@ size_t invalid_write(const void *buf, size_t offset, size_t len) {
 
 #define NR_REGEX ARRLEN(file_table)
 
-/* This is the information about all files in disk. */
+// 由于当前的文件的大小是固定的,在读写偏移的时候不能够超过文件的大小,防止修改别的文件
 static Finfo file_table[] __attribute__((used)) = {
     [FD_STDIN] = {"stdin", 0, 0, invalid_read, invalid_write},
     [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write},
@@ -69,7 +68,6 @@ size_t fs_read(int fd, void *buf, size_t len) {
 
 // 按照手册的说法即使是offset跳过了超出了文件的长度也应该写入(但是这里限制了文件的长度)
 size_t fs_write(int fd, const void *buf, size_t len) {
-  yield();
   if (file_table[fd].write != NULL) {
     return file_table[fd].write(buf, file_table[fd].open_offset, len);
   }
@@ -82,14 +80,23 @@ size_t fs_write(int fd, const void *buf, size_t len) {
 }
 
 size_t fs_lseek(int fd, size_t offset, int whence) {
-  if (whence == SEEK_SET) {
+  switch (whence) {
+  case SEEK_SET:
     file_table[fd].open_offset = offset;
-  } else if (whence == SEEK_CUR) {
+    break;
+  case SEEK_CUR:
     file_table[fd].open_offset += offset;
-  } else {
+    break;
+  case SEEK_END:
     file_table[fd].open_offset = file_table[fd].size + offset;
+    break;
+  default:
+    panic("fs_lseek is failed whence is %d", whence);
   }
-  return file_table[fd].open_offset;
+  // 不能够超出文件的大小
+  return file_table[fd].open_offset > file_table[fd].size
+             ? file_table[fd].size
+             : file_table[fd].open_offset;
 }
 
 int fs_close(int fd) { return 0; }
