@@ -5,8 +5,6 @@
 #include <common.h>
 #include <fs.h>
 #include <proc.h>
-#include <stdint.h>
-#include <stdio.h>
 #include <sys/time.h>
 
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime);
@@ -15,7 +13,11 @@ void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime);
 // 我修改了__am_asm_trap汇编代码,先让sp寄存器先加载Context结构体中a0寄存器的位置
 // 然后在根据该位置进行恢复上下文即可完成相关的恢复工作
 
-void sys_yield(Context *c) { asm volatile("mv sp, %0" : : "r"(schedule(c))); }
+void sys_yield(Context *c) {
+  uintptr_t sp = (uintptr_t)schedule(c);
+  Log("sp is %p\n", sp);
+  asm volatile("mv sp, %0" : : "r"(sp));
+}
 
 void sys_exit(Context *c) { halt(c->GPR2); }
 
