@@ -20,7 +20,7 @@ void free_page(void *p) { panic("not implement yet"); }
 /* The brk() system call handler. */
 int mm_brk(uintptr_t brk) { return 0; }
 
-// 初始化pf使其指向一个地址大约是0x83000000位置处
+// 初始化pf使其指向一个地址大约是0x83000000位置处(按照页面对齐)
 void init_mm() {
   pf = (void *)ROUNDUP(heap.start, PGSIZE);
   Log("free physical pages starting from %p", pf);
