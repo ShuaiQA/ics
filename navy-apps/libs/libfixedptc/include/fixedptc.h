@@ -68,7 +68,6 @@
  * SUCH DAMAGE.
  */
 
-#include <cstdint>
 #ifndef FIXEDPT_BITS
 #define FIXEDPT_BITS 32
 #endif

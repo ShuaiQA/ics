@@ -1,6 +1,8 @@
 #include "am.h"
 #include "debug.h"
 #include <fs.h>
+#include <stdio.h>
+#include <string.h>
 
 typedef size_t (*ReadFn)(void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn)(const void *buf, size_t offset, size_t len);
@@ -14,7 +16,16 @@ typedef struct {
   size_t open_offset;
 } Finfo;
 
-enum { FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENT, FD_FB, FD_SB, FD_DISP };
+enum {
+  FD_STDIN,
+  FD_STDOUT,
+  FD_STDERR,
+  FD_EVENT,
+  FD_FB,
+  FD_SB,
+  FD_DISP,
+  FD_SBCTL
+};
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
@@ -37,6 +48,7 @@ static Finfo file_table[] __attribute__((used)) = {
     [FD_FB] = {"/dev/fb", 0, 0, invalid_read, fb_write},
     [FD_SB] = {"/dev/sb", 0, 0, invalid_read, sb_write},
     [FD_DISP] = {"/proc/dispinfo", 0, 0, dispinfo_read, NULL},
+    [FD_SBCTL] = {"/dev/sbctl", 0, 0, sbctl_read, sbctl_write},
 
 #include "files.h"
 };
@@ -44,7 +56,10 @@ static Finfo file_table[] __attribute__((used)) = {
 // 根据pathname找到对应的文件描述符
 int fs_open(const char *pathname, int flags, int mode) {
   for (int i = 0; i < NR_REGEX; i++) {
-    if (strcmp(pathname, file_table[i].name) == 0) {
+    char buf[20];
+    sprintf(buf, "%s%s", "/bin/", pathname);
+    if (strcmp(pathname, file_table[i].name) == 0 ||
+        strcmp(buf, file_table[i].name) == 0) {
       file_table[i].open_offset = 0;
       return i;
     }

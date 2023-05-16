@@ -10,9 +10,11 @@
 #include <unistd.h>
 
 // 相关的文件集合(包含设备文件)
-static int evtdev = -1;
-static int fbdev = -1;
-static int dispdev = -1;
+static int evtdev = -1;  // events file
+static int fbdev = -1;   // gpu file
+static int sb = -1;      // audio file
+static int dispdev = -1; // gpu config file
+static int sbctl = -1;   // audio config file
 
 // 用于标记是否已经初始化了,因为当前的库给SDL和AM都需要提供接口
 // 避免多次初始化中文件偏移错误
@@ -82,13 +84,23 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   }
 }
 
-void NDL_OpenAudio(int freq, int channels, int samples) {}
+void NDL_OpenAudio(int freq, int channels, int samples) {
+  int buf[3];
+  buf[0] = freq;
+  buf[1] = channels;
+  buf[2] = samples;
+  write(sbctl, buf, 12);
+}
 
 void NDL_CloseAudio() {}
 
-int NDL_PlayAudio(void *buf, int len) { return 0; }
+int NDL_PlayAudio(void *buf, int len) { return write(sb, buf, len); }
 
-int NDL_QueryAudio() { return 0; }
+int NDL_QueryAudio() {
+  int *buf;
+  read(sbctl, buf, 4);
+  return buf[0];
+}
 
 int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
@@ -98,6 +110,8 @@ int NDL_Init(uint32_t flags) {
     char buf[64];
     dispdev = open("/proc/dispinfo", O_RDONLY);
     fbdev = open("/dev/fb", O_RDONLY);
+    sb = open("/dev/sb", O_RDWR);
+    sbctl = open("/dev/sbctl", O_RDWR);
     evtdev = open("/dev/events", O_RDONLY);
     read(dispdev, buf, 64);
     sscanf(buf, "WIDTH: %d\nHEIGHT: %d\n", &screen_w, &screen_h);
@@ -112,6 +126,8 @@ void NDL_Quit() {
   if (tag) {
     close(fbdev);
     close(evtdev);
+    close(sb);
+    close(sbctl);
     tag = 0;
   }
 }

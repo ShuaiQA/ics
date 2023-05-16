@@ -2,7 +2,6 @@
 #include "amdev.h"
 #include "klib-macros.h"
 #include <common.h>
-#include <stddef.h>
 
 #if defined(MULTIPROGRAM) && !defined(TIME_SHARING)
 #define MULTIPROGRAM_YIELD() yield()
@@ -46,6 +45,12 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   return sprintf(buf, "WIDTH: %d\nHEIGHT: %d\n", w, h);
 }
 
+size_t sbctl_read(void *buf, size_t offset, size_t len) {
+  AM_AUDIO_STATUS_T stat = io_read(AM_AUDIO_STATUS);
+  *(int *)buf = stat.count;
+  return 4;
+}
+
 size_t fb_write(void *buf, size_t offset, size_t len) {
   int x = offset / 4 % 400;
   int y = offset / 4 / 400;
@@ -55,7 +60,14 @@ size_t fb_write(void *buf, size_t offset, size_t len) {
 
 size_t sb_write(void *buf, size_t offset, size_t len) {
   Area area = {buf, buf + len};
-  ioe_write(AM_AUDIO_PLAY, &area);
+  io_write(AM_AUDIO_PLAY, area);
+  return len;
+}
+
+size_t sbctl_write(void *buf, size_t offset, size_t len) {
+  assert(len == 12);
+  int *arr = (int *)buf;
+  io_write(AM_AUDIO_CTRL, arr[0], arr[1], arr[2]);
   return len;
 }
 
