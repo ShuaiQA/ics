@@ -37,7 +37,7 @@ void sys_execve(const char *pathname, char *const argv[], char *const envp[]) {
 void do_syscall(Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;
-  // printf("%p\n", c);
+  printf("%p\n", c);
 
   switch (a[0]) {
   case SYS_exit:
