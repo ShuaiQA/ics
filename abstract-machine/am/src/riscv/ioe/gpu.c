@@ -1,7 +1,6 @@
 #include <am.h>
+#include <klib.h>
 #include <nemu.h>
-#include <stdint.h>
-#include <string.h>
 
 #define SYNC_ADDR (VGACTL_ADDR + 4)
 
@@ -25,7 +24,7 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   uint32_t *dst = (uint32_t *)FB_ADDR;
   int i = 0;
   for (int j = ctl->y; j < ctl->y + ctl->h; j++) {
-    memcpy(dst + (j * width + ctl->x), src + ctl->w * i, ctl->w);
+    memcpy(dst + (j * width + ctl->x), src + ctl->w * i, ctl->w * 4);
     i++;
   }
   if (ctl->sync) {
