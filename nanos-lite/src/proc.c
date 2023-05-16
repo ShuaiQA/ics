@@ -1,4 +1,5 @@
 #include "am.h"
+#include "debug.h"
 #include "memory.h"
 #include <proc.h>
 #include <stddef.h>
@@ -39,6 +40,7 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
   // 创建内核线程的栈空间
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = kcontext(area, entry, arg);
+  Log("create cte is %p", pcb->cp);
   return pcb->cp;
 }
 

@@ -15,7 +15,7 @@ void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime);
 
 void sys_yield(Context *c) {
   uintptr_t sp = (uintptr_t)schedule(c);
-  Log("sp is %p\n", sp);
+  Log("sp is %p", sp);
   asm volatile("mv sp, %0" : : "r"(sp));
 }
 
