@@ -36,8 +36,8 @@ static void sh_handle_cmd(const char *cmd) {
     i++;
     c = strtok(NULL, " ");
   }
-  argv[i] = NULL;
-  for (int j = 0; j < i; j++) {
+  argv[i - 1] = NULL;
+  for (int j = 0; j < i - 1; j++) {
     printf("j is %d string %s\n", j, argv[j]);
   }
   execve(argv[0], argv, NULL);
