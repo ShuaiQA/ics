@@ -1,6 +1,7 @@
 #include "syscall.h"
 #include <assert.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <time.h>
@@ -58,6 +59,7 @@ intptr_t _syscall_(intptr_t type, intptr_t a0, intptr_t a1, intptr_t a2) {
 void _exit(int status) {
   // _syscall_(SYS_exit, status, 0, 0);
   execve("/bin/nterm", NULL, NULL);
+  printf("over to nterm");
   while (1)
     ;
 }
