@@ -26,8 +26,8 @@ static void sh_prompt() { sh_printf("sh> "); }
 static void sh_handle_cmd(const char *cmd) {
   char buf[100];
   size_t s = strlen(cmd);
-  memcpy(buf, cmd, s);
-  buf[s] = '\0'; // 排除\n
+  memcpy(buf, cmd, s - 1);
+  buf[s - 1] = '\0'; // 排除\n
 
   char *argv[10];
   char *c = strtok(buf, " ");
