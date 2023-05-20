@@ -35,12 +35,11 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   Assert(page_dir > 0x80200000, "page_dir should > 0x80000000");
   word_t pte =
       paddr_read(page_dir + (vaddr >> 22) * 4, 4); // 找到页目录中的页表项
-  assert((pte & 0x1) == 1); // 查看当前的页表项有效位应该是1
+  Assert((pte & 0x1) == 1, "cnt is %d\n", cnt);
   word_t next_page = pte & 0xfffff000; // 根据页表项的获取二级页表的物理地址
   word_t next_pte = paddr_read(next_page + (vaddr << 10 >> 22) * 4,
                                4); // 获取二级页表中的页表项
-  assert((next_pte & 0x1) == 1);
-  assert((vaddr << 10 >> 22) < 1024);
+  Assert((next_pte & 0x1) == 1, "cnt is %d\n", cnt);
   vaddr_t ret = (next_pte & 0xfffff000) + (vaddr & 0xfff);
   Assert(vaddr == ret, "cnt is %d\n", cnt);
   cnt++;
