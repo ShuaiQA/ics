@@ -20,6 +20,7 @@
 #include <memory/paddr.h>
 #include <memory/vaddr.h>
 #include <stdint.h>
+#include <stdio.h>
 
 // https://zhuanlan.zhihu.com/p/61430196(介绍了相关的手册)
 // 将虚拟地址翻译成对应的物理地址
@@ -33,12 +34,14 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   Assert(page_dir > 0x80200000, "page_dir should > 0x80000000");
   word_t pte =
       paddr_read(page_dir + (vaddr >> 22) * 4, 4); // 找到页目录中的页表项
+  Log("pte is " FMT_WORD, pte);
   assert((pte & 0x1) == 1); // 查看当前的页表项有效位应该是1
   word_t next_page = pte & 0xfffff000; // 根据页表项的获取二级页表的物理地址
   word_t next_pte = paddr_read(next_page + (vaddr << 10 >> 22) * 4,
                                4); // 获取二级页表中的页表项
   assert((next_pte & 0x1) == 1);
   vaddr_t ret = (next_pte & 0xfffff000) + (vaddr & 0xfff);
+  Log("ret is " FMT_WORD, ret);
   assert(vaddr == ret); // 当前是恒等映射
   return ret;           // 获取物理地址
 }
