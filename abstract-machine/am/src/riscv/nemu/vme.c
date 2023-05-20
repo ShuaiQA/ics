@@ -1,7 +1,6 @@
 #include <am.h>
 #include <klib.h>
 #include <nemu.h>
-#include <stdint.h>
 
 static AddrSpace kas = {};
 static void *(*pgalloc_usr)(int) = NULL;
@@ -39,6 +38,7 @@ bool vme_init(void *(*pgalloc_f)(int), void (*pgfree_f)(void *)) {
     }
   }
 
+  printf("over init\n");
   set_satp(kas.ptr);
   vme_enable = 1;
 
