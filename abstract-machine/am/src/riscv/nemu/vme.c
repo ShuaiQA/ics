@@ -74,7 +74,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   PTE *pte = as->ptr;
   printf("页表项是%d\n", pte[(int)va >> 22] & 0x1);
   // 当前的页表项的下一个页面是无效的则创建一个页面,然后设置相关的PPN
-  while ((pte[(int)va >> 22] & 0x1) != 0) { // 设置页目录
+  while ((pte[(int)va >> 22] & 0x1) == 0) { // 设置页目录
     printf("dir pre vaild is %d\n", (pte[(int)va >> 22] & 0x1));
     void *next_add = pgalloc_usr(PGSIZE);
     printf("next_add is %p \n", next_add);
