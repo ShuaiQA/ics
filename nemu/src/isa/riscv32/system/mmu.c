@@ -40,6 +40,8 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   word_t next_pte = paddr_read(next_page + (vaddr << 10 >> 22) * 4,
                                4); // 获取二级页表中的页表项
   assert((next_pte & 0x1) == 1);
+  assert((vaddr << 10 >> 22) < 1024);
+  Log("next_pte is " FMT_WORD, next_pte);
   vaddr_t ret = (next_pte & 0xfffff000) + (vaddr & 0xfff);
   Log("ret is " FMT_WORD, ret);
   assert(vaddr == ret); // 当前是恒等映射
