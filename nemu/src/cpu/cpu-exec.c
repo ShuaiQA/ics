@@ -106,12 +106,10 @@ static void statistic() {
   else
     Log("Finish running in less than 1 us and can not calculate the simulation "
         "frequency");
-  if (nemu_state.state != NEMU_END) {
-    IFDEF(CONFIG_FTRACE, print_fun_buf());
-    IFDEF(CONFIG_IRINGBUF, printIringBuf());
-    IFDEF(CONFIG_DTRACE, print_device_trace());
-    IFDEF(CONFIG_ETRACE, print_etrace());
-  }
+  IFDEF(CONFIG_FTRACE, print_fun_buf());
+  IFDEF(CONFIG_IRINGBUF, printIringBuf());
+  IFDEF(CONFIG_DTRACE, print_device_trace());
+  IFDEF(CONFIG_ETRACE, print_etrace());
 }
 
 void assert_fail_msg() {
