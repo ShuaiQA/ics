@@ -1,6 +1,7 @@
 #include <am.h>
 #include <klib.h>
 #include <nemu.h>
+#include <stdint.h>
 
 static AddrSpace kas = {};
 static void *(*pgalloc_usr)(int) = NULL;
@@ -14,6 +15,7 @@ static Area segments[] = { // Kernel memory mappings
 
 static inline void set_satp(void *pdir) {
   uintptr_t mode = 1ul << (__riscv_xlen - 1);
+  // 写入什么到寄存器中:最高位是mode=1,将sapt寄存器中左移12位才代表着页表目录的物理地址
   asm volatile("csrw satp, %0" : : "r"(mode | ((uintptr_t)pdir >> 12)));
 }
 
@@ -64,7 +66,23 @@ void __am_switch(Context *c) {
   }
 }
 
-void map(AddrSpace *as, void *va, void *pa, int prot) {}
+// 将虚拟地址va映射到pa所在的物理地址
+// 主要是进行初始化的过程,如果当前的页目录的页表项的有效位是0,就创建一个页表项设置为1然后修改该页表项的PPN和有效位
+// 创建好页表之后就是设置页表的页表项和物理地址的对应,修改页表的页表项的PPN和有效位
+void map(AddrSpace *as, void *va, void *pa, int prot) {
+  PTE *pte = as->ptr;
+  // 当前的页表项的下一个页面是无效的则创建一个页面,然后设置相关的PPN
+  while ((pte[(int)va >> 22] & 0x1) != 0) { // 设置页目录
+    void *next_add = pgalloc_usr(PGSIZE);
+    pte[(int)va >> 22] = (int)next_add & 0xfffff000 + 0x1;
+  }
+  PTE p = pte[(int)va >> 22];
+  PTE *next = (PTE *)(p & 0xfffff000);             // 获取页表
+  while ((next[(int)va << 10 >> 22] & 0x1) != 0) { // 设置页表
+    int pyadd = (int)pa >> 12;
+    next[(int)va << 10 >> 22] = pyadd & 0xfffff000 + 0x1;
+  }
+}
 
 // 创建用户进程的上下文,注意当前是内核的PCB进程控制块的管理,目前和用户进程的设置没有关系
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {

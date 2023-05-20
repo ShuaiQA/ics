@@ -28,6 +28,7 @@ extern char _pmem_start;
   RANGE(&_pmem_start, PMEM_END), RANGE(FB_ADDR, FB_ADDR + 0x200000),           \
       RANGE(MMIO_BASE, MMIO_BASE + 0x1000) /* serial, rtc, screen, keyboard */
 
+// 假设PTE是由PPN[31,12]位,[4,0]分别代表着(读、写、执行、有效位)(其余位暂时没有用)
 typedef uintptr_t PTE;
 
 #define PGSIZE 4096

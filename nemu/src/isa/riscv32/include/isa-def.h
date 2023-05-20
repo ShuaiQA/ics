@@ -25,6 +25,7 @@ typedef struct {
   word_t mepc;    // 存放触发异常的PC
   word_t mcause;  // 存放触发异常号
   word_t mstatus; // 存放处理器的状态
+  word_t satp;    // 和页目录有关的
 } riscv32_CPU_state;
 
 // decode
@@ -33,7 +34,5 @@ typedef struct {
     uint32_t val;
   } inst;
 } riscv32_ISADecodeInfo;
-
-#define isa_mmu_check(vaddr, len, type) (MMU_DIRECT)
 
 #endif
