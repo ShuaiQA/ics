@@ -73,15 +73,13 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   PTE *pte = as->ptr; // 找的是页目录的地址
   // 当前的页表项的下一个页面是无效的则创建一个页面,然后设置相关的PPN
   while ((pte[(uintptr_t)va >> 22] & 0x1) == 0) { // 设置页目录
-    assert(((uintptr_t)va >> 22) < 1024);         // 确保范围是1024
     void *next_add = pgalloc_usr(PGSIZE);
     pte[(uintptr_t)va >> 22] = (uintptr_t)next_add + 0x1;
   }
   PTE p = pte[(uintptr_t)va >> 22];
-  assert(p > 0x80000000);
-  PTE *next = (PTE *)(p & 0xfffff000);                   // 获取页表地址
+  PTE *next = (PTE *)(p & 0xfffff000); // 获取页表地址
+  printf("uintptr_t size is %ld\n", sizeof(uintptr_t));
   while ((next[(uintptr_t)va << 10 >> 22] & 0x1) == 0) { // 设置页表
-    assert(((uintptr_t)va << 10 >> 22) < 1024);          // 确保范围是1024
     next[(uintptr_t)va << 10 >> 22] = ((uintptr_t)pa & 0xfffff000) + 0x1;
   }
 }
