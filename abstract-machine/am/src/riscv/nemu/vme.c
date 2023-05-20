@@ -74,13 +74,13 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   // 当前的页表项的下一个页面是无效的则创建一个页面,然后设置相关的PPN
   while ((pte[(int)va >> 22] & 0x1) != 0) { // 设置页目录
     void *next_add = pgalloc_usr(PGSIZE);
-    pte[(int)va >> 22] = (int)next_add & 0xfffff000 + 0x1;
+    pte[(int)va >> 22] = ((int)next_add & 0xfffff000) + 0x1;
   }
   PTE p = pte[(int)va >> 22];
   PTE *next = (PTE *)(p & 0xfffff000);             // 获取页表
   while ((next[(int)va << 10 >> 22] & 0x1) != 0) { // 设置页表
     int pyadd = (int)pa >> 12;
-    next[(int)va << 10 >> 22] = pyadd & 0xfffff000 + 0x1;
+    next[(int)va << 10 >> 22] = (pyadd & 0xfffff000) + 0x1;
   }
 }
 
