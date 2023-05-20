@@ -50,7 +50,7 @@ void do_syscall(Context *c) {
     sys_exit(c);
     break;
   case SYS_yield:
-    c->gpr[31] = sys_yield(c);
+    c->GPR1 = sys_yield(c);
     break;
   case SYS_open:
     c->GPRx = fs_open((char *)c->GPR2, c->GPR3, c->GPR4);
@@ -59,8 +59,7 @@ void do_syscall(Context *c) {
     c->GPRx = fs_read(c->GPR2, (void *)c->GPR3, c->GPR4);
     break;
   case SYS_execve:
-    c->gpr[31] =
-        sys_execve((char *)c->GPR2, (char **)c->GPR3, (char **)c->GPR4);
+    c->GPR1 = sys_execve((char *)c->GPR2, (char **)c->GPR3, (char **)c->GPR4);
     break;
   case SYS_write:
     c->GPRx = fs_write(c->GPR2, (char *)c->GPR3, c->GPR4);
@@ -82,6 +81,6 @@ void do_syscall(Context *c) {
     panic("Unhandled syscall ID = %d", a[0]);
   }
   if (a[0] != SYS_execve && a[0] != SYS_yield) {
-    c->gpr[31] = (intptr_t)c;
+    c->GPR1 = (intptr_t)c;
   }
 }
