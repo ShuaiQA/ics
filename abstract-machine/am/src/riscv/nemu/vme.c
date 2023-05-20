@@ -72,6 +72,7 @@ void __am_switch(Context *c) {
 // 创建好页表之后就是设置页表的页表项和物理地址的对应,修改页表的页表项的PPN和有效位
 void map(AddrSpace *as, void *va, void *pa, int prot) {
   PTE *pte = as->ptr;
+  printf("页表项是0%d\n", pte[(int)va >> 22]);
   // 当前的页表项的下一个页面是无效的则创建一个页面,然后设置相关的PPN
   while ((pte[(int)va >> 22] & 0x1) != 0) { // 设置页目录
     printf("dir pre vaild is %d\n", (pte[(int)va >> 22] & 0x1));
