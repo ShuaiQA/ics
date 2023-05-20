@@ -78,6 +78,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
     pte[(int)va >> 22] = ((int)next_add & 0xfffff000) + 0x1;
   }
   PTE p = pte[(int)va >> 22];
+  assert(p > 0x80000000);
   PTE *next = (PTE *)(p & 0xfffff000);             // 获取页表地址
   while ((next[(int)va << 10 >> 22] & 0x1) == 0) { // 设置页表
     assert(((int)va << 10 >> 22) < 1024);          // 确保范围是1024
