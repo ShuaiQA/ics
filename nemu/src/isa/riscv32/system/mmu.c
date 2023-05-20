@@ -39,6 +39,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   word_t next_page = pte & 0xfffff000; // 根据页表项的获取二级页表的物理地址
   word_t next_pte = paddr_read(next_page + (vaddr << 10 >> 22) * 4,
                                4); // 获取二级页表中的页表项
+  Log("next_pte is " FMT_WORD, next_pte);
   Assert((next_pte & 0x1) == 1, "cnt is %d\n", cnt);
   vaddr_t ret = (next_pte & 0xfffff000) + (vaddr & 0xfff);
   Assert(vaddr == ret, "cnt is %d\n", cnt);
