@@ -1,6 +1,7 @@
 #include <am.h>
 #include <klib.h>
 #include <nemu.h>
+#include <stdint.h>
 
 static AddrSpace kas = {};
 static void *(*pgalloc_usr)(int) = NULL;
@@ -38,7 +39,6 @@ bool vme_init(void *(*pgalloc_f)(int), void (*pgfree_f)(void *)) {
     }
   }
 
-  printf("over init\n");
   set_satp(kas.ptr);
   vme_enable = 1;
 
@@ -72,18 +72,18 @@ void __am_switch(Context *c) {
 void map(AddrSpace *as, void *va, void *pa, int prot) {
   PTE *pte = as->ptr; // 找的是页目录的地址
   // 当前的页表项的下一个页面是无效的则创建一个页面,然后设置相关的PPN
-  while ((pte[(int)va >> 22] & 0x1) == 0) { // 设置页目录
-    assert(((int)va >> 22) < 1024);         // 确保范围是1024
+  while ((pte[(uintptr_t)va >> 22] & 0x1) == 0) { // 设置页目录
+    assert(((uintptr_t)va >> 22) < 1024);         // 确保范围是1024
     void *next_add = pgalloc_usr(PGSIZE);
-    pte[(int)va >> 22] = ((int)next_add & 0xfffff000) + 0x1;
+    pte[(uintptr_t)va >> 22] = ((uintptr_t)next_add & 0xfffff000) + 0x1;
   }
-  PTE p = pte[(int)va >> 22];
+  PTE p = pte[(uintptr_t)va >> 22];
   assert(p > 0x80000000);
-  PTE *next = (PTE *)(p & 0xfffff000);             // 获取页表地址
-  while ((next[(int)va << 10 >> 22] & 0x1) == 0) { // 设置页表
-    assert(((int)va << 10 >> 22) < 1024);          // 确保范围是1024
-    int pyadd = (int)pa >> 12;
-    next[(int)va << 10 >> 22] = (pyadd & 0xfffff000) + 0x1;
+  PTE *next = (PTE *)(p & 0xfffff000);                   // 获取页表地址
+  while ((next[(uintptr_t)va << 10 >> 22] & 0x1) == 0) { // 设置页表
+    assert(((uintptr_t)va << 10 >> 22) < 1024);          // 确保范围是1024
+    uintptr_t pyadd = (uintptr_t)pa >> 12;
+    next[(uintptr_t)va << 10 >> 22] = (pyadd & 0xfffff000) + 0x1;
   }
 }
 
