@@ -82,8 +82,8 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   PTE *next = (PTE *)(p & 0xfffff000);                   // 获取页表地址
   while ((next[(uintptr_t)va << 10 >> 22] & 0x1) == 0) { // 设置页表
     assert(((uintptr_t)va << 10 >> 22) < 1024);          // 确保范围是1024
-    uintptr_t pyadd = (uintptr_t)pa >> 12;
-    next[(uintptr_t)va << 10 >> 22] = (pyadd & 0xfffff000) + 0x1;
+    assert((uintptr_t)pa > 0x80000000);
+    next[(uintptr_t)va << 10 >> 22] = ((uintptr_t)pa & 0xfffff000) + 0x1;
   }
 }
 
