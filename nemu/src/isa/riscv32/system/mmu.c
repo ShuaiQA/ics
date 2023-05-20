@@ -22,6 +22,8 @@
 #include <stdint.h>
 #include <stdio.h>
 
+static int cnt = 0;
+
 // https://zhuanlan.zhihu.com/p/61430196(介绍了相关的手册)
 // 将虚拟地址翻译成对应的物理地址
 paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
@@ -36,5 +38,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   word_t next_pte = paddr_read(next_page + (vaddr << 10 >> 22) * 4,
                                4); // 获取二级页表中的页表项
   vaddr_t ret = (next_pte & 0xfffff000) + (vaddr & 0xfff);
+  Assert(vaddr == ret, "cnt is %d\n", cnt);
+  cnt++;
   return ret; // 获取物理地址
 }
