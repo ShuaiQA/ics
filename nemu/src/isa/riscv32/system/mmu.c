@@ -22,28 +22,27 @@
 #include <stdint.h>
 #include <stdio.h>
 
+static int cnt = 0;
+
 // https://zhuanlan.zhihu.com/p/61430196(介绍了相关的手册)
 // 将虚拟地址翻译成对应的物理地址
 paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   if (type == MMU_DIRECT) {
     return vaddr;
   }
-  Log("trace_and_difftest");
   // 查看ab向寄存器中写的数据发现需要左移12位找到对应的页目录的地址
   word_t page_dir = cpu.satp << 12; // 找到对应的页目录的物理地址
   Assert(page_dir > 0x80200000, "page_dir should > 0x80000000");
   word_t pte =
       paddr_read(page_dir + (vaddr >> 22) * 4, 4); // 找到页目录中的页表项
-  Log("pte is " FMT_WORD, pte);
   assert((pte & 0x1) == 1); // 查看当前的页表项有效位应该是1
   word_t next_page = pte & 0xfffff000; // 根据页表项的获取二级页表的物理地址
   word_t next_pte = paddr_read(next_page + (vaddr << 10 >> 22) * 4,
                                4); // 获取二级页表中的页表项
   assert((next_pte & 0x1) == 1);
   assert((vaddr << 10 >> 22) < 1024);
-  Log("next_pte is " FMT_WORD, next_pte);
   vaddr_t ret = (next_pte & 0xfffff000) + (vaddr & 0xfff);
-  Log("ret is " FMT_WORD, ret);
-  assert(vaddr == ret); // 当前是恒等映射
-  return ret;           // 获取物理地址
+  Assert(vaddr == ret, "cnt is %d\n", cnt);
+  cnt++;
+  return ret; // 获取物理地址
 }
