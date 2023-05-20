@@ -77,8 +77,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
     pte[(uintptr_t)va >> 22] = (uintptr_t)next_add + 0x1;
   }
   PTE p = pte[(uintptr_t)va >> 22];
-  PTE *next = (PTE *)(p & 0xfffff000); // 获取页表地址
-  printf("uintptr_t size is %d\n", sizeof(uintptr_t));
+  PTE *next = (PTE *)(p & 0xfffff000);                   // 获取页表地址
   while ((next[(uintptr_t)va << 10 >> 22] & 0x1) == 0) { // 设置页表
     next[(uintptr_t)va << 10 >> 22] = ((uintptr_t)pa & 0xfffff000) + 0x1;
   }
