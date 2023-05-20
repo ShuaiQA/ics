@@ -14,6 +14,7 @@
  ***************************************************************************************/
 
 #include "common.h"
+#include "debug.h"
 #include <assert.h>
 #include <isa.h>
 #include <memory/paddr.h>
@@ -26,6 +27,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   if (type == MMU_DIRECT) {
     return vaddr;
   }
+  Log("trace_and_difftest");
   // 查看ab向寄存器中写的数据发现需要左移12位找到对应的页目录的地址
   word_t page_dir = cpu.satp << 12; // 找到对应的页目录的物理地址
   word_t pte =
