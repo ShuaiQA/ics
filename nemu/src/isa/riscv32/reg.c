@@ -30,9 +30,9 @@ void isa_reg_display() {
            regs[i], cpu.gpr[i], regs[i + 1], cpu.gpr[i + 1], regs[i + 2],
            cpu.gpr[i + 2], regs[i + 3], cpu.gpr[i + 3]);
   }
-  printf("mtvec  \t" FMT_WORD "\t  mepc" FMT_WORD "\t   mcause" FMT_WORD
-         "\t   mstatus" FMT_WORD "\n",
-         cpu.mtvec, cpu.mepc, cpu.mcause, cpu.mstatus);
+  printf("mtvec  \t" FMT_WORD "\tmepc   " FMT_WORD "\tmcause   " FMT_WORD
+         "\tmstatus    " FMT_WORD "satp  " FMT_WORD " \n",
+         cpu.mtvec, cpu.mepc, cpu.mcause, cpu.mstatus, cpu.satp);
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
