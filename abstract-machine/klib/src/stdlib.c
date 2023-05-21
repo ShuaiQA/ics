@@ -1,6 +1,7 @@
 #include <am.h>
 #include <klib-macros.h>
 #include <klib.h>
+#include <stdint.h>
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 static unsigned long int next = 1;
@@ -35,7 +36,7 @@ void *malloc(size_t size) {
   char *old_brk = mem_brk;
   mem_brk += size;
   // 容纳的字节数后面给页面分配使用
-  assert(mem_brk - &_heap_start < 0x100000);
+  assert((uintptr_t)mem_brk < 0x80321000);
   return (void *)old_brk;
 }
 
