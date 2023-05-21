@@ -10,6 +10,7 @@ static void *pf = NULL;
 void *new_page(size_t nr_page) {
   void *older = pf;
   pf += nr_page * PGSIZE;
+  assert((uintptr_t)pf < 0x83000000);
   return older;
 }
 
