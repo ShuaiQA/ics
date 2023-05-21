@@ -28,7 +28,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   if (type == MMU_DIRECT) {
     return vaddr;
   }
-  // 查看ab向寄存器中写的数据发现需要左移12位找到对应的页目录的地址
+  // 查看ab向寄存中写的数据发现需要左移12位找到对应的页目录的地址
   word_t page_dir = cpu.satp << 12; // 找到对应的页目录的物理地址
   word_t pte =
       paddr_read(page_dir + (vaddr >> 22) * 4, 4); // 找到页目录中的页表项
