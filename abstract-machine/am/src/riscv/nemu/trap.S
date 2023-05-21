@@ -65,7 +65,8 @@ __am_asm_trap:
 	lw t6,140(sp)
 	li t5,12
 	srl t6,t6,t5
-	addi t6,t6,1
+	li t5,0x80000000
+	add t6,t6,t5
   csrw satp, t6
 
   addi sp, sp, CONTEXT_SIZE
