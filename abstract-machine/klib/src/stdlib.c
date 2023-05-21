@@ -30,8 +30,8 @@ int atoi(const char *nptr) {
 extern char _heap_start;
 static char *mem_brk = &_heap_start; // 记录下一次分配的位置
 
+// 和nanos的分配页面应该有冲突
 void *malloc(size_t size) {
-  assert(0);
   char *old_brk = mem_brk;
   mem_brk += size;
   return (void *)old_brk;
