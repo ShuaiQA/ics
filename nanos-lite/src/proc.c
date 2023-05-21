@@ -60,9 +60,7 @@ Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(&pcb->as, area, entry);
   // 用户程序的约定,先将栈指针放到寄存器a0上,在用户空间初始的_start上在进行将a0转移到sp寄存器上
-  Log("set Argv");
-  pcb->cp->GPRx = (uintptr_t)setArgv(pcb->as.area.end - sizeof(Context), argv);
-  Log("over Argv");
+  pcb->cp->GPRx = (uintptr_t)setArgv(area.end - sizeof(Context), argv);
   return pcb->cp;
 }
 
