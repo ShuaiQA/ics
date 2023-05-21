@@ -2,10 +2,6 @@
 #include "debug.h"
 #include "memory.h"
 #include <proc.h>
-#include <stddef.h>
-#include <stdint.h>
-// #include <stdio.h>
-#include <string.h>
 
 #define MAX_NR_PROC 4
 
@@ -88,6 +84,7 @@ Context *schedule(Context *prev) {
   current->cp = prev;
   // current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
   current = &pcb[0];
+  Log("next is pcb0");
   return current->cp;
 }
 
