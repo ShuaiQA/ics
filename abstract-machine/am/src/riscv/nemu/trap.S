@@ -63,6 +63,9 @@ __am_asm_trap:
   MAP(REGS, POP)
 
 	lw t6,140(sp)
+	li t5,12
+	srl t6,t6,t5
+	addi t6,t6,1
   csrw satp, t6
 
   addi sp, sp, CONTEXT_SIZE
