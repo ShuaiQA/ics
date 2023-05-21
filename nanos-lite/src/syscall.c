@@ -26,6 +26,7 @@ void sys_exit(Context *c) { halt(c->GPR2); }
 
 // 主要是进行分配内存空间next记录着后面的地址空间,_end记录着最初的虚拟地址空间
 void *sys_brk(uint32_t _end, uint32_t next) {
+  Log("_end is %p", _end);
   uint32_t size = next - _end;
   while (size >= 0) {
     void *page = new_page(1);
