@@ -4,11 +4,6 @@
 #include <elf.h>
 #include <fs.h>
 #include <proc.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
 
 #ifdef __LP64__
 #define Elf_Ehdr Elf64_Ehdr
@@ -29,7 +24,7 @@ uintptr_t load_segement(PCB *pcb, char *date) {
   for (int i = 0; i < hd->e_phnum; i++) {
     Elf_Phdr ph = phs[i];
     if (ph.p_type == PT_LOAD) {
-      Log("%x %x %x %x", ph.p_vaddr, ph.p_memsz, ph.p_offset, ph.p_filesz);
+      // Log("%x %x %x %x", ph.p_vaddr, ph.p_memsz, ph.p_offset, ph.p_filesz);
       // 将当前的虚拟地址加载到相关的物理页面中,获取虚拟地址,虚拟地址大小.
       // 加载数据的位置(文件偏移量),加载数据的大小.
       uintptr_t vaddr = ph.p_vaddr, vsize = ph.p_memsz, f_offset = ph.p_offset,
@@ -40,7 +35,7 @@ uintptr_t load_segement(PCB *pcb, char *date) {
         char *page = new_page(1);
         memmove(page, pos, PGSIZE);
         map(&pcb->as, (char *)vaddr, page, 0);
-        Log("f_size vaddr %x to paddr %x", vaddr, page);
+        // Log("f_size vaddr %x to paddr %x", vaddr, page);
         pos += PGSIZE;
         vaddr += PGSIZE; // 虚拟地址自增为了映射
         size += PGSIZE;
@@ -52,7 +47,7 @@ uintptr_t load_segement(PCB *pcb, char *date) {
         // 注意只是移动了len!=4096个,默认new_page的字符是0
         memmove(page, pos, len);
         map(&pcb->as, (char *)vaddr, page, 0);
-        Log("f_size and vsize %x to paddr %x", vaddr, page);
+        // Log("f_size and vsize %x to paddr %x", vaddr, page);
         pos += PGSIZE;
         size += PGSIZE;
         vaddr += PGSIZE;
@@ -60,7 +55,7 @@ uintptr_t load_segement(PCB *pcb, char *date) {
       while (size <= vsize) {
         char *page = new_page(1); // 默认是0
         map(&pcb->as, (char *)vaddr, page, 0);
-        Log("vsize vaddr %x to paddr %x", vaddr, page);
+        // Log("vsize vaddr %x to paddr %x", vaddr, page);
         pos += PGSIZE;
         vaddr += PGSIZE; // 虚拟地址自增为了映射
         size += PGSIZE;
