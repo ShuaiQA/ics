@@ -18,13 +18,13 @@
 #include <isa.h>
 #include <memory/paddr.h>
 
-word_t vaddr_ifetch(vaddr_t addr, int len) { return paddr_read(addr, len); }
-
 // 先翻译成物理地址在进行读或者写
 word_t vaddr_read(vaddr_t addr, int len) {
   paddr_t paddr = isa_mmu_translate(addr, len, cpu.satp >> 31);
   return paddr_read(paddr, len);
 }
+
+word_t vaddr_ifetch(vaddr_t addr, int len) { return vaddr_read(addr, len); }
 
 void vaddr_write(vaddr_t addr, int len, word_t data) {
   paddr_t paddr = isa_mmu_translate(addr, len, cpu.satp >> 31);
