@@ -14,6 +14,7 @@
  ***************************************************************************************/
 
 #include "../../monitor/sdb/sdb.h"
+#include "isa.h"
 #include "local-include/reg.h"
 #include <cpu/cpu.h>
 #include <cpu/decode.h>
@@ -223,7 +224,8 @@ static int decode_exec(Decode *s) {
   // 存储80000550 <__am_asm_trap>地址到sr.mtvec变量中
   INSTPAT("0011000 00101 01111 001 00000 1110011", csrw_mtvec, I,
           cpu.mtvec = src1;);
-
+  INSTPAT("0001100 00000 00000 010 01111 1110011", csrr_satp, I,
+          R(rd) = cpu.satp;);
   INSTPAT("0001100 00000 01111 001 00000 1110011", csrw_satp, I,
           cpu.satp = src1;);
   INSTPAT("0011000 00010 00000 000 00000 1110011", mret, I,
