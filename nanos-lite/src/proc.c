@@ -2,6 +2,7 @@
 #include "debug.h"
 #include "memory.h"
 #include <proc.h>
+#include <stdint.h>
 
 #define MAX_NR_PROC 4
 
@@ -35,7 +36,7 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
 }
 
 // buf提供了一个地址空间,将argv参数放到buf地址空间的下面
-void *setArgv(char *buf, char *const argv[]) {
+uintptr_t setArgv(char *buf, char *const argv[]) {
   int del = 0;
   int i = 0;
   while (argv != NULL && argv[i] != NULL) {
@@ -48,7 +49,7 @@ void *setArgv(char *buf, char *const argv[]) {
   }
   del += 4;
   *(int *)(buf - del) = i;
-  return buf - del;
+  return del;
 }
 
 // 创建用户进程需要进行初始化有:1.在ucontext设置pc值,2.在当前暂时保存栈空间到a0寄存器中
@@ -60,7 +61,8 @@ Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(&pcb->as, area, entry);
   // 用户程序的约定,先将栈指针放到寄存器a0上,在用户空间初始的_start上在进行将a0转移到sp寄存器上
-  pcb->cp->GPRx = (uintptr_t)setArgv(area.end - sizeof(Context), argv);
+  uintptr_t len = setArgv(area.end - sizeof(Context), argv);
+  pcb->cp->GPRx = (uintptr_t)pcb->as.area.end - len - sizeof(Context);
   return pcb->cp;
 }
 
