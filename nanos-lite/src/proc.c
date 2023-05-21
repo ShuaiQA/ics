@@ -36,15 +36,14 @@ void hello_fun(void *arg) {
 // 对于一个Context初始化需要设置1.sp寄存器(自己线程的栈空间),2.pc值,3.可能的参数情况
 // (所以在kcontext函数中)应该初始化3个部分
 // 之后将变量cp指向创建好的Context结构体
+// 创建内核线程,其中线程的栈空间是由pcb构成的,传递相关的入口地址和参数arg(寄存器a0中)
 Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
-  // 创建内核线程的栈空间
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = kcontext(area, entry, arg);
-  Log("create cte is %p", pcb->cp);
   return pcb->cp;
 }
 
-// 根据相应的参数返回一个void*地址按照给定的要求进行参数组合
+// buf提供了一个地址空间,将argv参数放到buf地址空间的下面
 void *setArgv(char *buf, char *const argv[]) {
   int del = 0;
   int i = 0;
@@ -62,15 +61,15 @@ void *setArgv(char *buf, char *const argv[]) {
 }
 
 // 同理创建用户进程需要进行初始化有,1.在ucontext设置pc值,2.在当前暂时保存栈空间到a0寄存器中
+// 创建用户进程,首先是找到解析elf文件获取entry,设置用户进程的栈空间
 Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
                        char *const envp[]) {
   void *entry = naive_uload(pcb, pathname);
   Log("use entry is %p\n", entry);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(NULL, area, entry);
-  // 调用new_page(8)获取用户栈空间
-  // 设置栈空间的最后位置
-  pcb->cp->GPRx = (uintptr_t)setArgv(new_page(8) + PGSIZE * 8, argv);
+  // 用户程序的约定,先将栈指针放到寄存器a0上,在用户空间初始的_start上在进行将a0转移到sp寄存器上
+  pcb->cp->GPRx = (uintptr_t)setArgv(area.end - sizeof(Context), argv);
   return pcb->cp;
 }
 

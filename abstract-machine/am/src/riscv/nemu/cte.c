@@ -28,8 +28,7 @@ Context *__am_irq_handle(Context *c) {
 // 最后调用mret将mepc寄存器中的pc值放到pc寄存器中
 extern void __am_asm_trap(void);
 
-// 设置异常入口地址,注册一个事件处理回调函数
-// 回调函数由Nanos-lite提供handler
+// 设置异常入口地址,注册一个事件处理回调函数(由操作系统提供)
 bool cte_init(Context *(*handler)(Event, Context *)) {
   // initialize exception entry
   asm volatile("csrw mtvec, %0" : : "r"(__am_asm_trap));
@@ -37,14 +36,12 @@ bool cte_init(Context *(*handler)(Event, Context *)) {
   return true;
 }
 
-// kstack的end创建一个以entry为返回地址的上下文结构,将上下文指针进行返回
+// 创建内核线程,设置线程的上下文,初始化上下文中的pc,sp,a0寄存器
+// (分别代表了分别代表了指令开始执行位置,栈指针,参数)
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
-  // 获取最后一个Context空间
   Context *ans = (Context *)kstack.end - 1;
-  // 设置mepc也就是恢复上下文之后的pc值,以及sp寄存器的值(栈指针寄存器,用来分配局部变量)
   ans->mepc = (uintptr_t)entry;
   ans->gpr[2] = (uintptr_t)ans;
-  // 使用寄存器a0进行参数传递
   ans->GPR2 = (uintptr_t)arg;
   return ans;
 }

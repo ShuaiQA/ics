@@ -45,7 +45,8 @@ bool vme_init(void *(*pgalloc_f)(int), void (*pgfree_f)(void *)) {
   return true;
 }
 
-//
+// 设置用户虚拟地址空间(将操作系统的页目录进行复制),area(RANGE(0x40000000,
+// 0x80000000)) pgsize == 4096
 void protect(AddrSpace *as) {
   PTE *updir = (PTE *)(pgalloc_usr(PGSIZE));
   as->ptr = updir;
@@ -84,11 +85,11 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   }
 }
 
-// 创建用户进程的上下文,注意当前是内核的PCB进程控制块的管理,目前和用户进程的设置没有关系
+// 设置了用户进程的mepc寄存器的值,为了上下文切换之后能够设置正确的pc值
+// 返回Context的地址空间
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
-  // 获取最后一个Context空间
-  Context *ans = (Context *)kstack.end - 1;
-  // 设置mepc也就是恢复上下文之后的pc值,以及sp寄存器的值(栈指针寄存器,用来分配局部变量)
+  Context *ans = (Context *)kstack.end - 1; // 上下文的地址处
+  // 设置mepc也就是恢复上下文之后的pc值(因为系统调用使用的是yield进行恢复)
   ans->mepc = (uintptr_t)entry;
   return ans;
 }
