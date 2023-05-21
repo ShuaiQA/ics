@@ -33,6 +33,7 @@ void *sys_brk(uint32_t _end, uint32_t next) {
     void *page = new_page(1);
     map(&current->as, (void *)_end, page, 0);
     size -= PGSIZE;
+    Log("nei size is %p", size);
   }
   Log("over");
   return 0;
