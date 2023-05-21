@@ -25,7 +25,7 @@ int mm_brk(uintptr_t brk) { return 0; }
 
 void init_mm() {
   // 防止和malloc冲突向后容纳了0x100000字节
-  pf = (void *)ROUNDUP(heap.start, PGSIZE);
+  pf = (void *)ROUNDUP(heap.start + 0x100000, PGSIZE);
   Log("heap.start address is %p free physical pages starting from %p",
       heap.start, pf);
 
