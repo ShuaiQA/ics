@@ -54,6 +54,8 @@ __am_asm_trap:
 # 主要的原因是距离太远了,以直接写入为例,我在写入之后直到当前汇编的使用
 # 我在调度函数写入sp寄存器到当前的trap使用期望的值,在此期间编译器可能会自动修改sp寄存器
 	lw	sp,68(sp)
+	
+	lw t6,140(sp)
   csrw satp, t6
 
   LOAD t1, OFFSET_STATUS(sp)
