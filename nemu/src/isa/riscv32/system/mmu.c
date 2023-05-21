@@ -28,6 +28,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   if (type == MMU_DIRECT) {
     return vaddr;
   }
+  Log("vaddr is " FMT_WORD, vaddr);
   // 查看ab向寄存中写的数据发现需要左移12位找到对应的页目录的地址
   word_t page_dir = cpu.satp << 12; // 找到对应的页目录的物理地址
   Log("dir is " FMT_WORD, page_dir);
@@ -38,7 +39,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   word_t next_pte = paddr_read(next_page + (vaddr << 10 >> 22) * 4,
                                4); // 获取二级页表中的页表项
   vaddr_t ret = (next_pte & 0xfffff000) + (vaddr & 0xfff);
-  Log("ret is " FMT_WORD, ret);
+  Log("vaddr is " FMT_WORD "ret is " FMT_WORD, vaddr, ret);
   // Assert(vaddr == ret, "vaddr is " FMT_WORD "  cnt is %d\n", vaddr, cnt);
   return ret; // 获取物理地址
 }
