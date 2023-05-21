@@ -228,7 +228,7 @@ static int decode_exec(Decode *s) {
           R(rd) = cpu.satp;);
   INSTPAT("0001100 00000 01111 001 00000 1110011", csrw_satp, I,
           cpu.satp = src1;
-          Log("change satp\n"););
+          Log("change satp " FMT_WORD, cpu.satp););
   INSTPAT("0011000 00010 00000 000 00000 1110011", mret, I,
           s->dnpc = cpu.mepc;);
   INSTPAT("0000000 00001 00000 000 00000 1110011", ebreak, N,
