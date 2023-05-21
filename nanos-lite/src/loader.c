@@ -24,7 +24,7 @@ uintptr_t load_segement(char *date) {
   for (int i = 0; i < hd->e_phnum; i++) {
     Elf_Phdr ph = phs[i];
     if (ph.p_type == PT_LOAD) {
-      // printf("%x  %x  %x\n", ph.p_vaddr, ph.p_offset, ph.p_filesz);
+      Log("%x  %x  %x\n", ph.p_vaddr, ph.p_offset, ph.p_filesz);
       memmove((void *)ph.p_vaddr, date + ph.p_offset, ph.p_filesz);
       char *next = (char *)malloc(ph.p_memsz - ph.p_filesz);
       memset(next, 0, ph.p_memsz - ph.p_filesz);
@@ -54,7 +54,7 @@ void *naive_uload(PCB *pcb, const char *filename) {
     entry = loader(pcb, filename);
   } else {
     size_t size = get_ramdisk_size();
-    printf("size is %d\n", size);
+    Log("ramdisk_read size is %d\n", size);
     char *buf = malloc(size);
     ramdisk_read(buf, 0, size);
     entry = load_segement(buf);
