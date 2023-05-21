@@ -56,7 +56,6 @@ static void exec_once(Decode *s, vaddr_t pc) {
   s->snpc = pc;
   isa_exec_once(s);
   cpu.pc = s->dnpc;
-  Log("isa  over");
 #ifdef CONFIG_ITRACE
   char *p = s->logbuf;
   p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
@@ -83,7 +82,6 @@ static void exec_once(Decode *s, vaddr_t pc) {
   p[0] = '\0'; // the upstream llvm does not support loongarch32r
 #endif
 #endif
-  Log("once over");
 }
 
 static void execute(uint64_t n) {
@@ -95,7 +93,6 @@ static void execute(uint64_t n) {
     if (nemu_state.state != NEMU_RUNNING)
       break;
     IFDEF(CONFIG_DEVICE, device_update()); // 设备会根据一定时间间隔进行更新
-    Log("execute over");
   }
 }
 

@@ -243,7 +243,7 @@ static int decode_exec(Decode *s) {
 
 int isa_exec_once(Decode *s) {
   s->isa.inst.val = inst_fetch(&s->snpc, 4);
-  IFDEF(CONFIG_IRINGBUF, new_isa(s->snpc, s->isa.inst.val));
+  IFDEF(CONFIG_IRINGBUF, new_isa(cpu.pc, s->isa.inst.val));
   IFDEF(CONFIG_FTRACE, new_fun(s->snpc));
   return decode_exec(s);
 }
