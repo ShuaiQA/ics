@@ -49,6 +49,7 @@ bool vme_init(void *(*pgalloc_f)(int), void (*pgfree_f)(void *)) {
 // 0x80000000)) pgsize == 4096
 void protect(AddrSpace *as) {
   PTE *updir = (PTE *)(pgalloc_usr(PGSIZE));
+  printf("use create updir is %x", updir);
   as->ptr = updir;
   as->area = USER_SPACE;
   as->pgsize = PGSIZE;
@@ -66,6 +67,7 @@ void __am_get_cur_as(Context *c) {
 // 将当前进程中的pdir指针保存到寄存器satp中
 void __am_switch(Context *c) {
   if (vme_enable && c->pdir != NULL) {
+    printf("pdir is not null should set pdir is %x\n", c->pdir);
     set_satp(c->pdir);
   }
 }
