@@ -73,7 +73,7 @@ int _write(int fd, void *buf, size_t count) {
 
 // 链接器会在代码段和数据段之后默认添加一个_end
 extern char _end;
-char *pb = &_end;
+static char *pb = &_end;
 void *_sbrk(intptr_t increment) {
   char *old = pb;
   pb += increment;
