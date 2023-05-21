@@ -60,6 +60,7 @@ Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
   void *entry = naive_uload(pcb, pathname);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(&pcb->as, area, entry);
+  pcb->cp->pdir = pcb->as.ptr;
   // 用户程序的约定,先将栈指针放到寄存器a0上,在用户空间初始的_start上在进行将a0转移到sp寄存器上
   uintptr_t len = setArgv(area.end - sizeof(Context), argv);
   pcb->cp->GPRx = (uintptr_t)pcb->as.area.end - len - sizeof(Context);
