@@ -25,6 +25,7 @@
 // https://zhuanlan.zhihu.com/p/61430196(介绍了相关的手册)
 // 将虚拟地址翻译成对应的物理地址
 paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
+  Log("vaddr is " FMT_WORD, vaddr);
   if (type == MMU_DIRECT) {
     return vaddr;
   }
@@ -33,9 +34,11 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   word_t pte =
       paddr_read(page_dir + (vaddr >> 22) * 4, 4); // 找到页目录中的页表项
   word_t next_page = pte & 0xfffff000; // 根据页表项的获取二级页表的物理地址
+  Log("next_page is " FMT_WORD, next_page);
   word_t next_pte = paddr_read(next_page + (vaddr << 10 >> 22) * 4,
                                4); // 获取二级页表中的页表项
   vaddr_t ret = (next_pte & 0xfffff000) + (vaddr & 0xfff);
+  Log("ret is " FMT_WORD, ret);
   // Log("vaddr is " FMT_WORD "ret is " FMT_WORD, vaddr, ret);
   // Assert(vaddr == ret, "vaddr is " FMT_WORD "  cnt is %d\n", vaddr, cnt);
   return ret; // 获取物理地址
