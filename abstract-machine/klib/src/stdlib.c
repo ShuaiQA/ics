@@ -34,6 +34,8 @@ static char *mem_brk = &_heap_start; // 记录下一次分配的位置
 void *malloc(size_t size) {
   char *old_brk = mem_brk;
   mem_brk += size;
+  // 容纳的字节数后面给页面分配使用
+  assert(mem_brk - &_heap_start < 0x100000);
   return (void *)old_brk;
 }
 
