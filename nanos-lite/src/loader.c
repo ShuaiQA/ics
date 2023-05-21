@@ -18,7 +18,7 @@
 #define Elf_Phdr Elf32_Phdr
 #endif
 
-// 根据字符数组获取需要加载到内容中
+// 解析elf文件流,将type==LOAD需要加载的部分加载到相应的页表中,并建立起虚拟地址空间的映射关系
 uintptr_t load_segement(PCB *pcb, char *date) {
   Elf_Ehdr *hd = (Elf_Ehdr *)date;
   assert(*(uint32_t *)hd->e_ident == 0x464c457f);
@@ -29,7 +29,7 @@ uintptr_t load_segement(PCB *pcb, char *date) {
   for (int i = 0; i < hd->e_phnum; i++) {
     Elf_Phdr ph = phs[i];
     if (ph.p_type == PT_LOAD) {
-      Log("%x %x %x %x\n", ph.p_vaddr, ph.p_memsz, ph.p_offset, ph.p_filesz);
+      Log("%x %x %x %x", ph.p_vaddr, ph.p_memsz, ph.p_offset, ph.p_filesz);
       // 将当前的虚拟地址加载到相关的物理页面中,获取虚拟地址,虚拟地址大小.
       // 加载数据的位置(文件偏移量),加载数据的大小.
       uintptr_t vaddr = ph.p_vaddr, vsize = ph.p_memsz, f_offset = ph.p_offset,

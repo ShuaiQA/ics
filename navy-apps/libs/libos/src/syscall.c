@@ -57,8 +57,8 @@ intptr_t _syscall_(intptr_t type, intptr_t a0, intptr_t a1, intptr_t a2) {
 
 // 使用户程序退出的时候执行菜单程序(选择下一个应用程序),并不是终止halt机器
 void _exit(int status) {
-  // _syscall_(SYS_exit, status, 0, 0);
-  execve("/bin/nterm", NULL, NULL);
+  _syscall_(SYS_exit, status, 0, 0);
+  // execve("/bin/nterm", NULL, NULL);
   while (1)
     ;
 }

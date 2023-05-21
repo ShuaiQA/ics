@@ -1,10 +1,13 @@
 #include <am.h>
 #include <klib.h>
-#include <stdint.h>
 
 static Context *(*user_handler)(Event, Context *) = NULL;
+void __am_get_cur_as(Context *c);
+void __am_switch(Context *c);
 
 Context *__am_irq_handle(Context *c) {
+  // 来将当前的地址空间描述符指针保存到上下文中
+  __am_get_cur_as(c);
   if (user_handler) {
     Event ev = {0};
     // 目前都是cpu自增4的
@@ -14,7 +17,7 @@ Context *__am_irq_handle(Context *c) {
     c = user_handler(ev, c);
     assert(c != NULL);
   }
-
+  __am_switch(c);
   return c;
 }
 

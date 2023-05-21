@@ -58,10 +58,12 @@ void protect(AddrSpace *as) {
 
 void unprotect(AddrSpace *as) {}
 
+// 当前进程中的页目录地址保存到当前Context上下文中
 void __am_get_cur_as(Context *c) {
   c->pdir = (vme_enable ? (void *)get_satp() : NULL);
 }
 
+// 将当前进程中的pdir指针保存到寄存器satp中
 void __am_switch(Context *c) {
   if (vme_enable && c->pdir != NULL) {
     set_satp(c->pdir);
@@ -86,10 +88,19 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 }
 
 // 设置了用户进程的mepc寄存器的值,为了上下文切换之后能够设置正确的pc值
+// 将kstack的用户栈空间映射到[as.area.end - 32KB, as.area.end)这段虚拟地址空间.
+// 设置进程的页目录的地址空间
 // 返回Context的地址空间
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   Context *ans = (Context *)kstack.end - 1; // 上下文的地址处
   // 设置mepc也就是恢复上下文之后的pc值(因为系统调用使用的是yield进行恢复)
   ans->mepc = (uintptr_t)entry;
+  // 建立栈空间的虚拟映射
+  void *va = as->area.end - 8 * PGSIZE;
+  for (void *start = kstack.start; start < kstack.end; start += PGSIZE) {
+    map(as, va, start, 0);
+    va += PGSIZE;
+  }
+  ans->pdir = as->ptr;
   return ans;
 }
