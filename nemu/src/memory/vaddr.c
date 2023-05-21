@@ -21,7 +21,6 @@
 // 先翻译成物理地址在进行读或者写
 word_t vaddr_read(vaddr_t addr, int len) {
   paddr_t paddr = isa_mmu_translate(addr, len, cpu.satp >> 31);
-  Log("addr is" FMT_WORD " paddr is " FMT_WORD, addr, paddr);
   return paddr_read(paddr, len);
 }
 
