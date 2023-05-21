@@ -16,7 +16,6 @@ static Area segments[] = { // Kernel memory mappings
 static inline void set_satp(void *pdir) {
   uintptr_t mode = 1ul << (__riscv_xlen - 1);
   // 写到寄存器中:最高位是mode=1,将sapt寄存器中左移12位才代表着页表目录的物理地址
-  printf("向寄存器中写入数据值是%x\n", (mode | ((uintptr_t)pdir >> 12)));
   asm volatile("csrw satp, %0" : : "r"(mode | ((uintptr_t)pdir >> 12)));
 }
 
@@ -88,9 +87,6 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   PTE *next = (PTE *)(p & 0xfffff000);                   // 获取页表地址
   while ((next[(uintptr_t)va << 10 >> 22] & 0x1) == 0) { // 设置页表
     next[(uintptr_t)va << 10 >> 22] = ((uintptr_t)pa & 0xfffff000) + 0x1;
-  }
-  if (&kas != as) {
-    printf("va is %x dir is %x table is %x pa is %x\n", va, pte, next, pa);
   }
 }
 
