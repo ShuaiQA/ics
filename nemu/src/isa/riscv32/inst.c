@@ -212,11 +212,11 @@ static int decode_exec(Decode *s) {
   // 之后进行返回,将结构体c栈中的数据mepc,mcause传到t1,t2在将t1,t2数据传到mepc,mcause变量中
   INSTPAT("0000000 00000 00000 000 00000 1110011", ecall, I,
           s->dnpc = isa_raise_intr(cpu.gpr[17], cpu.pc););
-  INSTPAT("0011010 00010 00000 010 00101 1110011", csrr_mcause, I,
+  INSTPAT("0011010 00010 00000 010 ????? 1110011", csrr_mcause, I,
           R(rd) = cpu.mcause;);
-  INSTPAT("0011000 00000 00000 010 00110 1110011", csrr_mstatus, I,
+  INSTPAT("0011000 00000 00000 010 ????? 1110011", csrr_mstatus, I,
           R(rd) = cpu.mstatus;);
-  INSTPAT("0011010 00001 00000 010 00111 1110011", csrr_mepc, I,
+  INSTPAT("0011010 00001 00000 010 ????? 1110011", csrr_mepc, I,
           R(rd) = cpu.mepc;);
   INSTPAT("0011000 00000 00110 001 00000 1110011", csrw_mstatus, I,
           cpu.mstatus = src1);
@@ -224,7 +224,7 @@ static int decode_exec(Decode *s) {
   // 存储80000550 <__am_asm_trap>地址到sr.mtvec变量中
   INSTPAT("0011000 00101 01111 001 00000 1110011", csrw_mtvec, I,
           cpu.mtvec = src1;);
-  INSTPAT("0001100 00000 00000 010 01111 1110011", csrr_satp, I,
+  INSTPAT("0001100 00000 00000 010 ????? 1110011", csrr_satp, I,
           R(rd) = cpu.satp;);
   INSTPAT("0001100 00000 01111 001 00000 1110011", csrw_satp, I,
           cpu.satp = src1;

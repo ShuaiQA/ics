@@ -65,6 +65,7 @@ void __am_get_cur_as(Context *c) {
 }
 
 // 将当前进程中的pdir指针保存到寄存器satp中
+// 注意当前只是将当前栈空间上的satp数据放到寄存器中,并不是将下一个进程的satp放到寄存器中
 void __am_switch(Context *c) {
   if (vme_enable && c->pdir != NULL) {
     printf("pdir is not null should set pdir is %x\n", c->pdir);
