@@ -62,6 +62,7 @@ __am_asm_trap:
 
   MAP(REGS, POP)
 
+# 为了设置根目录我利用了寄存器t6,t5(覆盖了原有的数据)
 	lw t6,140(sp)
 	li t5,12
 	srl t6,t6,t5
