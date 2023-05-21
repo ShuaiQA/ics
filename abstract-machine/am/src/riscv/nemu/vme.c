@@ -107,5 +107,6 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
     va += PGSIZE;
   }
   ans->pdir = as->ptr;
+  printf("ans->pdir is %x\n", ans->pdir);
   return ans;
 }
