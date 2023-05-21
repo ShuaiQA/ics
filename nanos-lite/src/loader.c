@@ -1,6 +1,6 @@
 #include "am.h"
+#include "debug.h"
 #include "memory.h"
-#include "nemu.h"
 #include <elf.h>
 #include <fs.h>
 #include <proc.h>
@@ -40,6 +40,7 @@ uintptr_t load_segement(PCB *pcb, char *date) {
         char *page = new_page(1);
         memmove(page, pos, PGSIZE);
         map(&pcb->as, (char *)vaddr, page, 0);
+        Log("vaddr %x to paddr %x", vaddr, page);
         pos += PGSIZE;
         vaddr += PGSIZE; // 虚拟地址自增为了映射
         size += PGSIZE;
@@ -51,6 +52,7 @@ uintptr_t load_segement(PCB *pcb, char *date) {
         // 注意只是移动了len!=4096个,默认new_page的字符是0
         memmove(page, pos, len);
         map(&pcb->as, (char *)vaddr, page, 0);
+        Log("vaddr %x to paddr %x", vaddr, page);
         pos += PGSIZE;
         size += PGSIZE;
         vaddr += PGSIZE;
@@ -58,6 +60,7 @@ uintptr_t load_segement(PCB *pcb, char *date) {
       while (size <= vsize) {
         char *page = new_page(1); // 默认是0
         map(&pcb->as, (char *)vaddr, page, 0);
+        Log("vaddr %x to paddr %x", vaddr, page);
         pos += PGSIZE;
         vaddr += PGSIZE; // 虚拟地址自增为了映射
         size += PGSIZE;
