@@ -87,7 +87,6 @@ Context *schedule(Context *prev) {
   current->cp = prev;
   // current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
   current = &pcb[0];
-  Log("next is pcb0");
   return current->cp;
 }
 
