@@ -2,6 +2,7 @@
 #include "am.h"
 #include "debug.h"
 #include "klib-macros.h"
+#include "memory.h"
 #include <common.h>
 #include <fs.h>
 #include <proc.h>
@@ -23,8 +24,16 @@ intptr_t sys_yield(Context *c) {
 
 void sys_exit(Context *c) { halt(c->GPR2); }
 
-// 判断当前的addr是否和其余的程序有冲突
-void *sys_brk(uint32_t addr) { return 0; }
+// 主要是进行分配内存空间next记录着后面的地址空间,_end记录着最初的虚拟地址空间
+void *sys_brk(uint32_t _end, uint32_t next) {
+  uint32_t size = next - _end;
+  while (size >= 0) {
+    void *page = new_page(1);
+    map(&current->as, (void *)_end, page, 0);
+    size -= PGSIZE;
+  }
+  return 0;
+}
 
 int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
   AM_TIMER_UPTIME_T rtc;
@@ -65,7 +74,7 @@ void do_syscall(Context *c) {
     c->GPRx = fs_write(c->GPR2, (char *)c->GPR3, c->GPR4);
     break;
   case SYS_brk:
-    c->GPRx = (uintptr_t)sys_brk(c->GPR2);
+    c->GPRx = (uintptr_t)sys_brk(c->GPR2, c->GPR3);
     break;
   case SYS_close:
     c->GPRx = fs_close(c->GPR2);

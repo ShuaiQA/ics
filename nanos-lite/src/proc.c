@@ -63,15 +63,14 @@ Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
   // 用户程序的约定,先将栈指针放到寄存器a0上,在用户空间初始的_start上在进行将a0转移到sp寄存器上
   uintptr_t len = setArgv(area.end - sizeof(Context), argv);
   pcb->cp->GPRx = (uintptr_t)pcb->as.area.end - len - sizeof(Context);
-  Log("change pcb.cp.pdir %x\n", pcb->as.ptr);
   return pcb->cp;
 }
 
 void init_proc() {
   // context_kload(&pcb[0], hello_fun, NULL);
   // context_kload(&pcb[0], hello_fun, NULL);
-  // context_uload(&pcb[1], "/bin/nterm", NULL, NULL);
-  context_uload(&pcb[0], "/bin/dummy", NULL, NULL);
+  context_uload(&pcb[0], "/bin/nterm", NULL, NULL);
+  // context_uload(&pcb[0], "/bin/dummy", NULL, NULL);
   switch_boot_pcb();
   Log("Initializing processes...");
 
