@@ -55,15 +55,15 @@ __am_asm_trap:
 # 我在调度函数写入sp寄存器到当前的trap使用期望的值,在此期间编译器可能会自动修改sp寄存器
 	lw	sp,68(sp)
 	
-	lw t6,140(sp)
-  csrw satp, t6
-
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
   csrw mstatus, t1
   csrw mepc, t2
 
   MAP(REGS, POP)
+
+	lw t6,140(sp)
+  csrw satp, t6
 
   addi sp, sp, CONTEXT_SIZE
   mret
