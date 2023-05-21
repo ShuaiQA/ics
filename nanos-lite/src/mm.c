@@ -24,7 +24,8 @@ void free_page(void *p) { panic("not implement yet"); }
 int mm_brk(uintptr_t brk) { return 0; }
 
 void init_mm() {
-  pf = (void *)ROUNDUP(heap.start + 0x100000, PGSIZE);
+  // 防止和malloc冲突向后容纳了0x100000字节
+  pf = (void *)ROUNDUP(heap.start, PGSIZE);
   Log("heap.start address is %p free physical pages starting from %p",
       heap.start, pf);
 
