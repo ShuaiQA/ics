@@ -31,6 +31,7 @@ void *sys_brk(uint32_t _end, uint32_t next) {
   Log("size is %p", s);
   while (s >= 0) {
     void *page = new_page(1);
+    Log("allow ");
     map(&current->as, (void *)_end, page, 0);
     s = s - PGSIZE;
   }
