@@ -44,7 +44,8 @@ void *sys_brk(uintptr_t last, uintptr_t cur, uintptr_t next) {
   if (last == cur) {
     current->max_brk -= last % 0x1000;
   }
-  Log("over");
+  Log("over last is %p cur is %p next is %p size is %p", last, cur, next,
+      current->max_brk);
   return 0;
 }
 
