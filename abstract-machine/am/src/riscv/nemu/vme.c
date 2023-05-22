@@ -82,10 +82,8 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
     pte[(uintptr_t)va >> 22] = (uintptr_t)next_add + 0x1;
   }
   PTE p = pte[(uintptr_t)va >> 22];
-  PTE *next = (PTE *)(p & 0xfffff000);                   // 获取页表地址
-  while ((next[(uintptr_t)va << 10 >> 22] & 0x1) == 0) { // 设置页表
-    next[(uintptr_t)va << 10 >> 22] = ((uintptr_t)pa & 0xfffff000) + 0x1;
-  }
+  PTE *next = (PTE *)(p & 0xfffff000); // 获取页表地址
+  next[(uintptr_t)va << 10 >> 22] = ((uintptr_t)pa & 0xfffff000) + 0x1;
 }
 
 // 设置了用户进程的mepc寄存器的值,为了上下文切换之后能够设置正确的pc值
