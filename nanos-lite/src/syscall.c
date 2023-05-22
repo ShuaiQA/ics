@@ -33,7 +33,7 @@ void *sys_brk(uintptr_t last, uintptr_t cur, uintptr_t next) {
     return 0;
   }
   int realse = next - last - current->max_brk; // 查看还需要分配多少
-  while (realse >= 0) {
+  while (realse > 0) {
     void *page = new_page(1);
     Log("allow");
     map(&current->as, (void *)cur, page, 0); // cur页面对齐到page页面
