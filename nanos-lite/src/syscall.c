@@ -38,6 +38,7 @@ void *sys_brk(uintptr_t last, uintptr_t cur, uintptr_t next) {
     Log("allow");
     map(&current->as, (void *)cur, page, 0); // cur页面对齐到page页面
     realse -= PGSIZE;
+    current->max_brk += PGSIZE;
   }
   Log("over");
   return 0;
