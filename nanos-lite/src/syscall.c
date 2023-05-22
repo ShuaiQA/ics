@@ -26,9 +26,8 @@ void sys_exit(Context *c) { halt(c->GPR2); }
 
 // 主要是进行分配内存空间next记录着后面的地址空间,_end记录着最初的虚拟地址空间
 // 记录了当前进程堆的最初的位置,待分配的位置和分配之后的位置
-void *sys_brk(uintptr_t cur, uintptr_t next) {
-  Log("cur is %p next is %p", cur, next);
-  int size = next - cur;
+void *sys_brk(uintptr_t cur, uintptr_t next, int size) {
+  Log("cur is %p next is %p size is %p", cur, next, size);
   int i = 0;
   while (size >= 0) {
     void *page = new_page(1);
@@ -79,7 +78,7 @@ void do_syscall(Context *c) {
     c->GPRx = fs_write(c->GPR2, (char *)c->GPR3, c->GPR4);
     break;
   case SYS_brk:
-    c->GPRx = (uintptr_t)sys_brk(c->GPR2, c->GPR3);
+    c->GPRx = (uintptr_t)sys_brk(c->GPR2, c->GPR3, c->GPR4);
     break;
   case SYS_close:
     c->GPRx = fs_close(c->GPR2);
