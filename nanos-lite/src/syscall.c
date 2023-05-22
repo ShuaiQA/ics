@@ -25,15 +25,19 @@ intptr_t sys_yield(Context *c) {
 void sys_exit(Context *c) { halt(c->GPR2); }
 
 // 主要是进行分配内存空间next记录着后面的地址空间,_end记录着最初的虚拟地址空间
-void *sys_brk(uint32_t _end, uint32_t next) {
-  Log("_end is %p next is %p", _end, next);
-  int s = next - _end;
-  Log("size is %p", s);
-  while (s >= 0) {
+// 记录了当前进程堆的最初的位置,待分配的位置和分配之后的位置
+void *sys_brk(uintptr_t last, uintptr_t cur, uintptr_t next) {
+  Log("last is %p cur is %p next is %p size is %p", last, cur, next,
+      current->max_brk);
+  if (current->max_brk + last >= next) { // 如果已经分配的大于申请的直接返回
+    return 0;
+  }
+  int realse = next - last - current->max_brk; // 查看还需要分配多少
+  while (realse >= 0) {
     void *page = new_page(1);
-    Log("allow ");
-    map(&current->as, (void *)_end, page, 0);
-    s = s - PGSIZE;
+    Log("allow");
+    map(&current->as, (void *)cur, page, 0); // cur页面对齐到page页面
+    realse -= PGSIZE;
   }
   Log("over");
   return 0;
@@ -78,7 +82,7 @@ void do_syscall(Context *c) {
     c->GPRx = fs_write(c->GPR2, (char *)c->GPR3, c->GPR4);
     break;
   case SYS_brk:
-    c->GPRx = (uintptr_t)sys_brk(c->GPR2, c->GPR3);
+    c->GPRx = (uintptr_t)sys_brk(c->GPR2, c->GPR3, c->GPR4);
     break;
   case SYS_close:
     c->GPRx = fs_close(c->GPR2);
