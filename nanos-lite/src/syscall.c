@@ -40,6 +40,10 @@ void *sys_brk(uintptr_t last, uintptr_t cur, uintptr_t next) {
     realse -= PGSIZE;
     current->max_brk += PGSIZE;
   }
+  // 第一次进行分配的时候,用户进程能够使用的字节数并不是4096(没有对齐)
+  if (last == cur) {
+    current->max_brk -= last % 0x1000;
+  }
   Log("over");
   return 0;
 }

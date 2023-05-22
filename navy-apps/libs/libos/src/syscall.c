@@ -73,13 +73,13 @@ int _write(int fd, void *buf, size_t count) {
 
 // 链接器会在代码段和数据段之后默认添加一个_end
 extern char _end;
-static char *pb = &_end;
+static uintptr_t pb = (uintptr_t)&_end;
 void *_sbrk(intptr_t increment) {
-  char *old = pb;
+  uintptr_t old = pb;
   pb += increment;
   // 将新的pb传到操作系统中,查看申请之后的进程空间是否和其余的有冲突
-  _syscall_(SYS_brk, (intptr_t)(&_end), (intptr_t)old, (uintptr_t)pb);
-  return old;
+  _syscall_(SYS_brk, (intptr_t)(&_end), old, pb);
+  return (void *)old;
 }
 
 int _read(int fd, void *buf, size_t count) {
