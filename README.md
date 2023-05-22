@@ -17,3 +17,6 @@ The following subprojects/components are included. Some of them are not fully im
 * [Abstract-Machine](https://github.com/NJU-ProjectN/abstract-machine)
 * [Nanos-lite](https://github.com/NJU-ProjectN/nanos-lite)
 * [Navy-apps](https://github.com/NJU-ProjectN/navy-apps)
+
+写一些待优化的地方：
+1. 用户进程malloc的时候为了方便操作系统分配空间,我们让分配的时候是4096字节对齐的,换句话说,当分配是1字节的时候在操作系统的层面也是4096个字节
