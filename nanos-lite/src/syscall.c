@@ -33,13 +33,15 @@ void *sys_brk(uintptr_t last, uintptr_t cur, uintptr_t next) {
     return 0;
   }
   int realse = next - last - current->max_brk; // 查看还需要分配多少
+  int i = 0;
   while (realse > 0) {
     void *page = new_page(1);
-    Log("allow");
+    i++;
     map(&current->as, (void *)cur, page, 0); // cur页面对齐到page页面
     realse -= PGSIZE;
     current->max_brk += PGSIZE;
   }
+  Log("allow i is %d", i);
   // 第一次进行分配的时候,用户进程能够使用的字节数并不是4096(没有对齐)
   if (last == cur) {
     current->max_brk -= (last % 0x1000);
