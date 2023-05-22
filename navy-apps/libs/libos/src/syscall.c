@@ -74,6 +74,8 @@ int _write(int fd, void *buf, size_t count) {
 // 链接器会在代码段和数据段之后默认添加一个_end
 extern char _end;
 static uintptr_t pb = (uintptr_t)&_end;
+
+// 暂时的考虑是每一次分配的时候就是让页面对齐(即使是分配一个字节,在物理页面上也是申请的4096个字节)
 void *_sbrk(intptr_t increment) {
   uintptr_t old = pb;
   if (old % 4096 != 0) {

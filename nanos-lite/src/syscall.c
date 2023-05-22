@@ -26,28 +26,15 @@ void sys_exit(Context *c) { halt(c->GPR2); }
 
 // 主要是进行分配内存空间next记录着后面的地址空间,_end记录着最初的虚拟地址空间
 // 记录了当前进程堆的最初的位置,待分配的位置和分配之后的位置
-void *sys_brk(uintptr_t last, uintptr_t cur, uintptr_t next) {
-  Log("last is %p cur is %p next is %p size is %p", last, cur, next,
-      current->max_brk);
-  if (current->max_brk + last >= next) { // 如果已经分配的大于申请的直接返回
-    return 0;
-  }
-  int realse = next - last - current->max_brk; // 查看还需要分配多少
+void *sys_brk(uintptr_t cur, uintptr_t next) {
+  int size = next - cur;
   int i = 0;
-  while (realse > 0) {
+  while (size >= 0) {
     void *page = new_page(1);
+    map(&current->as, (void *)(cur + i * PGSIZE), page, 0);
+    size -= PGSIZE;
     i++;
-    map(&current->as, (void *)cur, page, 0); // cur页面对齐到page页面
-    realse -= PGSIZE;
-    current->max_brk += PGSIZE;
   }
-  Log("allow i is %d", i);
-  // 第一次进行分配的时候,用户进程能够使用的字节数并不是4096(没有对齐)
-  if (last == cur) {
-    current->max_brk -= (last % 0x1000);
-  }
-  Log("over last is %p cur is %p next is %p size is %p", last, cur, next,
-      current->max_brk);
   return 0;
 }
 
@@ -90,7 +77,7 @@ void do_syscall(Context *c) {
     c->GPRx = fs_write(c->GPR2, (char *)c->GPR3, c->GPR4);
     break;
   case SYS_brk:
-    c->GPRx = (uintptr_t)sys_brk(c->GPR2, c->GPR3, c->GPR4);
+    c->GPRx = (uintptr_t)sys_brk(c->GPR2, c->GPR3);
     break;
   case SYS_close:
     c->GPRx = fs_close(c->GPR2);
