@@ -13,6 +13,7 @@
  * See the Mulan PSL v2 for more details.
  ***************************************************************************************/
 
+#include "debug.h"
 #include "local-include/reg.h"
 #include <cpu/cpu.h>
 #include <cpu/decode.h>
@@ -95,7 +96,6 @@ static int decode_exec(Decode *s) {
               ((BITS(imm, 30, 21)) | (BITS(imm, 20, 20) << 10) |
                (BITS(imm, 19, 12) << 11) | (SEXT(BITS(imm, 31, 31), 1) << 19));
           R(rd) = cpu.pc + 4; s->dnpc = cpu.pc + (imm << 1));
-
   INSTPAT("??????? ????? ????? 000 ????? 1100111", ret_jalr, I,
           s->dnpc = (src1 + imm) & ~1, R(rd) = cpu.pc + 4);
   // 跳转指令使用ra寄存器保存下一条返回指令
@@ -207,7 +207,7 @@ static int decode_exec(Decode *s) {
           R(rd) = (int64_t)(int32_t)(src1 + imm));
   INSTPAT("0000000 ????? ????? 001 ????? 0011011", slliw, I,
           R(rd) = (int64_t)(int32_t)(src1 << BITS(imm, 5, 0)));
-  INSTPAT("0000000 ????? ????? 101 ????? 0011011", srliw, I,
+  INSTPAT("0000000 ????? ????? 101 ????? 0011011", srliw, I, Log("%ld", src1);
           R(rd) = (src1 >> BITS(imm, 5, 0)));
   INSTPAT("0100000 ????? ????? 101 ????? 0011011", sraiw, I,
           R(rd) = (int64_t)(int32_t)(src1 >> imm));
