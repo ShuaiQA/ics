@@ -38,6 +38,9 @@ void free_wp(int no);
 void new_wp(word_t value, char *what);
 void find_watch();
 void printWP();
+// iringbuf
+void new_isa(word_t pc, char *isa);
+void printIringBuf();
 
 // exec
 struct Decode;
