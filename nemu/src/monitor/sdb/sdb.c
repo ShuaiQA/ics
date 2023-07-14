@@ -15,6 +15,7 @@
 
 #include "sdb.h"
 #include "debug.h"
+#include "macro.h"
 #include "utils.h"
 #include <cpu/cpu.h>
 #include <isa.h>
@@ -107,6 +108,68 @@ static int cmd_x(char *args) {
   return 0;
 }
 
+// 设置监视点
+static int cmd_w(char *args) {
+#ifdef CONFIG_WATCHPOINT
+  if (args == NULL) {
+    Log("w 应该加上参数,可以是变量或者表达式,内存地址,$寄存器名字");
+    return 0;
+  }
+  bool success = false;
+  word_t val = expr(args, &success);
+  if (success == false) {
+    Log("表达式不合法,重新输入\n");
+  } else {
+    new_wp(val, args);
+    Log("当前的val是" FMT_WORD, val);
+  }
+#else
+  Log("not define CONFIG_WATCHPOINT make menuconfig");
+#endif
+  return 0;
+}
+
+static int cmd_d(char *args) {
+#ifdef CONFIG_WATCHPOINT
+  if (args == NULL) {
+    Log("d后面应该添加 info w 的NO\n");
+  }
+  int num = atoi(args);
+  free_wp(num);
+#else
+  Log("not define CONFIG_WATCHPOINT make menuconfig");
+#endif
+  return 0;
+}
+
+// 查看所有的寄存器的值,或者是监视点
+static int cmd_info(char *args) {
+  char *token = strtok(args, " ");
+  switch (token[0]) {
+  case 'r':
+    isa_reg_display();
+    break;
+  case 'w':
+    IFDEF(CONFIG_WATCHPOINT, printWP());
+    break;
+  case 'i':
+    IFDEF(CONFIG_IRINGBUF, printIringBuf());
+    break;
+  case 'f':
+    IFDEF(CONFIG_FTRACE, print_fun_buf());
+    break;
+  case 'e':
+    IFDEF(CONFIG_ETRACE, print_etrace());
+    break;
+  case 'd':
+    IFDEF(CONFIG_DTRACE, print_device_trace());
+    break;
+  default:
+    Log("info参数不对输入:w,r,i,f,e,d\n");
+  }
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -120,6 +183,9 @@ static struct {
     {"si", "step N", cmd_si},
     {"p", "print var", cmd_p},
     {"x", "look memory", cmd_x},
+    {"w", "watchpoint", cmd_w},
+    {"d", "删除监测点", cmd_d},
+    {"info", "打印寄存器状态或打印监视点信息", cmd_info},
 
     /* TODO: Add more commands */
 

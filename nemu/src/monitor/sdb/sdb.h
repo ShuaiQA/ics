@@ -21,4 +21,8 @@
 word_t expr(char *e, bool *success);
 
 word_t paddr_read(paddr_t addr, int len);
+
+void new_wp(word_t value, char *what);
+void printWP();
+
 #endif
