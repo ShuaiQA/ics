@@ -14,6 +14,7 @@
  ***************************************************************************************/
 
 #include "sdb.h"
+#include "debug.h"
 #include "utils.h"
 #include <cpu/cpu.h>
 #include <isa.h>
@@ -54,6 +55,55 @@ static int cmd_q(char *args) {
   return -1;
 }
 
+static int cmd_si(char *args) {
+  char *token = strtok(args, " ");
+  if (token == NULL) {
+    cpu_exec(1);
+  } else {
+    int n = atoi(token);
+    if (n == 0) {
+      Log("输出10进制的整数");
+    }
+    cpu_exec(n);
+  }
+  return 0;
+}
+
+static int cmd_p(char *args) {
+  if (args == NULL) {
+    Log("p 需要参数,例如p $pc");
+    return 0;
+  }
+  bool v;
+  word_t pval = expr(args, &v);
+  Log(FMT_WORD, pval);
+  return 0;
+}
+
+static int cmd_x(char *args) {
+  char *token = strtok(args, " ");
+  int cnt = -1;
+  if (token != NULL) {
+    sscanf(token, "%x", &cnt);
+  }
+  token = strtok(NULL, " "); // 表达式
+  if (token == NULL) {
+    Log("x 需要参数,例如x 4 0x80000000, x 4 $pc");
+  }
+  bool v;
+  word_t padd = expr(token, &v);
+  for (int i = 0; i < cnt; i++) {
+    word_t pval = paddr_read(padd, 4);
+    printf("[" FMT_WORD "]:\t" FMT_WORD "\t ", padd, pval);
+    padd += 4;
+    if ((i + 1) % 4 == 0) {
+      printf("\n");
+    }
+  }
+  printf("\n");
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -64,6 +114,9 @@ static struct {
     {"help", "Display information about all supported commands", cmd_help},
     {"c", "Continue the execution of the program", cmd_c},
     {"q", "Exit NEMU", cmd_q},
+    {"si", "step N", cmd_si},
+    {"p", "print var", cmd_p},
+    {"x", "look memory", cmd_x},
 
     /* TODO: Add more commands */
 
