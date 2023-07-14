@@ -28,7 +28,7 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
     if (ref_r->gpr[i] != cpu.gpr[i]) {
       printf("pc is " FMT_WORD " reg %s expect is " FMT_WORD
              " fact is " FMT_WORD "\n",
-             cpu.pc, reg_name(i, 0), ref_r->gpr[i], cpu.gpr[i]);
+             pc, reg_name(i, 0), ref_r->gpr[i], cpu.gpr[i]);
       ans = false;
     }
   }
