@@ -20,7 +20,7 @@ void new_isa(word_t pc, char *isa) {
 void printIringBuf() {
   int i = pos;
   do {
-    printf("[" FMT_WORD "]: %s\t    ", buf[i].pc, buf[i].logbuf);
+    printf("[" FMT_WORD "]: %s\n", buf[i].pc, buf[i].logbuf);
     i = (i + 1) % SIZE_ISA_BUF;
   } while (i != pos);
 }
