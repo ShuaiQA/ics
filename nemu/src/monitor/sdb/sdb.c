@@ -93,9 +93,12 @@ static int cmd_x(char *args) {
   bool v;
   word_t padd = expr(token, &v);
   for (int i = 0; i < cnt; i++) {
-    word_t pval = paddr_read(padd, 4);
-    printf("[" FMT_WORD "]:\t" FMT_WORD "\t ", padd, pval);
-    padd += 4;
+    if ((i % 4) == 0) {
+      printf("[" FMT_WORD "]:\t", padd);
+    }
+    word_t pval = paddr_read(padd, 8);
+    printf(FMT_WORD "\t ", pval);
+    padd += 8;
     if ((i + 1) % 4 == 0) {
       printf("\n");
     }
