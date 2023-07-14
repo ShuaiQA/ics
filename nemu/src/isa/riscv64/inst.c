@@ -249,11 +249,12 @@ static int decode_exec(Decode *s) {
           R(rd) = (int64_t)(int32_t)(((sword_t)src1 & 0xffffffff) /
                                      ((sword_t)src2 & 0xffffffff)));
   INSTPAT("0000001 ????? ????? 101 ????? 0111011", divuw, S,
-          R(rd) = (sword_t)src1 * (sword_t)src2);
+          R(rd) = ((src1 & 0xffffffff) / (src2 & 0xffffffff)));
   INSTPAT("0000001 ????? ????? 110 ????? 0111011", remw, S,
-          R(rd) = (sword_t)src1 * (sword_t)src2);
+          R(rd) = (int64_t)(int32_t)(((sword_t)src1 & 0xffffffff) %
+                                     ((sword_t)src2 & 0xffffffff)));
   INSTPAT("0000001 ????? ????? 111 ????? 0111011", remuw, S,
-          R(rd) = (sword_t)src1 * (sword_t)src2);
+          R(rd) = ((src1 & 0xffffffff) % (src2 & 0xffffffff)));
 
   // INSTPAT("0011010 00010 00000 010 ????? 1110011", csrr_mcause, I,
   //         R(rd) = cpu.mcause;);
