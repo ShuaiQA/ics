@@ -208,7 +208,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("0000000 ????? ????? 001 ????? 0011011", slliw, I,
           R(rd) = (int64_t)(int32_t)(src1 << BITS(imm, 5, 0)));
   INSTPAT("0000000 ????? ????? 101 ????? 0011011", srliw, I,
-          Log(FMT_WORD, src1);
+          Log(FMT_WORD FMT_WORD, src1, imm);
           R(rd) = (src1 >> BITS(imm, 5, 0)));
   INSTPAT("0100000 ????? ????? 101 ????? 0011011", sraiw, I,
           R(rd) = (int64_t)(int32_t)(src1 >> imm));
