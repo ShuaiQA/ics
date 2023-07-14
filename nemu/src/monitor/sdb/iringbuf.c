@@ -2,7 +2,6 @@
 #include "sdb.h"
 
 typedef struct isa {
-  word_t pc;
   char logbuf[128];
 } ISAbuf;
 
@@ -10,8 +9,7 @@ typedef struct isa {
 static ISAbuf buf[SIZE_ISA_BUF];
 static word_t pos = 0;
 
-void new_isa(word_t pc, char *isa) {
-  buf[pos].pc = pc;
+void new_isa(char *isa) {
   memcpy(buf[pos].logbuf, isa, strlen(isa));
   pos = (pos + 1) % SIZE_ISA_BUF;
 }
@@ -20,7 +18,7 @@ void new_isa(word_t pc, char *isa) {
 void printIringBuf() {
   int i = pos;
   do {
-    printf("[" FMT_WORD "]: %s\n", buf[i].pc, buf[i].logbuf);
+    printf("%s\n", buf[i].logbuf);
     i = (i + 1) % SIZE_ISA_BUF;
   } while (i != pos);
 }
