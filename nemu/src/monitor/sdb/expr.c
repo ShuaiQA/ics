@@ -43,12 +43,12 @@ static struct rule {
   int token_type;
 } rules[] = {
     // 寄存器的reg解析暂时是$..
-    {" ", TK_NOTYPE},     {"0x([0-9a-f]+)", TK_0XNUM},
-    {"\\$..", TK_REG},    {"&&", TK_YUYU},
-    {"==", TK_EQ},        {"!=", TK_NEQ},
-    {"\\+", TK_ADD},      {"-", TK_SUB},
-    {"\\*", TK_MUL},      {"/", TK_DIV},
-    {"\\(", TK_ZUO},      {"\\)", TK_YOU},
+    {" ", TK_NOTYPE},       {"0x([0-9a-f]+)", TK_0XNUM},
+    {"\\$([^ ]*)", TK_REG}, {"&&", TK_YUYU},
+    {"==", TK_EQ},          {"!=", TK_NEQ},
+    {"\\+", TK_ADD},        {"-", TK_SUB},
+    {"\\*", TK_MUL},        {"/", TK_DIV},
+    {"\\(", TK_ZUO},        {"\\)", TK_YOU},
     {"([0-9]+)", TK_NUM}, // 0-9数字
 };
 
