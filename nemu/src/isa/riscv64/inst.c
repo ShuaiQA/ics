@@ -300,7 +300,4 @@ static int decode_exec(Decode *s) {
   return 0;
 }
 
-int isa_exec_once(Decode *s) {
-  s->isa.inst.val = inst_fetch(&s->snpc, 4);
-  return decode_exec(s);
-}
+int isa_exec_once(Decode *s) { return decode_exec(s); }
