@@ -34,7 +34,7 @@ void wmcsr(word_t pos, word_t val) {
   Log("pos is" FMT_WORD ",val is " FMT_WORD, pos, val);
   switch (pos) {
   case mtvec:
-    cpu.mcsr[2] = val;
+    cpu.mcsr[1] = val;
     break;
   default:
     Log("error");
@@ -57,7 +57,7 @@ void isa_reg_display() {
   printf("pc\t" FMT_WORD "\n", cpu.pc);
   for (int i = 0; i < 32; i++) {
     printf("%s\t" FMT_WORD "\t", regs[i], cpu.gpr[i]);
-    if (i % 4 == 0) {
+    if ((i + 1) % 4 == 0) {
       printf("\n");
     }
   }
