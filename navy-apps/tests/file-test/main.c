@@ -5,16 +5,11 @@ int main() {
   FILE *fp = fopen("/share/files/num", "r+");
   assert(fp);
 
-  printf("hello1\n");
   fseek(fp, 0, SEEK_END);
-  printf("hello2\n");
   long size = ftell(fp);
-  printf("hello3\n");
   assert(size == 5000);
 
-  printf("hello4\n");
   fseek(fp, 500 * 5, SEEK_SET);
-  printf("hello5\n");
   int i, n;
   for (i = 500; i < 1000; i++) {
     fscanf(fp, "%d", &n);
