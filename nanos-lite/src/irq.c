@@ -1,4 +1,3 @@
-
 #include <common.h>
 
 static Context *do_event(Event e, Context *c) {
