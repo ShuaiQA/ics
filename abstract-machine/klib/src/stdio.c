@@ -107,7 +107,7 @@ int vsnprintf(char *out, size_t n, const char *s, va_list vl) {
   return pos;
 }
 
-char buf[4096];
+static char buf[4096];
 
 int printf(const char *fmt, ...) {
   va_list args;
