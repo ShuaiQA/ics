@@ -74,24 +74,19 @@ word_t isa_reg_str2val(const char *s, bool *success) {
     *success = true;
     return cpu.pc;
   }
-  int pos = -1;
   for (int i = 0; i < 32; i++) {
     if (strcmp(s, regs[i]) == 0) {
-      pos = i;
-      break;
+      *success = true;
+      return cpu.gpr[i];
     }
   }
   for (int i = 0; i < 4; i++) {
     if (strcmp(s, mcsr[i]) == 0) {
-      pos = i;
-      break;
+      *success = true;
+      return cpu.mcsr[i];
     }
   }
-  if (pos == -1) {
-    *success = false;
-    Log("查找regs字符串错误");
-    return 0;
-  }
+  Log("查找regs字符串错误");
   *success = true;
-  return cpu.gpr[pos];
+  return 0;
 }

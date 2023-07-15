@@ -70,6 +70,7 @@ enum {
 
 // imm -> rd , rs1 -> imm
 void csrrw(word_t imm, word_t src1, word_t rd) {
+  Log("csrrw ");
   if (rd != 0) {
     R(rd) = rmscr(imm);
   }
