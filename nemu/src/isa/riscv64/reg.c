@@ -43,13 +43,10 @@ size_t mcsrpos(word_t num) {
   case mepc:
     pos = 2;
     break;
-  case mcause:
-    pos = 3;
-    break;
   default:
+    IFDEF(CONFIG_IRINGBUF, printIringBuf());
     Assert(0, "num is " FMT_WORD, num);
   }
-  nemu_state.state = NEMU_STOP;
   return pos;
 }
 
