@@ -33,7 +33,7 @@ const char *mcsr[] = {"mstatus", "mtvec", "mepc", "mcause"};
 
 size_t mcsrpos(word_t num) {
   size_t pos = -1;
-  switch (pos) {
+  switch (num) {
   case mtvec:
     pos = 1;
     break;
