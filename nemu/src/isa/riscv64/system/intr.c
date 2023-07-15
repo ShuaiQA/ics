@@ -13,11 +13,12 @@
  * See the Mulan PSL v2 for more details.
  ***************************************************************************************/
 
+#include <../local-include/reg.h>
 #include <isa.h>
 
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
-  cpu.mcsr[2] = epc;
-  cpu.mcsr[3] = 2; // Environment call from M-mode
+  mcsr(mepc) = epc;
+  mcsr(mcause) = 0xb;
   IFDEF(CONFIG_ETRACE, new_etrace(epc, cpu.gpr[17]));
   return cpu.mcsr[1];
 }
