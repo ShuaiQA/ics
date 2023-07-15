@@ -41,6 +41,10 @@ void printWP();
 // iringbuf
 void new_isa(char *isa);
 void printIringBuf();
+// etrace
+void new_etrace();
+void new_ret();
+void print_etrace();
 
 // exec
 struct Decode;

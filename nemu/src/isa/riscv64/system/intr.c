@@ -13,14 +13,16 @@
  * See the Mulan PSL v2 for more details.
  ***************************************************************************************/
 
+#include "macro.h"
 #include <../local-include/reg.h>
+#include <common.h>
 #include <isa.h>
 
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   mcsr(mepc) = epc;
   mcsr(mcause) = 0xb;
-  IFDEF(CONFIG_ETRACE, new_etrace(epc, cpu.gpr[17]));
-  return cpu.mcsr[1];
+  IFDEF(CONFIG_ETRACE, new_etrace());
+  return mcsr(mtvec);
 }
 
 word_t isa_query_intr() { return INTR_EMPTY; }

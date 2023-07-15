@@ -277,6 +277,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("???????????? ????? 010 ????? 1110011", csrrs, I,
           csrrs(imm, src1, rd));
   INSTPAT("0011000 00010 00000 000 00000 1110011", mret, I,
+          IFDEF(CONFIG_ETRACE, new_ret());
           s->dnpc = RM(mepc););
 
   // INSTPAT("0011010 00010 00000 010 ????? 1110011", csrr_mcause, I,
