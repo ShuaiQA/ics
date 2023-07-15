@@ -125,7 +125,6 @@ static int decode_exec(Decode *s) {
 
   INSTPAT_START();
   INSTPAT("??????? ????? ????? ??? ????? 0110111", lui, U, R(rd) = imm);
-  //       0000000 00000 00010 100 00010 0010111  auipc   sp, 20
   INSTPAT("??????? ????? ????? ??? ????? 0010111", auipc, U,
           R(rd) = cpu.pc + imm);
   INSTPAT("??????? ????? ????? ??? ????? 1101111", jal, J, R(rd) = cpu.pc + 4;
@@ -204,7 +203,7 @@ static int decode_exec(Decode *s) {
   // 之后调用__am_irq_handle进行异常处理,之后进入do_event函数
   // 之后进行返回,将结构体c栈中的数据mepc,mcause传到t1,t2在将t1,t2数据传到mepc,mcause变量中
   INSTPAT("0000000 00000 00000 000 00000 1110011", ecall, I,
-          s->dnpc = isa_raise_intr(cpu.gpr[17], cpu.pc););
+          s->dnpc = isa_raise_intr(0xb, cpu.pc););
   INSTPAT("0000000 00001 00000 000 00000 1110011", ebreak, N,
           NEMUTRAP(s->pc, R(10))); // R(10) is $a0
 
