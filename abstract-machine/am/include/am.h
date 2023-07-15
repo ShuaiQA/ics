@@ -38,6 +38,9 @@ typedef struct {
 enum {
   SYS_exit,
   SYS_yield,
+  SYS_open,
+  SYS_read,
+  SYS_write,
 };
 
 // A protected address space with user memory @area

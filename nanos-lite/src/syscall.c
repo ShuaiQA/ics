@@ -1,9 +1,11 @@
-#include "syscall.h"
 #include "am.h"
+
 #include "debug.h"
 #include <common.h>
+#include <fs.h>
 #include <stdint.h>
 
+#include "syscall.h"
 uintptr_t sys_yield() { return 0; }
 
 void sys_exit() { halt(0); }
@@ -22,6 +24,9 @@ void do_syscall(Context *c) {
     break;
   case SYS_exit:
     sys_exit();
+    break;
+  case SYS_write:
+    c->GPRx = fs_write(a[0], (void *)a[1], a[2]);
     break;
   default:
     panic("Unhandled syscall ID = %d", a[0]);
