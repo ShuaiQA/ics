@@ -51,6 +51,8 @@ static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
   s->snpc = pc;
   s->isa.inst.val = inst_fetch(&s->snpc, 4);
+  // 先解析汇编代码在执行相关的指令
+  // 不然的话当指令执行错误了,相关的指令却没有在buf中
 #ifdef CONFIG_ITRACE
   char *p = s->logbuf;
   p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
