@@ -37,17 +37,17 @@ void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
 
 // 向缓冲区中写入音频数据
 void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
-  size_t len = ctl->buf.end - ctl->buf.start;
-  while (len > BUF_SIZE - inl(AUDIO_SBUF_SIZE_ADDR)) // 空间不够等待
-    ;
-  uint32_t write_pos =
-      (inl(AUDIO_RPOS_ADDR) + inl(AUDIO_SBUF_SIZE_ADDR)) % BUF_SIZE;
-  if (BUF_SIZE - write_pos < len) {
-    uint32_t remain = BUF_SIZE - write_pos;
-    memcpy((void *)write_pos + AUDIO_SBUF_ADDR, ctl->buf.start, remain);
-    memcpy((void *)AUDIO_SBUF_ADDR, ctl->buf.start + remain, len - remain);
-  } else {
-    memcpy((void *)AUDIO_SBUF_ADDR + write_pos, ctl->buf.start, len);
-  }
-  outl(AUDIO_SBUF_SIZE_ADDR, inl(AUDIO_SBUF_SIZE_ADDR) + len);
+  // size_t len = ctl->buf.end - ctl->buf.start;
+  // while (len > BUF_SIZE - inl(AUDIO_SBUF_SIZE_ADDR)) // 空间不够等待
+  //   ;
+  // uint32_t write_pos =
+  //     (inl(AUDIO_RPOS_ADDR) + inl(AUDIO_SBUF_SIZE_ADDR)) % BUF_SIZE;
+  // if (BUF_SIZE - write_pos < len) {
+  //   uint32_t remain = BUF_SIZE - write_pos;
+  //   memcpy((void *)write_pos + AUDIO_SBUF_ADDR, ctl->buf.start, remain);
+  //   memcpy((void *)AUDIO_SBUF_ADDR, ctl->buf.start + remain, len - remain);
+  // } else {
+  //   memcpy((void *)AUDIO_SBUF_ADDR + write_pos, ctl->buf.start, len);
+  // }
+  // outl(AUDIO_SBUF_SIZE_ADDR, inl(AUDIO_SBUF_SIZE_ADDR) + len);
 }
