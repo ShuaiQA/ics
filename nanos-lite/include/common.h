@@ -13,4 +13,6 @@
 
 #include <debug.h>
 
+void do_syscall(Context *c);
+
 #endif
