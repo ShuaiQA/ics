@@ -5,7 +5,6 @@
 #include <fs.h>
 #include <stdint.h>
 
-#include "syscall.h"
 uintptr_t sys_yield() { return 0; }
 
 void sys_exit() { halt(0); }
