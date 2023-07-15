@@ -32,7 +32,6 @@ enum { mtvec = 0x305, mcause = 0x300 };
 const char *mcsr[] = {"mstatus", "mtvec", "mepc", "mcause"};
 
 size_t mcsrpos(word_t num) {
-  Log("pos is" FMT_WORD, num);
   size_t pos = -1;
   switch (pos) {
   case mtvec:
@@ -41,6 +40,8 @@ size_t mcsrpos(word_t num) {
   case mcause:
     pos = 3;
     break;
+  default:
+    Assert(0, "num is " FMT_WORD, num);
   }
   return pos;
 }
