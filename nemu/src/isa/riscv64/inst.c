@@ -24,6 +24,7 @@
 #include <stdint.h>
 
 #define R(i) gpr(i)
+#define RM(i) mcsr(i)
 #define Mr vaddr_read
 #define Mw vaddr_write
 
@@ -71,15 +72,14 @@ enum {
 // imm -> rd , rs1 -> imm
 void csrrw(word_t imm, word_t src1, word_t rd) {
   if (rd != 0) {
-    R(rd) = rmscr(imm);
+    R(rd) = RM(imm);
   }
-  wmcsr(imm, src1);
+  RM(imm) = src1;
 }
 
 void csrrs(word_t imm, word_t src1, word_t rd) {
-  Log("csrrs ");
-  R(rd) = rmscr(imm);
-  wmcsr(imm, src1 | rmscr(imm));
+  R(rd) = RM(imm);
+  RM(imm) = RM(imm) | src1;
 }
 
 static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2,

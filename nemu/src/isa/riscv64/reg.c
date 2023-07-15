@@ -16,8 +16,10 @@
 #include "local-include/reg.h"
 #include "common.h"
 #include "debug.h"
+#include <assert.h>
 #include <isa.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -26,31 +28,21 @@ const char *regs[] = {"$0", "ra", "sp",  "gp",  "tp", "t0", "t1", "t2",
                       "a6", "a7", "s2",  "s3",  "s4", "s5", "s6", "s7",
                       "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"};
 
-// mtvec : 0x305
-enum { mtvec = 0x305 };
+enum { mtvec = 0x305, mcause = 0x300 };
 const char *mcsr[] = {"mstatus", "mtvec", "mepc", "mcause"};
 
-void wmcsr(word_t pos, word_t val) {
-  Log("pos is" FMT_WORD ",val is " FMT_WORD, pos, val);
+size_t mcsrpos(word_t num) {
+  Log("pos is" FMT_WORD, num);
+  size_t pos = -1;
   switch (pos) {
   case mtvec:
-    cpu.mcsr[1] = val;
+    pos = 1;
     break;
-  default:
-    Log("error");
-  }
-}
-
-word_t rmscr(word_t pos) {
-  int val = 0;
-  switch (pos) {
-  case mtvec:
-    val = cpu.mcsr[2];
+  case mcause:
+    pos = 3;
     break;
-  default:
-    Log("error");
   }
-  return val;
+  return pos;
 }
 
 void isa_reg_display() {
