@@ -23,8 +23,17 @@ void do_syscall(Context *c) {
     c->GPRx = sys_yield();
     Log("get yield");
     break;
+  case SYS_open:
+    c->GPRx = fs_open((char *)a[1], a[2], a[3]);
+    break;
   case SYS_exit:
     sys_exit();
+    break;
+  case SYS_read:
+    c->GPRx = fs_read(a[1], (char *)a[2], a[3]);
+    break;
+  case SYS_lseek:
+    c->GPRx = fs_lseek(a[1], a[2], a[3]);
     break;
   case SYS_write:
     c->GPRx = fs_write(a[1], (void *)a[2], a[3]);
