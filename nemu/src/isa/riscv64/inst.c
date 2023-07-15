@@ -70,11 +70,16 @@ enum {
 
 // imm -> rd , rs1 -> imm
 void csrrw(word_t imm, word_t src1, word_t rd) {
-  Log("csrrw ");
   if (rd != 0) {
     R(rd) = rmscr(imm);
   }
   wmcsr(imm, src1);
+}
+
+void csrrs(word_t imm, word_t src1, word_t rd) {
+  Log("csrrs ");
+  R(rd) = rmscr(imm);
+  wmcsr(imm, src1 | rmscr(imm));
 }
 
 static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2,
@@ -271,6 +276,11 @@ static int decode_exec(Decode *s) {
   // 001101000001 00000 010 00111 1110011 csrr	t2,mepc
   INSTPAT("???????????? ????? 001 ????? 1110011", csrrw, I,
           csrrw(imm, src1, rd));
+
+  // 0011 0100 0010 0000 0010 0010 1111 0011  csrrs   t0, mcause, zeroe8
+  INSTPAT("???????????? ????? 010 ????? 1110011", csrrs, I,
+          csrrs(imm, src1, rd));
+
   // INSTPAT("0011010 00010 00000 010 ????? 1110011", csrr_mcause, I,
   //         R(rd) = cpu.mcause;);
   // INSTPAT("0011000 00000 00000 010 ????? 1110011", csrr_mstatus, I,
