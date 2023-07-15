@@ -31,6 +31,7 @@ enum { mtvec = 0x304 };
 const char *mcsr[] = {"mstatus", "mtvec", "mepc", "mcause"};
 
 void wmcsr(word_t pos, word_t val) {
+  Log("pos is" FMT_WORD ",val is " FMT_WORD, pos, val);
   switch (pos) {
   case mtvec:
     cpu.mcsr[2] = val;
