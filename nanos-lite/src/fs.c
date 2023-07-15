@@ -68,6 +68,7 @@ size_t fs_write(int fd, const void *buf, size_t len) {
     Log("fd is %d buf is %s len is %d", fd, buf, len);
     return file_table[fd].write(buf, file_table[fd].open_offset, len);
   }
+  Log("fs");
   size_t remain_size = file_table[fd].size - file_table[fd].open_offset;
   remain_size = remain_size > len ? len : remain_size;
   file_table[fd].open_offset += remain_size;
