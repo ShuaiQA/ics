@@ -62,8 +62,8 @@ void isa_reg_display() {
     }
   }
   for (int i = 0; i < 4; i++) {
-    printf("%s\t" FMT_WORD "\t", mcsr[i], cpu.gpr[i]);
-    if (i % 4 == 0) {
+    printf("%s\t" FMT_WORD "\t", mcsr[i], cpu.mcsr[i]);
+    if ((i + 1) % 4 == 0) {
       printf("\n");
     }
   }
