@@ -276,6 +276,8 @@ static int decode_exec(Decode *s) {
           csrrw(imm, src1, rd));
   INSTPAT("???????????? ????? 010 ????? 1110011", csrrs, I,
           csrrs(imm, src1, rd));
+  INSTPAT("0011000 00010 00000 000 00000 1110011", mret, I,
+          s->dnpc = RM(mepc););
 
   // INSTPAT("0011010 00010 00000 010 ????? 1110011", csrr_mcause, I,
   //         R(rd) = cpu.mcause;);
@@ -286,8 +288,6 @@ static int decode_exec(Decode *s) {
   // // 存储80000550 <__am_asm_trap>地址到sr.mtvec变量中
   // INSTPAT("0001100 00000 00000 010 ????? 1110011", csrr_satp, I,
   //         R(rd) = cpu.satp;);
-  // INSTPAT("0011000 00010 00000 000 00000 1110011", mret, I,
-  //         s->dnpc = cpu.mepc;);
   INSTPAT("??????? ????? ????? ??? ????? ???????", inv, N, INV(s->pc));
   INSTPAT_END();
 
