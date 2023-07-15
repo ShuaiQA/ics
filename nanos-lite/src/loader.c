@@ -1,6 +1,6 @@
 #include <elf.h>
+#include <fs.h>
 #include <proc.h>
-#include <string.h>
 
 #ifdef __LP64__
 #define Elf_Ehdr Elf64_Ehdr
@@ -32,7 +32,8 @@ uintptr_t load_segement(char *date) {
 }
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
-  return load_segement((char *)&ramdisk_start);
+  int fd = fs_open(filename, 0, 0);
+  return load_segement((char *)&ramdisk_start + fs_diskoff(fd));
 }
 
 void naive_uload(PCB *pcb, const char *filename) {
