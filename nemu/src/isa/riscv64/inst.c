@@ -211,7 +211,6 @@ static int decode_exec(Decode *s) {
           s->dnpc = isa_raise_intr(0xb, cpu.pc););
   INSTPAT("0000000 00001 00000 000 00000 1110011", ebreak, N,
           NEMUTRAP(s->pc, R(10))); // R(10) is $a0
-
   // RV64I
   INSTPAT("??????? ????? ????? 110 ????? 0000011", lwu, I,
           R(rd) = Mr(src1 + imm, 4));
@@ -273,11 +272,8 @@ static int decode_exec(Decode *s) {
   INSTPAT("0000001 ????? ????? 111 ????? 0111011", remuw, R,
           R(rd) = SEXT((uint32_t)src1 % (uint32_t)src2, 32));
 
-  // 001101000001 00000 010 00111 1110011 csrr	t2,mepc
   INSTPAT("???????????? ????? 001 ????? 1110011", csrrw, I,
           csrrw(imm, src1, rd));
-
-  // 0011 0100 0010 0000 0010 0010 1111 0011  csrrs   t0, mcause, zeroe8
   INSTPAT("???????????? ????? 010 ????? 1110011", csrrs, I,
           csrrs(imm, src1, rd));
 
