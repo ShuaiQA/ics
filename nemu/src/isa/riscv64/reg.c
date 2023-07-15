@@ -16,11 +16,11 @@
 #include "local-include/reg.h"
 #include "common.h"
 #include "debug.h"
+#include "utils.h"
 #include <assert.h>
 #include <isa.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include <stdio.h>
 #include <string.h>
 
 const char *regs[] = {"$0", "ra", "sp",  "gp",  "tp", "t0", "t1", "t2",
@@ -43,6 +43,7 @@ size_t mcsrpos(word_t num) {
   default:
     Assert(0, "num is " FMT_WORD, num);
   }
+  nemu_state.state = NEMU_STOP;
   return pos;
 }
 
