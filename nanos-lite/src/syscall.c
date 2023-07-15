@@ -25,7 +25,7 @@ void do_syscall(Context *c) {
     sys_exit();
     break;
   case SYS_write:
-    c->GPRx = fs_write(a[0], (void *)a[1], a[2]);
+    c->GPRx = fs_write(a[1], (void *)a[2], a[3]);
     break;
   default:
     panic("Unhandled syscall ID = %d", a[0]);
