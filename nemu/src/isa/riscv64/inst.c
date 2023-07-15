@@ -68,6 +68,14 @@ enum {
            (BITS(i, 11, 8) << 1) | (BITS(i, 7, 7) << 11);                      \
   } while (0)
 
+// imm -> rd , rs1 -> imm
+void csrrw(word_t imm, word_t src1, word_t rd) {
+  if (rd != 0) {
+    R(rd) = rmscr(imm);
+  }
+  wmcsr(imm, src1);
+}
+
 static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2,
                            word_t *imm, int type) {
   uint32_t i = s->isa.inst.val;
@@ -259,6 +267,9 @@ static int decode_exec(Decode *s) {
   INSTPAT("0000001 ????? ????? 111 ????? 0111011", remuw, R,
           R(rd) = SEXT((uint32_t)src1 % (uint32_t)src2, 32));
 
+  // 0011 0000 0101 01110 001 00000 1110011	csrw	mtvec,a4
+  INSTPAT("???????????? ????? 001 ????? 1110011", csrrw, I,
+          csrrw(imm, src1, rd));
   // INSTPAT("0011010 00010 00000 010 ????? 1110011", csrr_mcause, I,
   //         R(rd) = cpu.mcause;);
   // INSTPAT("0011000 00000 00000 010 ????? 1110011", csrr_mstatus, I,
@@ -270,8 +281,6 @@ static int decode_exec(Decode *s) {
   // INSTPAT("0011010 00001 00111 001 00000 1110011", wmepc, I, cpu.mepc =
   // src1);
   // // 存储80000550 <__am_asm_trap>地址到sr.mtvec变量中
-  // INSTPAT("0011000 00101 01111 001 00000 1110011", csrw_mtvec, I,
-  //         cpu.mtvec = src1;);
   // INSTPAT("0001100 00000 00000 010 ????? 1110011", csrr_satp, I,
   //         R(rd) = cpu.satp;);
   // INSTPAT("0001100 00000 ????? 001 00000 1110011", csrw_satp, I,
