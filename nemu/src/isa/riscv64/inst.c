@@ -267,25 +267,17 @@ static int decode_exec(Decode *s) {
   INSTPAT("0000001 ????? ????? 111 ????? 0111011", remuw, R,
           R(rd) = SEXT((uint32_t)src1 % (uint32_t)src2, 32));
 
-  // 0011 0000 0101 01110 001 00000 1110011	csrw	mtvec,a4
-  INSTPAT("???????????? ????? 001 ????? 1110011", csrrw, I,
-          csrrw(imm, src1, rd));
+  // INSTPAT("???????????? ????? 001 ????? 1110011", csrrw, I,
+  //         csrrw(imm, src1, rd));
   // INSTPAT("0011010 00010 00000 010 ????? 1110011", csrr_mcause, I,
   //         R(rd) = cpu.mcause;);
   // INSTPAT("0011000 00000 00000 010 ????? 1110011", csrr_mstatus, I,
   //         R(rd) = cpu.mstatus;);
   // INSTPAT("0011010 00001 00000 010 ????? 1110011", csrr_mepc, I,
   //         R(rd) = cpu.mepc;);
-  // INSTPAT("0011000 00000 00110 001 00000 1110011", csrw_mstatus, I,
-  //         cpu.mstatus = src1);
-  // INSTPAT("0011010 00001 00111 001 00000 1110011", wmepc, I, cpu.mepc =
-  // src1);
   // // 存储80000550 <__am_asm_trap>地址到sr.mtvec变量中
   // INSTPAT("0001100 00000 00000 010 ????? 1110011", csrr_satp, I,
   //         R(rd) = cpu.satp;);
-  // INSTPAT("0001100 00000 ????? 001 00000 1110011", csrw_satp, I,
-  //         cpu.satp = src1;
-  //         Log("change satp " FMT_WORD, cpu.satp););
   // INSTPAT("0011000 00010 00000 000 00000 1110011", mret, I,
   //         s->dnpc = cpu.mepc;);
   INSTPAT("??????? ????? ????? ??? ????? ???????", inv, N, INV(s->pc));
