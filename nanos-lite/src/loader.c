@@ -1,5 +1,6 @@
 #include <elf.h>
 #include <proc.h>
+#include <string.h>
 
 #ifdef __LP64__
 #define Elf_Ehdr Elf64_Ehdr
@@ -24,10 +25,7 @@ uintptr_t load_segement(char *date) {
     if (ph.p_type == PT_LOAD) {
       // printf("%x  %x  %x\n", ph.p_vaddr, ph.p_offset, ph.p_filesz);
       memmove((void *)ph.p_vaddr, date + ph.p_offset, ph.p_filesz);
-      char *next = (char *)malloc(ph.p_memsz - ph.p_filesz);
-      memset(next, 0, ph.p_memsz - ph.p_filesz);
-      memmove((void *)(ph.p_vaddr + ph.p_filesz), next,
-              ph.p_memsz - ph.p_filesz);
+      memset((void *)(ph.p_vaddr + ph.p_filesz), 0, ph.p_memsz - ph.p_filesz);
     }
   }
   return entry;
