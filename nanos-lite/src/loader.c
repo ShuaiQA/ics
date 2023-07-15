@@ -1,3 +1,4 @@
+#include "debug.h"
 #include <elf.h>
 #include <fs.h>
 #include <proc.h>
@@ -33,6 +34,7 @@ uintptr_t load_segement(char *date) {
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
   int fd = fs_open(filename, 0, 0);
+  Log("fd is %d off is %d", fd, fs_diskoff(fd));
   return load_segement((char *)&ramdisk_start + fs_diskoff(fd));
 }
 
