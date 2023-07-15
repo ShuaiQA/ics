@@ -36,9 +36,9 @@ ISA        = $(word 1,$(ARCH_SPLIT))
 PLATFORM   = $(word 2,$(ARCH_SPLIT))
 
 ### Check if there is something to build
-ifeq ($(flavor SRCS), undefined)
-  $(error Nothing to build)
-endif
+# ifeq ($(flavor SRCS), undefined)
+#   $(error Nothing to build)
+# endif
 
 ### Checks end here
 endif
@@ -127,6 +127,8 @@ $(DST_DIR)/%.o: %.S
 $(LIBS): %:
 	@$(MAKE) -s -C $(AM_HOME)/$* archive
 
+libs:$(LIBS)
+
 ### Rule (link): objects (`*.o`) and libraries (`*.a`) -> `IMAGE.elf`, the final ELF binary to be packed into image (ld)
 $(IMAGE).elf: $(OBJS) am $(LIBS)
 	@echo + LD "->" $(IMAGE_REL).elf
@@ -159,4 +161,4 @@ CLEAN_ALL = $(dir $(shell find . -mindepth 2 -name Makefile))
 clean-all: $(CLEAN_ALL) clean
 $(CLEAN_ALL):
 	-@$(MAKE) -s -C $@ clean
-.PHONY: clean-all $(CLEAN_ALL)
+.PHONY: clean-all $(CLEAN_ALL) libs
