@@ -37,7 +37,7 @@ void print_fun_buf() {
   }
   int i = cnt;
   do {
-    printf(FMT_WORD "%s\n", ff[i].pc, ff[i].name);
+    printf(FMT_WORD "    %s\n", ff[i].pc, ff[i].name);
     i = (i + 1) % 20;
   } while (i != cnt);
 }
