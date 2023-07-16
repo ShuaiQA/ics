@@ -1,16 +1,21 @@
 #include <assert.h>
+#include <bits/types/struct_timeval.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 // 相关的文件集合(包含设备文件)
-static int evtdev = -1;
-static int fbdev = -1;
-static int dispdev;
+static int evtdev = -1;   // 键盘设备
+static int fbdev = -1;    // 图像设备
+static int dispinfo = -1; // 屏幕信息
+static int sbdev = -1;    // 音频设备
+static int sbclt = -1; // 写入时是初始化音频设备,读出时是音频设备的空闲字节数
+static struct timeval pre;
 
 // 用于标记是否已经初始化了,因为当前的库给SDL和AM都需要提供接口
 // 避免多次初始化中文件偏移错误
@@ -19,11 +24,12 @@ static int tag = 0;
 // 记录屏幕的大小,以及画布的大小
 static int screen_w = 0, screen_h = 0;
 static int canvas_w, canvas_h;
+static int mbv = 0; // 记录最大的音频缓冲区
 
 uint32_t NDL_GetTicks() {
   struct timeval val;
   gettimeofday(&val, NULL);
-  return val.tv_sec * 1000000 + val.tv_usec;
+  return (val.tv_sec - pre.tv_sec) * 1000000 + (val.tv_usec - pre.tv_usec);
 }
 
 int NDL_PollEvent(char *buf, int len) { return read(evtdev, buf, len); }
@@ -32,14 +38,8 @@ int NDL_PollEvent(char *buf, int len) { return read(evtdev, buf, len); }
 // 如果*w和*h均为0, 则将系统全屏幕作为画布, 并将*w和*h分别设为系统屏幕的大小
 void NDL_OpenCanvas(int *w, int *h) {
   if (*w == 0 && *h == 0) {
-    char buf[64];
-    read(dispdev, buf, 64);
-    sscanf(buf, "WIDTH: %d\nHEIGHT: %d\n", &canvas_w, &canvas_h);
-    *w = canvas_w;
-    *h = canvas_h;
-  } else {
-    canvas_w = *w;
-    canvas_h = *h;
+    *w = screen_w;
+    *h = screen_h;
   }
   if (getenv("NWM_APP")) {
     int fbctl = 4;
@@ -73,24 +73,38 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   }
 }
 
-void NDL_OpenAudio(int freq, int channels, int samples) {}
+void NDL_OpenAudio(int freq, int channels, int samples) {
+  int buf[3];
+  buf[0] = freq;
+  buf[1] = channels;
+  buf[2] = samples;
+  write(sbclt, buf, 12);
+}
 
 void NDL_CloseAudio() {}
 
-int NDL_PlayAudio(void *buf, int len) { return 0; }
+int NDL_PlayAudio(void *buf, int len) { return write(sbdev, buf, len); }
 
-int NDL_QueryAudio() { return 0; }
+int NDL_QueryAudio() {
+  int free;
+  read(sbclt, &free, 4);
+  return mbv - free;
+}
 
 int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
+  gettimeofday(&pre, NULL);
   if (tag == 0) {
     char buf[64];
-    dispdev = open("/proc/dispinfo", O_RDONLY);
+    dispinfo = open("/proc/dispinfo", O_RDONLY);
     fbdev = open("/dev/fb", O_RDONLY);
+    sbdev = open("/dev/sb", O_RDWR);
     evtdev = open("/dev/events", O_RDONLY);
-    read(dispdev, buf, 64);
+    sbclt = open("/dev/sbctl", O_RDWR);
+    read(sbclt, &mbv, 4);
+    read(dispinfo, buf, 64);
     sscanf(buf, "WIDTH: %d\nHEIGHT: %d\n", &screen_w, &screen_h);
     tag = 1;
   }
@@ -99,7 +113,7 @@ int NDL_Init(uint32_t flags) {
 
 void NDL_Quit() {
   if (tag) {
-    close(dispdev);
+    close(dispinfo);
     close(fbdev);
     tag = 1;
   }
