@@ -19,6 +19,4 @@ typedef union {
 
 extern PCB *current;
 
-void ptb(uintptr_t a0, uintptr_t a1, uintptr_t a2, uintptr_t no);
-void pte(uintptr_t ret);
 #endif

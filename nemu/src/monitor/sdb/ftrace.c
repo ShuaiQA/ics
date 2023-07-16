@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <elf.h>
 #include <fcntl.h>
+#include <stdint.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -20,16 +21,19 @@ typedef struct Elf { // 记录函数的起始位置、函数的大小、名字
 typedef struct funcbuf { // 标记函数的起始位置
   word_t pc;
   char *name;
+  char *call;
   int pos; // 记录当前是第几个funcs buf
 } funtrace;
 
 static funcs buf[2000]; // 记录当前有多少个函数
 static size_t num = 0;
-static funtrace ff[20]; // 环形缓冲区记录函数调用过程
+static funtrace ff[40]; // 环形缓冲区记录函数调用过程
 static size_t cnt = 0;
 
 // 不属于内核代码是内核加载的用户代码的地方
-funtrace user = {0, "userproc", -1};
+static funtrace user = {0, "userproc", "", -1};
+
+static char *a[] = {"call", "ret"};
 
 void print_fun_buf() {
   if (elf_file == NULL) {
@@ -65,6 +69,11 @@ void new_fun(word_t pc) {
     ff[cnt].pc = pc;
     ff[cnt].name = buf[pos].name;
     ff[cnt].pos = pos;
+    if (pc == buf[pos].st_value) {
+      ff[cnt].call = a[0];
+    } else {
+      ff[cnt].call = a[1];
+    }
     cnt = (cnt + 1) % 20;
   }
 }
