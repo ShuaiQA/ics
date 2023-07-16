@@ -3,6 +3,7 @@
 
 #include <common.h>
 #include <memory.h>
+#include <stdint.h>
 
 #define STACK_SIZE (8 * PGSIZE)
 
@@ -18,6 +19,6 @@ typedef union {
 
 extern PCB *current;
 
-void ptb(uintptr_t a0, uintptr_t a1, uintptr_t a2);
+void ptb(uintptr_t a0, uintptr_t a1, uintptr_t a2, uintptr_t no);
 void pte(uintptr_t ret);
 #endif
