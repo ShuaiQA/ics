@@ -30,6 +30,7 @@ int main() {
 
   for (i = 500; i < 1000; i++) {
     fscanf(fp, "%d", &n);
+    printf("fact %d except %d\n ", n, i + 1);
     assert(n == i + 1);
   }
   size = ftell(fp);
