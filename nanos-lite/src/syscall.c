@@ -4,9 +4,20 @@
 #include <common.h>
 #include <fs.h>
 #include <stdint.h>
+#include <sys/time.h>
+
+void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime);
 
 uintptr_t sys_yield() {
   Log("get yield");
+  return 0;
+}
+
+int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
+  AM_TIMER_UPTIME_T rtc;
+  __am_timer_uptime(&rtc);
+  tv->tv_sec = rtc.us / 1000000;
+  tv->tv_usec = rtc.us % 1000000;
   return 0;
 }
 
@@ -45,6 +56,9 @@ void do_syscall(Context *c) {
     break;
   case SYS_close:
     c->GPRx = fs_close(a[1]);
+    break;
+  case SYS_gettimeofday:
+    c->GPRx = sys_gettimeofday((struct timeval *)a[1], (struct timezone *)a[2]);
     break;
   default:
     panic("Unhandled syscall ID = %d", a[0]);
