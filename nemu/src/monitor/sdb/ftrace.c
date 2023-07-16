@@ -25,9 +25,11 @@ typedef struct funcbuf { // 标记函数的起始位置
   int pos; // 记录当前是第几个funcs buf
 } funtrace;
 
+#define FBUF 40
+
 static funcs buf[2000]; // 记录当前有多少个函数
 static size_t num = 0;
-static funtrace ff[40]; // 环形缓冲区记录函数调用过程
+static funtrace ff[FBUF]; // 环形缓冲区记录函数调用过程
 static size_t cnt = 0;
 
 // 不属于内核代码是内核加载的用户代码的地方
@@ -41,8 +43,8 @@ void print_fun_buf() {
   }
   int i = cnt;
   do {
-    printf(FMT_WORD "    %s\n", ff[i].pc, ff[i].name);
-    i = (i + 1) % 20;
+    printf(FMT_WORD "    %s   %s\n", ff[i].pc, ff[i].name, ff[i].call);
+    i = (i + 1) % FBUF;
   } while (i != cnt);
 }
 
@@ -58,10 +60,10 @@ void new_fun(word_t pc) {
     }
   }
   // 获取前一个pos的对应位置,查看当前是否对应
-  funtrace pre = ff[(cnt + 19) % 20];
+  funtrace pre = ff[(cnt + FBUF - 1) % FBUF];
   if (pos == -1 && pre.pos != -1) {
     ff[cnt] = user;
-    cnt = (cnt + 1) % 20;
+    cnt = (cnt + 1) % FBUF;
     return;
   }
 
@@ -74,7 +76,7 @@ void new_fun(word_t pc) {
     } else {
       ff[cnt].call = a[1];
     }
-    cnt = (cnt + 1) % 20;
+    cnt = (cnt + 1) % FBUF;
   }
 }
 
