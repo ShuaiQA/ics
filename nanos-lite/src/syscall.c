@@ -5,7 +5,10 @@
 #include <fs.h>
 #include <stdint.h>
 
-uintptr_t sys_yield() { return 0; }
+uintptr_t sys_yield() {
+  Log("get yield");
+  return 0;
+}
 
 void sys_exit() { halt(0); }
 
@@ -17,12 +20,10 @@ void do_syscall(Context *c) {
   a[1] = c->GPR2;
   a[2] = c->GPR3;
   a[3] = c->GPR4;
-  Log("test hello brk");
 
   switch (a[0]) {
   case SYS_yield:
     c->GPRx = sys_yield();
-    Log("get yield");
     break;
   case SYS_open:
     c->GPRx = fs_open((char *)a[1], a[2], a[3]);
