@@ -13,6 +13,9 @@
  * See the Mulan PSL v2 for more details.
  ***************************************************************************************/
 
+#include "macro.h"
+#include "sdb/sdb.h"
+#include <bits/getopt_core.h>
 #include <isa.h>
 #include <memory/paddr.h>
 
@@ -75,11 +78,12 @@ static int parse_args(int argc, char *argv[]) {
       {"log", required_argument, NULL, 'l'},
       {"diff", required_argument, NULL, 'd'},
       {"port", required_argument, NULL, 'p'},
+      {"elf", required_argument, NULL, 'e'},
       {"help", no_argument, NULL, 'h'},
       {0, 0, NULL, 0},
   };
   int o;
-  while ((o = getopt_long(argc, argv, "-bhl:d:p:", table, NULL)) != -1) {
+  while ((o = getopt_long(argc, argv, "-bhe:l:d:p:", table, NULL)) != -1) {
     switch (o) {
     case 'b':
       sdb_set_batch_mode();
@@ -93,6 +97,9 @@ static int parse_args(int argc, char *argv[]) {
     case 'd':
       diff_so_file = optarg;
       break;
+    case 'e':
+      IFDEF(CONFIG_FTRACE, set_elf_file(optarg));
+      break;
     case 1:
       img_file = optarg;
       return 0;
@@ -101,6 +108,7 @@ static int parse_args(int argc, char *argv[]) {
       printf("\t-b,--batch              run with batch mode\n");
       printf("\t-l,--log=FILE           output log to FILE\n");
       printf("\t-d,--diff=REF_SO        run DiffTest with reference REF_SO\n");
+      printf("\t-e,--elf=FILE           input elf FILE\n");
       printf("\t-p,--port=PORT          run DiffTest with port PORT\n");
       printf("\n");
       exit(0);

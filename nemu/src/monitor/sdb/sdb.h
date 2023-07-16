@@ -22,4 +22,8 @@ word_t expr(char *e, bool *success);
 
 word_t paddr_read(paddr_t addr, int len);
 
+// ftrace.c
+void set_elf_file(char *elf);
+void print_fun_buf();
+
 #endif

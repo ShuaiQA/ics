@@ -137,6 +137,10 @@ config ETRACE
 	bool "Enable ecall"
 	default y
 
+config FTRACE
+	bool "Enable func trace"
+	default y
+
 config TRACE_START
   depends on TRACE
   int "When tracing is enabled (unit: number of instructions)"
