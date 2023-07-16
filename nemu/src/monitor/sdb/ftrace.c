@@ -57,6 +57,7 @@ void new_fun(word_t pc) {
   for (int i = 0; i < num; i++) {
     if (pc >= buf[i].st_value && pc <= buf[i].st_value + buf[i].st_size) {
       pos = i;
+      break;
     }
   }
   // 获取前一个pos的对应位置,查看当前是否对应
