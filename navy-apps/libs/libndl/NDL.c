@@ -1,5 +1,4 @@
 #include <assert.h>
-#include <bits/types/struct_timeval.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -74,10 +73,8 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
 }
 
 void NDL_OpenAudio(int freq, int channels, int samples) {
-  int buf[3];
-  buf[0] = freq;
-  buf[1] = channels;
-  buf[2] = samples;
+  char buf[12];
+  sprintf(buf, "%d%d%d", freq, channels, samples);
   write(sbclt, buf, 12);
 }
 
@@ -96,25 +93,17 @@ int NDL_Init(uint32_t flags) {
     evtdev = 3;
   }
   gettimeofday(&pre, NULL);
-  if (tag == 0) {
-    char buf[64];
-    dispinfo = open("/proc/dispinfo", O_RDONLY);
-    fbdev = open("/dev/fb", O_RDONLY);
-    sbdev = open("/dev/sb", O_RDWR);
-    evtdev = open("/dev/events", O_RDONLY);
-    sbclt = open("/dev/sbctl", O_RDWR);
-    read(sbclt, &mbv, 4);
-    read(dispinfo, buf, 64);
-    sscanf(buf, "WIDTH: %d\nHEIGHT: %d\n", &screen_w, &screen_h);
-    tag = 1;
-  }
+  char buf[64];
+  dispinfo = open("/proc/dispinfo", O_RDONLY);
+  fbdev = open("/dev/fb", O_RDONLY);
+  evtdev = open("/dev/events", O_RDONLY);
+  read(dispinfo, buf, 64);
+  sscanf(buf, "WIDTH: %d\nHEIGHT: %d\n", &screen_w, &screen_h);
   return 0;
 }
 
 void NDL_Quit() {
-  if (tag) {
-    close(dispinfo);
-    close(fbdev);
-    tag = 1;
-  }
+  close(dispinfo);
+  close(fbdev);
+  close(evtdev);
 }
