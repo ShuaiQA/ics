@@ -43,7 +43,7 @@ int SDL_PollEvent(SDL_Event *ev) {
     // printf("ev->type is %d\n", ev->type);
     for (int i = 0; i < 85; i++) {
       if (strcmp(val, keyname[i]) == 0) {
-        ev->key.keysym.sym = i + 1;
+        ev->key.keysym.sym = i;
         // printf("ev->keysym is %d\n", ev->key.keysym.sym);
         break;
       }

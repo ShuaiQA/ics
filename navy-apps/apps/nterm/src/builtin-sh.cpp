@@ -1,6 +1,9 @@
 #include <SDL.h>
+#include <cstddef>
+#include <cstdio>
 #include <nterm.h>
 #include <stdarg.h>
+#include <string.h>
 #include <unistd.h>
 
 char handle_key(SDL_Event *ev);
@@ -21,10 +24,30 @@ static void sh_banner() {
 static void sh_prompt() { sh_printf("sh> "); }
 
 static void sh_handle_cmd(const char *cmd) {
-  char buf[40];
-  sscanf(cmd, "%s\n", buf);
-  printf("buf is %s \n", buf);
-  // execve(buf, NULL, NULL);
+  static char buf[256];
+  memmove(buf, cmd, strlen(cmd));
+  char *pathname = strtok(buf, " ");
+  // 只有参数使用最后使用\n进行结尾
+  char *argv[10]; // 最大的参数是10
+  argv[0] = NULL;
+  char *para = strtok(NULL, " ");
+  int i = 0;
+  for (; para != NULL; i++) {
+    argv[i] = para;
+    para = strtok(NULL, " ");
+  }
+  // 删除\n变为\0
+  if (i == 0) {
+    pathname[strlen(pathname) - 1] = '\0';
+  } else {
+    argv[i - 1][strlen(argv[i - 1]) - 1] = '\0';
+    argv[i] = NULL;
+  }
+  // printf("[%s] \n", pathname);
+  // for (int i = 0; argv[i] != NULL; i++) {
+  //   printf("argv [%d] %s\n", i, argv[i]);
+  // }
+  execve(pathname, argv, NULL);
 }
 
 void builtin_sh_run() {

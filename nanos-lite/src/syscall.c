@@ -25,6 +25,11 @@ void sys_exit() { halt(0); }
 
 uintptr_t sys_brk(uintptr_t size) { return 0; }
 
+int sys_execve(const char *pathname, char *const argv[], char *const envp[]) {
+  naive_uload(NULL, pathname);
+  return 0;
+}
+
 void do_syscall(Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;
@@ -59,6 +64,9 @@ void do_syscall(Context *c) {
     break;
   case SYS_gettimeofday:
     c->GPRx = sys_gettimeofday((struct timeval *)a[1], (struct timezone *)a[2]);
+    break;
+  case SYS_execve:
+    c->GPRx = sys_execve((char *)a[1], (char **)a[2], (char **)a[3]);
     break;
   default:
     panic("Unhandled syscall ID = %d", a[0]);
