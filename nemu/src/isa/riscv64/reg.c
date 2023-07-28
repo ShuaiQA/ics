@@ -88,7 +88,7 @@ word_t isa_reg_str2val(const char *s, bool *success) {
       return cpu.mcsr[i];
     }
   }
-  Log("查找regs字符串错误");
+  Log("查找regs字符串错误 %s", s);
   *success = true;
   return 0;
 }
