@@ -23,8 +23,9 @@ static inline int check_reg_idx(int idx) {
   return idx;
 }
 
+#define MCSR_SIZE 5
 static inline int check_mcsreg(int idx) {
-  IFDEF(CONFIG_RT_CHECK, assert(idx >= 0 && idx < 4));
+  IFDEF(CONFIG_RT_CHECK, assert(idx >= 0 && idx < MCSR_SIZE));
   return idx;
 }
 
