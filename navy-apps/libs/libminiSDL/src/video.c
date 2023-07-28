@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <sdl-video.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -48,7 +49,11 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
 }
 
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
-  NDL_DrawRect(s->pixels, x, y, s->w, s->h);
+  if (s->format->BitsPerPixel == 32) {
+    NDL_DrawRect(s->pixels, x, y, s->w, s->h);
+  } else if (s->format->BitsPerPixel == 8) {
+    printf("hello");
+  }
 }
 
 // APIs below are already implemented.
