@@ -31,7 +31,7 @@ static inline int check_mcsreg(int idx) {
 enum {
   mstatus = 0x300,
   mtvec = 0x305,
-  mscratch = 340,
+  mscratch = 0x340,
   mepc = 0x341,
   mcause = 0x342
 };
