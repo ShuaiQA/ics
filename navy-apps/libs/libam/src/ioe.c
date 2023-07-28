@@ -1,12 +1,13 @@
 #include <NDL.h>
 #include <SDL.h>
 #include <am.h>
+#include <stdbool.h>
 #include <sys/time.h>
 
 // 只是进行初始化,还需要进行关闭
-int ioe_init() {
+bool ioe_init() {
   SDL_Init(0);
-  return 1;
+  return true;
 }
 
 // 在本质上依旧是读取或者写入某一些位置的内容然后,获取相应的结果
