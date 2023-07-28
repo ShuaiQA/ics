@@ -49,6 +49,7 @@ __am_asm_trap:
 
   mv a0, sp
   jal __am_irq_handle
+	csrrw	sp, mscratch, sp	
 
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
@@ -56,6 +57,8 @@ __am_asm_trap:
   csrw mepc, t2
 
   MAP(REGS, POP)
+	# 加载内存sp的地方到sp寄存器中
+	ld	sp,16(sp)
 
   addi sp, sp, CONTEXT_SIZE
   mret

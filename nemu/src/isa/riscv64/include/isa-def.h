@@ -21,7 +21,7 @@
 typedef struct {
   word_t gpr[32];
   vaddr_t pc;
-  word_t mcsr[4];
+  word_t mcsr[5];
 } riscv64_CPU_state;
 
 // decode
