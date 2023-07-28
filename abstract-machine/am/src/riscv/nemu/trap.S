@@ -53,7 +53,7 @@ __am_asm_trap:
 
   jal __am_irq_handle
 	# a0返回的是Context,其中Context中的a0存放的是下一个上下文
-	csrrw	sp, mscratch, sp
+  csrr sp, mscratch
 
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
@@ -61,8 +61,6 @@ __am_asm_trap:
   csrw mepc, t2
 
   MAP(REGS, POP)
-	# 加载内存sp的地方到sp寄存器中
-	ld	sp,16(sp)
 
   addi sp, sp, CONTEXT_SIZE
   mret
