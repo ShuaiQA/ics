@@ -35,6 +35,7 @@
       IFNDEF(CONFIG_TARGET_AM, extern FILE *log_fp; fflush(log_fp));           \
       extern void assert_fail_msg();                                           \
       assert_fail_msg();                                                       \
+      nemu_state.state = NEMU_QUIT;                                            \
     }                                                                          \
   } while (0)
 
