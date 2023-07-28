@@ -26,8 +26,40 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
   return pcb->cp;
 }
 
+// buf提供了一个地址空间,将argv参数放到buf地址空间的下面
+uintptr_t setArgv(char *buf, char *const argv[]) {
+  int del = 0;
+  int i = 0;
+  while (argv != NULL && argv[i] != NULL) {
+    del += 1;
+    *(buf - del) = '\0';
+    size_t size = strlen(argv[i]);
+    del += size;
+    memcpy(buf - del, argv[i], size);
+    i++;
+  }
+  del += 4;
+  *(int *)(buf - del) = i;
+  return del;
+}
+
+// 创建用户进程需要进行初始化有:1.在ucontext设置pc值,2.在当前暂时保存栈空间到a0寄存器中
+// 创建用户进程,首先是找到解析elf文件获取entry,设置用户进程的栈空间
+Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
+                       char *const envp[]) {
+  protect(&pcb->as); // 每一个进程对AddrSpace进行初始化
+  uintptr_t entry = loader(pcb, pathname);
+  Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
+  pcb->cp = ucontext(&pcb->as, area, (void *)entry);
+  // 用户程序的约定,先将栈指针放到寄存器a0上,在用户空间初始的_start上在进行将a0转移到sp寄存器上
+  uintptr_t len = setArgv(area.end - sizeof(Context), argv);
+  pcb->cp->GPRx = (uintptr_t)pcb->as.area.end - len - sizeof(Context);
+  return pcb->cp;
+}
+
 void init_proc() {
   context_kload(&pcb[0], hello_fun, (void *)10);
+  context_uload(&pcb[1], "/bin/hello", NULL, NULL);
   switch_boot_pcb();
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/nterm");

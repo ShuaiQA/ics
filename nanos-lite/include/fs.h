@@ -10,6 +10,7 @@ enum { SEEK_SET, SEEK_CUR, SEEK_END };
 
 // loader.c
 void naive_uload(PCB *pcb, const char *filename);
+uintptr_t loader(PCB *pcb, const char *filename);
 
 // ramdisk.c
 size_t get_ramdisk_size();

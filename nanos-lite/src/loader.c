@@ -32,7 +32,7 @@ uintptr_t load_segement(char *date) {
   return entry;
 }
 
-static uintptr_t loader(PCB *pcb, const char *filename) {
+uintptr_t loader(PCB *pcb, const char *filename) {
   int fd = fs_open(filename, 0, 0);
   return load_segement((char *)&ramdisk_start + fs_diskoff(fd));
 }
