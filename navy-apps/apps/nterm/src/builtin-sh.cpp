@@ -1,7 +1,7 @@
+#include <SDL.h>
 #include <nterm.h>
 #include <stdarg.h>
 #include <unistd.h>
-#include <SDL.h>
 
 char handle_key(SDL_Event *ev);
 
@@ -18,11 +18,13 @@ static void sh_banner() {
   sh_printf("Built-in Shell in NTerm (NJU Terminal)\n\n");
 }
 
-static void sh_prompt() {
-  sh_printf("sh> ");
-}
+static void sh_prompt() { sh_printf("sh> "); }
 
 static void sh_handle_cmd(const char *cmd) {
+  char buf[40];
+  sscanf(cmd, "%s\n", buf);
+  printf("buf is %s \n", buf);
+  // execve(buf, NULL, NULL);
 }
 
 void builtin_sh_run() {
