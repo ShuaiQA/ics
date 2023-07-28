@@ -28,7 +28,13 @@ static inline int check_mcsreg(int idx) {
   return idx;
 }
 
-enum { mstatus = 0x300, mtvec = 0x305, mepc = 0x341, mcause = 0x342 };
+enum {
+  mstatus = 0x300,
+  mtvec = 0x305,
+  mscratch = 340,
+  mepc = 0x341,
+  mcause = 0x342
+};
 #define gpr(idx) (cpu.gpr[check_reg_idx(idx)])
 
 size_t mcsrpos(word_t num);

@@ -7,7 +7,11 @@
 
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime);
 
-uintptr_t sys_yield(Context *c) { return (uintptr_t)schedule(c); }
+void sys_yield(Context *c) {
+  Context *next = schedule(c);
+  // 将返回的寄存器写到mscratch寄存器中
+  asm volatile("csrw mscratch, %0" : : "r"(next));
+}
 
 int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
   AM_TIMER_UPTIME_T rtc;
@@ -35,7 +39,7 @@ void do_syscall(Context *c) {
 
   switch (a[0]) {
   case SYS_yield:
-    c->GPRx = sys_yield(c);
+    sys_yield(c);
     break;
   case SYS_open:
     c->GPRx = fs_open((char *)a[1], a[2], a[3]);

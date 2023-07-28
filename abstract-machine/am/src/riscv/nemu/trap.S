@@ -48,8 +48,12 @@ __am_asm_trap:
   csrw mstatus, t1
 
   mv a0, sp
+	# 将sp寄存器的值放到mscratch中,如果调度函数没有修改mscratch寄存器可以根据mscratch进行返回,如果修改了也可以进行返回
+	csrw mscratch, sp
+
   jal __am_irq_handle
-	csrrw	sp, mscratch, sp	
+	# a0返回的是Context,其中Context中的a0存放的是下一个上下文
+	csrrw	sp, mscratch, sp
 
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)

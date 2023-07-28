@@ -28,6 +28,7 @@ const char *regs[] = {"$0", "ra", "sp",  "gp",  "tp", "t0", "t1", "t2",
                       "a6", "a7", "s2",  "s3",  "s4", "s5", "s6", "s7",
                       "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"};
 
+#define MCSR_SIZE 5
 const char *mcsr[] = {"mstatus", "mtvec", "mepc", "mcause", "mscratch"};
 
 size_t mcsrpos(word_t num) {
@@ -45,6 +46,9 @@ size_t mcsrpos(word_t num) {
   case mcause:
     pos = 3;
     break;
+  case mscratch:
+    pos = 4;
+    break;
   default:
     IFDEF(CONFIG_IRINGBUF, printIringBuf());
     Assert(0, "num is " FMT_WORD, num);
@@ -60,7 +64,7 @@ void isa_reg_display() {
       printf("\n");
     }
   }
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < MCSR_SIZE; i++) {
     printf("%s\t" FMT_WORD "\t", mcsr[i], cpu.mcsr[i]);
     if ((i + 1) % 4 == 0) {
       printf("\n");
@@ -79,7 +83,7 @@ word_t isa_reg_str2val(const char *s, bool *success) {
       return cpu.gpr[i];
     }
   }
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < MCSR_SIZE; i++) {
     if (strcmp(s, mcsr[i]) == 0) {
       *success = true;
       return cpu.mcsr[i];
