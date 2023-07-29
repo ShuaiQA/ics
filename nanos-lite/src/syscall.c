@@ -6,11 +6,7 @@
 #include <stdint.h>
 #include <sys/time.h>
 
-void sys_yield(Context *c) {
-  Context *next = schedule(c);
-  // 将返回的寄存器写到mscratch寄存器中
-  asm volatile("csrw mscratch, %0" : : "r"(next));
-}
+void sys_yield(Context *c) { c->next_context = (uintptr_t)schedule(c); }
 
 int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
   AM_TIMER_UPTIME_T rtc;
