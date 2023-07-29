@@ -48,7 +48,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
 }
 
 // 为了更加符合syscall将其修改为1
-void yield() { asm volatile("li a7, 1; ecall"); }
+inline void yield() { asm volatile("li a7, 1; ecall"); }
 
 bool ienabled() { return false; }
 
