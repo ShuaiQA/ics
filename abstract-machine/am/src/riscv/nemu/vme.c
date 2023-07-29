@@ -88,6 +88,7 @@ PTE *walk(pagetable_t pagetable, void *va, int alloc) {
     } else {
       if (!alloc || (pagetable = (pde_t *)pgalloc_usr(PGSIZE)) == 0)
         return 0;
+      printf("add walk %p\n",pagetable);
       *pte = PA2PTE(pagetable) | PTE_V;
     }
   }
@@ -97,6 +98,7 @@ PTE *walk(pagetable_t pagetable, void *va, int alloc) {
 // 获取as的页目录,然后添加根据va虚拟地址和pa物理地址建立虚拟映射关系
 void map(AddrSpace *as, void *va, void *pa, int prot) {
   PTE *pte;
+  printf("va %p pa %p\n",va,pa);
   if ((pte = walk(as->ptr, va, 1)) == 0) 
     panic("PTE error");
   if (*pte & PTE_V)
