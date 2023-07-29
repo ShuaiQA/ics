@@ -81,15 +81,16 @@ static int cmd_p(char *args) {
   return 0;
 }
 
+// x 8 $mscratch
 static int cmd_x(char *args) {
   char *token = strtok(args, " ");
   int cnt = -1;
   if (token != NULL) {
-    sscanf(token, "%x", &cnt);
+    sscanf(token, "%d", &cnt);
   }
   token = strtok(NULL, " "); // 表达式
   if (token == NULL) {
-    Log("x 需要参数,例如x 4 0x80000000, x 4 $pc");
+    Log("x 需要参数,例如x 4(10进制的数) 0x80000000, x 4 $pc");
   }
   bool v;
   word_t padd = expr(token, &v);
