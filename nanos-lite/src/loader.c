@@ -38,6 +38,5 @@ uintptr_t naive_uload(PCB *pcb, const char *filename) {
   int fd = fs_open(filename, 0, 0);
   uintptr_t entry = load_segement((char *)&ramdisk_start + fs_diskoff(fd));
   Log("Jump to entry = %p", entry);
-  sleep(5);
   return entry;
 }

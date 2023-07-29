@@ -8,7 +8,7 @@
 #include <sys/time.h>
 
 // 首先需要确定的是ecall是否是可以进行step以及是否是yield
-void sys_yield(Context *c) { c->next_context = (uintptr_t)schedule(c); }
+uintptr_t sys_yield(Context *c) { return (uintptr_t)schedule(c); }
 
 int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
   AM_TIMER_UPTIME_T rtc;
@@ -41,7 +41,7 @@ void do_syscall(Context *c) {
     c->next_context = sys_exit();
     break;
   case SYS_yield:
-    sys_yield(c);
+    c->next_context = sys_yield(c);
     break;
   case SYS_open:
     c->GPRx = fs_open((char *)a[1], a[2], a[3]);
