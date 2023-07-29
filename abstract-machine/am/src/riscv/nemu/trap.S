@@ -51,6 +51,7 @@ __am_asm_trap:
 
   jal __am_irq_handle
 	ld	sp,280(sp)
+	wfi
 
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
