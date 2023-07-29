@@ -69,6 +69,5 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {}
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   Context *cte = (Context *)kstack.end - 1; // 上下文的地址处
   cte->mepc = (uintptr_t)entry;
-  cte->gpr[2] = (uintptr_t)cte;
   return cte;
 }
