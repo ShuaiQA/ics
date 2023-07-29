@@ -22,9 +22,9 @@ void sys_exit() { naive_uload(NULL, "/bin/nterm"); }
 
 uintptr_t sys_brk(uintptr_t size) { return 0; }
 
-int sys_execve(const char *pathname, char *const argv[], char *const envp[]) {
-  context_uload(current, pathname, argv, envp);
-  return 0;
+uintptr_t sys_execve(const char *pathname, char *const argv[],
+                     char *const envp[]) {
+  return (uintptr_t)context_uload(current, pathname, argv, envp);
 }
 
 void do_syscall(Context *c) {
