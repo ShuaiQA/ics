@@ -76,14 +76,17 @@ void __am_switch(Context *c) {
 #define PX(level, va) ((((uintptr_t)(va)) >> PXSHIFT(level)) & PXMASK)
 #define PTE2PA(pte) (((pte) >> 10) << 12) // 根据页表项获取物理地址
 #define PA2PTE(pa) ((((uintptr_t)pa) >> 12) << 10)
+typedef uintptr_t *pagetable_t; // 512 PTEs
+typedef uintptr_t pde_t;
 
-PTE *walk(uintptr_t *pagetable, void *va, int alloc) {
+
+PTE *walk(pagetable_t pagetable, void *va, int alloc) {
   for (int level = 2; level > 0; level--) {
     PTE *pte = &pagetable[PX(level, va)];
     if (*pte & PTE_V) {
-      pagetable = (void *)PTE2PA(*pte);
+      pagetable = (pagetable_t)PTE2PA(*pte);
     } else {
-      if (!alloc || (pagetable = (void *)pgalloc_usr(PGSIZE)) == 0)
+      if (!alloc || (pagetable = (pde_t *)pgalloc_usr(PGSIZE)) == 0)
         return 0;
       *pte = PA2PTE(pagetable) | PTE_V;
     }
@@ -94,9 +97,8 @@ PTE *walk(uintptr_t *pagetable, void *va, int alloc) {
 // 获取as的页目录,然后添加根据va虚拟地址和pa物理地址建立虚拟映射关系
 void map(AddrSpace *as, void *va, void *pa, int prot) {
   PTE *pte;
-  if ((pte = walk(as->ptr, va, 1)) == 0) {
+  if ((pte = walk(as->ptr, va, 1)) == 0) 
     panic("PTE error");
-  }
   if (*pte & PTE_V)
     panic("mappages: remap");
   *pte = PA2PTE(pa) | prot | PTE_V;
