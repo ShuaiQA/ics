@@ -32,13 +32,13 @@ bool vme_init(void *(*pgalloc_f)(int), void (*pgfree_f)(void *)) {
 
   // 获取一个页面,放到ptr中
   kas.ptr = pgalloc_f(PGSIZE);
-  printf("kas.ptr %p\n", kas.ptr);
 
   int i;
   // 创建虚拟地址恒等映射
   for (i = 0; i < LENGTH(segments); i++) {
     void *va = segments[i].start;
     for (; va < segments[i].end; va += PGSIZE) {
+      printf("cur va %p\n", va);
       map(&kas, va, va, 0);
     }
   }
