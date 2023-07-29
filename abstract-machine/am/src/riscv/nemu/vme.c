@@ -100,6 +100,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   }
   if (*pte & PTE_V)
     panic("mappages: remap");
+  printf("over");
   *pte = PA2PTE(pa) | prot | PTE_V;
 }
 
