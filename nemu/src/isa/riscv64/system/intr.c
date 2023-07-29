@@ -13,6 +13,7 @@
  * See the Mulan PSL v2 for more details.
  ***************************************************************************************/
 
+#include "debug.h"
 #include "macro.h"
 #include <../local-include/reg.h>
 #include <common.h>
@@ -20,6 +21,7 @@
 
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   mcsr(mepc) = epc;
+  Log("save mepc is " FMT_PADDR, mepc);
   mcsr(mcause) = 0xb;
   IFDEF(CONFIG_ETRACE, new_etrace());
   return mcsr(mtvec);
