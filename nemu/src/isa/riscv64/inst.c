@@ -279,16 +279,9 @@ static int decode_exec(Decode *s) {
   INSTPAT("0011000 00010 00000 000 00000 1110011", mret, I,
           IFDEF(CONFIG_ETRACE, new_ret());
           s->dnpc = RM(mepc););
-
-  // INSTPAT("0011010 00010 00000 010 ????? 1110011", csrr_mcause, I,
-  //         R(rd) = cpu.mcause;);
-  // INSTPAT("0011000 00000 00000 010 ????? 1110011", csrr_mstatus, I,
-  //         R(rd) = cpu.mstatus;);
-  // INSTPAT("0011010 00001 00000 010 ????? 1110011", csrr_mepc, I,
-  //         R(rd) = cpu.mepc;);
-  // // 存储80000550 <__am_asm_trap>地址到sr.mtvec变量中
-  // INSTPAT("0001100 00000 00000 010 ????? 1110011", csrr_satp, I,
-  //         R(rd) = cpu.satp;);
+  // 使用wfi节能的指令用于debug,用户暂停程序
+  INSTPAT("0001 0000 0101 0000 0000 0000 0111 0011", wfi, I,
+          nemu_state.state = NEMU_STOP);
   INSTPAT("??????? ????? ????? ??? ????? ???????", inv, N, INV(s->pc));
   INSTPAT_END();
 
