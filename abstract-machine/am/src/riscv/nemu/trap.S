@@ -47,9 +47,13 @@ __am_asm_trap:
   or t1, t1, a0
   csrw mstatus, t1
 
+	# 保存sp寄存器的值
+	sd	sp,16(sp)
+
   mv a0, sp
 
   jal __am_irq_handle
+	# 加载next_context的值
 	ld	sp,280(sp)
 	wfi
 
@@ -60,6 +64,7 @@ __am_asm_trap:
 
   MAP(REGS, POP)
 
+	# 恢复sp的值
 	ld	sp,16(sp)
   addi sp, sp, CONTEXT_SIZE
   mret
