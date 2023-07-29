@@ -1,5 +1,6 @@
 #include "klib-macros.h"
 #include <memory.h>
+#include <string.h>
 
 static void *pf = NULL;
 
@@ -12,7 +13,10 @@ void *new_page(size_t nr_page) {
 
 #ifdef HAS_VME
 // 分配多少字节数目
-static void *pg_alloc(int n) { return new_page(ROUNDUP(n, PGSIZE)); }
+static void *pg_alloc(int n) {
+  void *mem = new_page(ROUNDUP(n, PGSIZE));
+  return memset(mem, 0, PGSIZE);
+}
 #endif
 
 void free_page(void *p) { panic("not implement yet"); }
