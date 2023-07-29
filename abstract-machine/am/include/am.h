@@ -63,7 +63,7 @@ enum {
 typedef struct {
   int pgsize;
   Area area;
-  void *ptr;
+  void *ptr; // 当前的进程的页面的地址
 } AddrSpace;
 
 #ifdef __cplusplus
