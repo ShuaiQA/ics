@@ -56,8 +56,6 @@ __am_asm_trap:
 	# 加载next_context的值,需要确定到底是不是yield,检查a7是否是1
 	ld	sp,280(sp)
 
-	wfi
-
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
   csrw mstatus, t1
