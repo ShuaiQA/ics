@@ -61,7 +61,7 @@ uintptr_t setArgv(char *buf, char *const argv[]) {
 // 创建用户进程,首先是找到解析elf文件获取entry,设置用户进程的栈空间
 Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
                        char *const envp[]) {
-  uintptr_t entry = loader(pcb, pathname);
+  uintptr_t entry = naive_uload(pcb, pathname);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(&pcb->as, area, (void *)entry);
   // 用户程序的约定,先将栈指针放到寄存器a0上,在用户空间初始的_start上在进行将a0转移到sp寄存器上

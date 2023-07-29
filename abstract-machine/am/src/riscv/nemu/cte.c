@@ -12,7 +12,6 @@ Context *__am_irq_handle(Context *c) {
     case 0xb:
       ev.event = EVENT_SYSCALL;
       c->mepc += 4;
-      printf("mepc + 4 %p\n", c->mepc);
       break;
     default:
       ev.event = EVENT_ERROR;
