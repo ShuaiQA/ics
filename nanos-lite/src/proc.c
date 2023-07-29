@@ -27,6 +27,7 @@ void sleep(int time) {
   do {
     AM_TIMER_UPTIME_T r = io_read(AM_TIMER_UPTIME);
     if (r.us - rtc.us > time) {
+      Log("wake");
       break;
     }
   } while (1);
