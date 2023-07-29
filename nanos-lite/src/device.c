@@ -1,3 +1,4 @@
+#include "am.h"
 #include "debug.h"
 #include <common.h>
 
@@ -13,6 +14,7 @@ static const char *keyname[256]
     __attribute__((used)) = {[AM_KEY_NONE] = "NONE", AM_KEYS(NAME)};
 
 size_t serial_write(const void *buf, size_t offset, size_t len) {
+  yield();
   char *temp = (char *)buf;
   for (size_t i = 0; i < len; i++) {
     putch(temp[i]);
@@ -22,6 +24,7 @@ size_t serial_write(const void *buf, size_t offset, size_t len) {
 
 // 根据keycode获取keyname,按下一次包含输出2次(按下和弹起)
 size_t events_read(void *buf, size_t offset, size_t len) {
+  yield();
   AM_INPUT_KEYBRD_T ev = io_read(AM_INPUT_KEYBRD);
   if (ev.keycode == AM_KEY_NONE) {
     return 0;
@@ -45,6 +48,7 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 }
 
 size_t fb_write(void *buf, size_t offset, size_t len) {
+  yield();
   int x = offset / 4 % 400;
   int y = offset / 4 / 400;
   io_write(AM_GPU_FBDRAW, x, y, buf, len / 4, 1, true);
