@@ -69,7 +69,7 @@ void do_syscall(Context *c) {
   default:
     panic("Unhandled syscall ID = %d", a[0]);
   }
-  if (a[0] != SYS_yield) {
+  if (a[0] != SYS_yield && a[0] != SYS_execve) {
     c->next_context = (uintptr_t)c;
   }
 }
