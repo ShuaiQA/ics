@@ -73,7 +73,7 @@ Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
 void init_proc() {
   // context_kload(&pcb[0], hello_fun, (void *)10);
   context_kload(&pcb[1], hello_fun, (void *)20);
-  context_uload(&pcb[0], "/bin/hello", NULL, NULL);
+  context_uload(&pcb[0], "/bin/nterm", NULL, NULL);
   switch_boot_pcb();
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/nterm");
