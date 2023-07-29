@@ -22,6 +22,15 @@ void hello_fun(void *arg) {
   }
 }
 
+extern AM_TIMER_UPTIME_T boot_time;
+
+void sleep(int time) {
+  AM_TIMER_UPTIME_T rtc;
+  __am_timer_uptime(&rtc);
+  while (rtc.us - boot_time.us > time)
+    ;
+}
+
 // 创建内核线程,其中线程的栈空间是由pcb构成的,传递相关的入口地址和参数arg(寄存器a0中)
 Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};

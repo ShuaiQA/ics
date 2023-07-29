@@ -1,5 +1,6 @@
 #include "am.h"
 #include "debug.h"
+#include "klib-macros.h"
 #include <common.h>
 #include <fs.h>
 #include <stdint.h>
@@ -15,6 +16,7 @@ void sys_yield(Context *c) {
 
 int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
   AM_TIMER_UPTIME_T rtc;
+  io_write(3, rtc);
   __am_timer_uptime(&rtc);
   tv->tv_sec = rtc.us / 1000000;
   tv->tv_usec = rtc.us % 1000000;
