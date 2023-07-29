@@ -38,7 +38,6 @@ bool vme_init(void *(*pgalloc_f)(int), void (*pgfree_f)(void *)) {
   for (i = 0; i < LENGTH(segments); i++) {
     void *va = segments[i].start;
     for (; va < segments[i].end; va += PGSIZE) {
-      printf("cur va %p\n", va);
       map(&kas, va, va, 0);
     }
   }
@@ -80,13 +79,11 @@ void __am_switch(Context *c) {
 PTE *walk(uintptr_t *pagetable, void *va, int alloc) {
   for (int level = 2; level > 0; level--) {
     PTE *pte = &pagetable[PX(level, va)];
-    printf("over  %p\n", pagetable);
     if (*pte & PTE_V) {
       pagetable = (void *)PTE2PA(*pte);
     } else {
       if (!alloc || (pagetable = (void *)pgalloc_usr(PGSIZE)) == 0)
         return 0;
-      memset(pagetable, 0, PGSIZE);
       *pte = PA2PTE(pagetable) | PTE_V;
     }
   }
