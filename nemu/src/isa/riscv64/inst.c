@@ -18,6 +18,7 @@
 #include "isa.h"
 #include "local-include/reg.h"
 #include "macro.h"
+#include "utils.h"
 #include <cpu/cpu.h>
 #include <cpu/decode.h>
 #include <cpu/ifetch.h>
@@ -278,7 +279,8 @@ static int decode_exec(Decode *s) {
           csrrs(imm, src1, rd));
   INSTPAT("0011000 00010 00000 000 00000 1110011", mret, I,
           IFDEF(CONFIG_ETRACE, new_ret());
-          Log("mret " FMT_WORD, RM(mepc)); s->dnpc = RM(mepc););
+          nemu_state.state = NEMU_STOP; Log("mret " FMT_WORD, RM(mepc));
+          s->dnpc = RM(mepc););
   // 使用wfi节能的指令用于debug,用户暂停程序
   INSTPAT("0001 0000 0101 0000 0000 0000 0111 0011", wfi, I,
           nemu_state.state = NEMU_STOP);
