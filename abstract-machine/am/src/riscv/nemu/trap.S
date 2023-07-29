@@ -48,13 +48,14 @@ __am_asm_trap:
   csrw mstatus, t1
 
 	# 保存sp寄存器的值
-	; sd	sp,16(sp)
+	sd	sp,16(sp)
 
   mv a0, sp
 
   jal __am_irq_handle
-	# 加载next_context的值
+	# 加载next_context的值,需要确定到底是不是yield,检查a7是否是1
 	ld	sp,280(sp)
+
 	wfi
 
   LOAD t1, OFFSET_STATUS(sp)
@@ -65,6 +66,6 @@ __am_asm_trap:
   MAP(REGS, POP)
 
 	# 恢复sp的值
-	; ld	sp,16(sp)
+	ld	sp,16(sp)
   addi sp, sp, CONTEXT_SIZE
   mret

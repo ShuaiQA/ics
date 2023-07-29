@@ -1,11 +1,13 @@
 #include "am.h"
 #include "debug.h"
 #include "klib-macros.h"
+#include "proc.h"
 #include <common.h>
 #include <fs.h>
 #include <stdint.h>
 #include <sys/time.h>
 
+// 首先需要确定的是ecall是否是可以进行step以及是否是yield
 void sys_yield(Context *c) { c->next_context = (uintptr_t)schedule(c); }
 
 int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
@@ -21,7 +23,7 @@ void sys_exit() { naive_uload(NULL, "/bin/nterm"); }
 uintptr_t sys_brk(uintptr_t size) { return 0; }
 
 int sys_execve(const char *pathname, char *const argv[], char *const envp[]) {
-  naive_uload(NULL, pathname);
+  context_uload(current, pathname, argv, envp);
   return 0;
 }
 
@@ -65,5 +67,8 @@ void do_syscall(Context *c) {
     break;
   default:
     panic("Unhandled syscall ID = %d", a[0]);
+  }
+  if (a[0] != SYS_yield) {
+    c->next_context = (uintptr_t)c;
   }
 }
