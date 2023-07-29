@@ -70,6 +70,7 @@ void print_etrace() {
              " ret " FMT_WORD " \n",
              cur->syscall, cur->a0, cur->a1, cur->a2, cur->ret);
       cur = cur->next;
+      step++;
     }
     i = (i + 1) % SIZE_ETR_BUF;
   } while (i != pos);
