@@ -80,6 +80,7 @@ void __am_switch(Context *c) {
 PTE *walk(uintptr_t *pagetable, void *va, int alloc) {
   for (int level = 2; level > 0; level--) {
     PTE *pte = &pagetable[PX(level, va)];
+    printf("over  %p\n", pagetable);
     if (*pte & PTE_V) {
       pagetable = (void *)PTE2PA(*pte);
     } else {
@@ -100,7 +101,6 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   }
   if (*pte & PTE_V)
     panic("mappages: remap");
-  printf("over");
   *pte = PA2PTE(pa) | prot | PTE_V;
 }
 
