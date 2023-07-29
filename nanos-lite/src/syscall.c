@@ -6,8 +6,6 @@
 #include <stdint.h>
 #include <sys/time.h>
 
-void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime);
-
 void sys_yield(Context *c) {
   Context *next = schedule(c);
   // 将返回的寄存器写到mscratch寄存器中
@@ -16,8 +14,7 @@ void sys_yield(Context *c) {
 
 int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
   AM_TIMER_UPTIME_T rtc;
-  io_write(3, rtc);
-  __am_timer_uptime(&rtc);
+  rtc = io_read(AM_TIMER_UPTIME);
   tv->tv_sec = rtc.us / 1000000;
   tv->tv_usec = rtc.us % 1000000;
   return 0;

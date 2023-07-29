@@ -15,4 +15,6 @@
 
 void do_syscall(Context *c);
 
+void sleep(int time);
+
 #endif

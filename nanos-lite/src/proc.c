@@ -26,7 +26,7 @@ extern AM_TIMER_UPTIME_T boot_time;
 
 void sleep(int time) {
   AM_TIMER_UPTIME_T rtc;
-  __am_timer_uptime(&rtc);
+  rtc = io_read(AM_TIMER_UPTIME);
   while (rtc.us - boot_time.us > time)
     ;
 }
