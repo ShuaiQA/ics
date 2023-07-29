@@ -15,6 +15,7 @@ static const char *keyname[256]
 
 size_t serial_write(const void *buf, size_t offset, size_t len) {
   yield();
+  sleep(1);
   char *temp = (char *)buf;
   for (size_t i = 0; i < len; i++) {
     putch(temp[i]);
