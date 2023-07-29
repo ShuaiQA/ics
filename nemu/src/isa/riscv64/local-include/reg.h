@@ -30,6 +30,7 @@ static inline int check_mcsreg(int idx) {
 }
 
 enum {
+  satp = 0x180,
   mstatus = 0x300,
   mtvec = 0x305,
   mscratch = 0x340,
