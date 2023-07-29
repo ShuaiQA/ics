@@ -32,7 +32,7 @@ bool vme_init(void *(*pgalloc_f)(int), void (*pgfree_f)(void *)) {
 
   // 获取一个页面,放到ptr中
   kas.ptr = pgalloc_f(PGSIZE);
-
+  printf("max size is %p\n",PMEM_END  );
   int i;
   // 创建虚拟地址恒等映射
   for (i = 0; i < LENGTH(segments); i++) {
