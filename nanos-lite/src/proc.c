@@ -22,13 +22,14 @@ void hello_fun(void *arg) {
   }
 }
 
-extern AM_TIMER_UPTIME_T boot_time;
-
 void sleep(int time) {
-  AM_TIMER_UPTIME_T rtc;
-  rtc = io_read(AM_TIMER_UPTIME);
-  while (rtc.us - boot_time.us > time)
-    ;
+  AM_TIMER_UPTIME_T rtc = io_read(AM_TIMER_UPTIME);
+  do {
+    AM_TIMER_UPTIME_T r = io_read(AM_TIMER_UPTIME);
+    if (r.us - rtc.us > time) {
+      break;
+    }
+  } while (1);
 }
 
 // 创建内核线程,其中线程的栈空间是由pcb构成的,传递相关的入口地址和参数arg(寄存器a0中)
