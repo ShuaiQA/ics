@@ -14,7 +14,7 @@ void *new_page(size_t nr_page) {
 #ifdef HAS_VME
 // 分配多少字节数目
 static void *pg_alloc(int n) {
-  void *mem = new_page(ROUNDUP(n, PGSIZE));
+  void *mem = new_page(ROUNDUP(n, PGSIZE)/PGSIZE);
   return memset(mem, 0, PGSIZE);
 }
 #endif
