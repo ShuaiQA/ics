@@ -145,6 +145,10 @@ static int cmd_d(char *args) {
 // 查看所有的寄存器的值,或者是监视点
 static int cmd_info(char *args) {
   char *token = strtok(args, " ");
+  if (token == NULL) {
+    Log("info参数不对输入:w,r,i,f,e,d\n");
+    return 0;
+  }
   switch (token[0]) {
   case 'r':
     isa_reg_display();
