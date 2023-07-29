@@ -26,8 +26,7 @@ void sleep(int time) {
   AM_TIMER_UPTIME_T rtc = io_read(AM_TIMER_UPTIME);
   do {
     AM_TIMER_UPTIME_T r = io_read(AM_TIMER_UPTIME);
-    if (r.us - rtc.us > time) {
-      Log("wake");
+    if (r.us - rtc.us > time * 1000000) {
       break;
     }
   } while (1);
@@ -72,9 +71,9 @@ Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
 }
 
 void init_proc() {
-  context_kload(&pcb[0], hello_fun, (void *)10);
+  // context_kload(&pcb[0], hello_fun, (void *)10);
   // context_kload(&pcb[1], hello_fun, (void *)20);
-  context_uload(&pcb[1], "/bin/hello", NULL, NULL);
+  context_uload(&pcb[0], "/bin/hello", NULL, NULL);
   switch_boot_pcb();
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/nterm");
@@ -90,7 +89,7 @@ Context *schedule(Context *prev) {
   } else {
     Log("to 0");
   }
-  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
-  // current = &pcb[0];
+  // current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+  current = &pcb[0];
   return current->cp;
 }
