@@ -38,7 +38,7 @@ typedef word_t PTE;
 
 // 将虚拟地址转换成物理地址
 paddr_t isa_mmu_translate(vaddr_t vaddr) {
-  pagetable_t pagetable = cpu.mcsr[5]; // 获取页表的地址
+  pagetable_t pagetable = cpu.mcsr[5] << PGSHIFT; // 获取页表的地址
   for (int level = 2; level > 0; level--) {
     PTE pte = paddr_read(pagetable + PX(level, vaddr) * 8, 8);
     if (pte & PTE_V) {
