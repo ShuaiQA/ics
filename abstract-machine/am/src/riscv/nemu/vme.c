@@ -32,7 +32,6 @@ bool vme_init(void *(*pgalloc_f)(int), void (*pgfree_f)(void *)) {
 
   // 获取一个页面,放到ptr中
   kas.ptr = pgalloc_f(PGSIZE);
-  printf("max size is %p\n",PMEM_END  );
   int i;
   // 创建虚拟地址恒等映射
   for (i = 0; i < LENGTH(segments); i++) {
@@ -41,7 +40,6 @@ bool vme_init(void *(*pgalloc_f)(int), void (*pgfree_f)(void *)) {
       map(&kas, va, va, 0);
     }
   }
-  printf("set begin\n");
   // 设置satp寄存器的值,开启虚拟映射
   set_satp(kas.ptr);
   vme_enable = 1;
@@ -77,8 +75,6 @@ void __am_switch(Context *c) {
 #define PTE2PA(pte) (((pte) >> 10) << 12) // 根据页表项获取物理地址
 #define PA2PTE(pa) ((((uintptr_t)pa) >> 12) << 10)
 typedef uintptr_t *pagetable_t; // 512 PTEs
-typedef uintptr_t pde_t;
-
 
 PTE *walk(pagetable_t pagetable, void *va, int alloc) {
   for (int level = 2; level > 0; level--) {
@@ -86,9 +82,8 @@ PTE *walk(pagetable_t pagetable, void *va, int alloc) {
     if (*pte & PTE_V) {
       pagetable = (pagetable_t)PTE2PA(*pte);
     } else {
-      if (!alloc || (pagetable = (pde_t *)pgalloc_usr(PGSIZE)) == 0)
+      if (!alloc || (pagetable = (pagetable_t)pgalloc_usr(PGSIZE)) == 0)
         return 0;
-      printf("add walk %p\n",pagetable);
       *pte = PA2PTE(pagetable) | PTE_V;
     }
   }
@@ -98,8 +93,7 @@ PTE *walk(pagetable_t pagetable, void *va, int alloc) {
 // 获取as的页目录,然后添加根据va虚拟地址和pa物理地址建立虚拟映射关系
 void map(AddrSpace *as, void *va, void *pa, int prot) {
   PTE *pte;
-  printf("va %p pa %p\n",va,pa);
-  if ((pte = walk(as->ptr, va, 1)) == 0) 
+  if ((pte = walk(as->ptr, va, 1)) == 0)
     panic("PTE error");
   if (*pte & PTE_V)
     panic("mappages: remap");

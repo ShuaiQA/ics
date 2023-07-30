@@ -16,6 +16,7 @@
 #ifndef __RISCV64_REG_H__
 #define __RISCV64_REG_H__
 
+#include "macro.h"
 #include <common.h>
 
 static inline int check_reg_idx(int idx) {
@@ -23,12 +24,11 @@ static inline int check_reg_idx(int idx) {
   return idx;
 }
 
-#define MCSR_SIZE 5
+#define MCSR_SIZE 6
 static inline int check_mcsreg(int idx) {
   IFDEF(CONFIG_RT_CHECK, assert(idx >= 0 && idx < MCSR_SIZE));
   return idx;
 }
-
 enum {
   satp = 0x180,
   mstatus = 0x300,
@@ -37,10 +37,11 @@ enum {
   mepc = 0x341,
   mcause = 0x342
 };
+
 #define gpr(idx) (cpu.gpr[check_reg_idx(idx)])
 
 size_t mcsrpos(word_t num);
-#define mcsr(num) (cpu.mcsr[check_mcsreg(mcsrpos(num))])
+#define MCSR(num) (cpu.mcsr[check_mcsreg(mcsrpos(num))])
 
 static inline const char *reg_name(int idx, int width) {
   extern const char *regs[];

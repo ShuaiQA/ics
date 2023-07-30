@@ -49,6 +49,9 @@ size_t mcsrpos(word_t num) {
   case mscratch:
     pos = 4;
     break;
+  case satp:
+    pos = 5;
+    break;
   default:
     IFDEF(CONFIG_IRINGBUF, printIringBuf());
     Assert(0, "num is " FMT_WORD, num);
