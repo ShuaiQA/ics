@@ -7,6 +7,7 @@
 !*.[cSh]
 !*.cpp
 !scripts/*.mk
+!scripts/*.ld
 build/
 repo/
 libs/libc/

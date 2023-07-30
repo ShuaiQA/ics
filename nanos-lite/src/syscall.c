@@ -19,6 +19,7 @@ int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
 }
 
 uintptr_t sys_exit() {
+  halt(0);
   return (uintptr_t)context_uload(current, "/bin/nterm", NULL, NULL);
 }
 
