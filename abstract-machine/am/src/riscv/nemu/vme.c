@@ -32,7 +32,6 @@ bool vme_init(void *(*pgalloc_f)(int), void (*pgfree_f)(void *)) {
 
   // 获取一个页面,放到ptr中
   kas.ptr = pgalloc_f(PGSIZE);
-  printf("kernel pagetable is %p\n", kas.ptr);
   int i;
   // 创建虚拟地址恒等映射
   for (i = 0; i < LENGTH(segments); i++) {
@@ -43,6 +42,7 @@ bool vme_init(void *(*pgalloc_f)(int), void (*pgfree_f)(void *)) {
   }
   // 设置satp寄存器的值,开启虚拟映射
   set_satp(kas.ptr);
+  printf("set pagetable is %p\n", kas.ptr);
   vme_enable = 1;
 
   return true;
