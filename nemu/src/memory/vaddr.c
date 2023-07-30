@@ -18,8 +18,6 @@
 #include <isa.h>
 #include <memory/paddr.h>
 
-static int cnt = 0;
-
 // 根据传入的地址返回对应的物理地址
 static word_t paddr(vaddr_t addr) {
   int c = isa_mmu_check(addr);
@@ -35,18 +33,15 @@ static word_t paddr(vaddr_t addr) {
 
 word_t vaddr_ifetch(vaddr_t addr, int len) {
   Assert(addr == paddr(addr), "恒等映射错误");
-  Log("cnt %d", cnt);
   return paddr_read(paddr(addr), len);
 }
 
 word_t vaddr_read(vaddr_t addr, int len) {
   Assert(addr == paddr(addr), "恒等映射错误");
-  Log("cnt %d", cnt);
   return paddr_read(paddr(addr), len);
 }
 
 void vaddr_write(vaddr_t addr, int len, word_t data) {
   Assert(addr == paddr(addr), "恒等映射错误");
-  Log("cnt %d", cnt);
   paddr_write(paddr(addr), len, data);
 }
