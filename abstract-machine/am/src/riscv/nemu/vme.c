@@ -68,14 +68,6 @@ void __am_switch(Context *c) {
   }
 }
 
-#define PXMASK 0x1FF // 9 bits
-#define PGSHIFT 12   // bits of offset within a page
-#define PXSHIFT(level) (PGSHIFT + (9 * (level)))
-#define PX(level, va) ((((uintptr_t)(va)) >> PXSHIFT(level)) & PXMASK)
-#define PTE2PA(pte) (((pte) >> 10) << 12) // 根据页表项获取物理地址
-#define PA2PTE(pa) ((((uintptr_t)pa) >> 12) << 10)
-typedef uintptr_t *pagetable_t; // 512 PTEs
-
 PTE *walk(pagetable_t pagetable, void *va, int alloc) {
   for (int level = 2; level > 0; level--) {
     PTE *pte = &pagetable[PX(level, va)];
@@ -103,5 +95,14 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   Context *cte = (Context *)kstack.end - 1; // 上下文的地址处
   cte->mepc = (uintptr_t)entry;
+  // 映射用户栈空间kstack到用户地址空间的末尾
+  uintptr_t f = (uintptr_t)kstack.start;
+  uintptr_t va = 0x80000000 - 32 * 1024;
+  while (f < (uintptr_t)kstack.end) {
+    map(as, (void *)va, (void *)f, 0);
+    f += PGSIZE;
+    va += PGSIZE;
+  }
+  cte->pdir = as->ptr;
   return cte;
 }
