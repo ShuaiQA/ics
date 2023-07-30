@@ -53,8 +53,5 @@ paddr_t isa_mmu_translate(vaddr_t vaddr) {
 
 // 查看是否需要进行转换
 int isa_mmu_check(vaddr_t vaddr) {
-  if (1ul << 63 & MCSR(satp)) {
-    Log("tran");
-  }
   return (1ul << 63 & MCSR(satp)) ? MMU_TRANSLATE : MMU_DIRECT;
 }

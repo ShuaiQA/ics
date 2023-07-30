@@ -41,7 +41,6 @@ bool vme_init(void *(*pgalloc_f)(int), void (*pgfree_f)(void *)) {
     }
   }
   // 设置satp寄存器的值,开启虚拟映射
-  printf("begin kas\n");
   set_satp(kas.ptr);
   vme_enable = 1;
 

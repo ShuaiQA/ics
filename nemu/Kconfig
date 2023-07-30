@@ -135,7 +135,7 @@ config WATCHPOINT
 
 config ETRACE
 	bool "Enable ecall"
-	default y
+	default n
 
 config FTRACE
 	bool "Enable func trace"
