@@ -32,16 +32,13 @@ static word_t paddr(vaddr_t addr) {
 }
 
 word_t vaddr_ifetch(vaddr_t addr, int len) {
-  Assert(addr == paddr(addr), "恒等映射错误");
   return paddr_read(paddr(addr), len);
 }
 
 word_t vaddr_read(vaddr_t addr, int len) {
-  Assert(addr == paddr(addr), "恒等映射错误");
   return paddr_read(paddr(addr), len);
 }
 
 void vaddr_write(vaddr_t addr, int len, word_t data) {
-  Assert(addr == paddr(addr), "恒等映射错误");
   paddr_write(paddr(addr), len, data);
 }
