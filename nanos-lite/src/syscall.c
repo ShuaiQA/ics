@@ -29,7 +29,7 @@ uintptr_t sys_execve(const char *pathname, char *const argv[],
   return (uintptr_t)context_uload(current, pathname, argv, envp);
 }
 
-void do_syscall(Context *c) {
+Context *do_syscall(Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;
   a[1] = c->GPR2;
@@ -38,11 +38,9 @@ void do_syscall(Context *c) {
 
   switch (a[0]) {
   case SYS_exit:
-    c->next_context = sys_exit();
-    break;
+    return (Context *)sys_exit();
   case SYS_yield:
-    c->next_context = sys_yield(c);
-    break;
+    return (Context *)sys_yield(c);
   case SYS_open:
     c->GPRx = fs_open((char *)a[1], a[2], a[3]);
     break;
@@ -65,12 +63,9 @@ void do_syscall(Context *c) {
     c->GPRx = sys_gettimeofday((struct timeval *)a[1], (struct timezone *)a[2]);
     break;
   case SYS_execve:
-    c->next_context = sys_execve((char *)a[1], (char **)a[2], (char **)a[3]);
-    break;
+    return (Context *)sys_execve((char *)a[1], (char **)a[2], (char **)a[3]);
   default:
     panic("Unhandled syscall ID = %d", a[0]);
   }
-  if (a[0] != SYS_yield && a[0] != SYS_execve && a[0] != SYS_exit) {
-    c->next_context = (uintptr_t)c;
-  }
+  return c;
 }

@@ -13,7 +13,7 @@
 
 #include <debug.h>
 
-void do_syscall(Context *c);
+Context *do_syscall(Context *c);
 
 void sleep(int time);
 
