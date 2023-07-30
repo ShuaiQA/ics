@@ -20,7 +20,7 @@
 #include <memory/paddr.h>
 #include <memory/vaddr.h>
 
-typedef word_t *pagetable_t; // 512 PTEs
+typedef word_t pagetable_t; // 512 PTEs
 typedef word_t PTE;
 #define PXMASK 0x1FF // 9 bits
 #define PGSHIFT 12   // bits of offset within a page
@@ -28,7 +28,6 @@ typedef word_t PTE;
 #define PX(level, va) ((((uintptr_t)(va)) >> PXSHIFT(level)) & PXMASK)
 #define PTE2PA(pte) (((pte) >> 10) << 12) // 根据页表项获取物理地址
 #define PA2PTE(pa) ((((uintptr_t)pa) >> 12) << 10)
-typedef uintptr_t *pagetable_t; // 512 PTEs
 #define PTE_V 0x01
 #define PTE_R 0x02
 #define PTE_W 0x04
@@ -39,16 +38,16 @@ typedef uintptr_t *pagetable_t; // 512 PTEs
 
 // 将虚拟地址转换成物理地址
 paddr_t isa_mmu_translate(vaddr_t vaddr) {
-  pagetable_t pagetable = (pagetable_t)cpu.mcsr[5];
+  pagetable_t pagetable = cpu.mcsr[5]; // 获取页表的地址
   for (int level = 2; level > 0; level--) {
-    PTE *pte = &pagetable[PX(level, vaddr)];
-    if (*pte & PTE_V) {
-      pagetable = (pagetable_t)PTE2PA(*pte);
+    PTE pte = paddr_read(pagetable + PX(level, vaddr) * 8, 8);
+    if (pte & PTE_V) {
+      pagetable = PTE2PA(pte);
     } else {
       Assert(0, "PTE_V error");
     }
   }
-  return PTE2PA(pagetable[PX(0, vaddr)]);
+  return PTE2PA(paddr_read(pagetable + PX(0, vaddr) * 8, 8));
 }
 
 // 查看是否需要进行转换
