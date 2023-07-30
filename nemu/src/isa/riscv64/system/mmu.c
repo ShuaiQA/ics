@@ -47,7 +47,8 @@ paddr_t isa_mmu_translate(vaddr_t vaddr) {
       Assert(0, "PTE_V error");
     }
   }
-  return PTE2PA(paddr_read(pagetable + PX(0, vaddr) * 8, 8));
+  paddr_t offset = vaddr & ((1 << PGSHIFT) - 1);
+  return PTE2PA(paddr_read(pagetable + PX(0, vaddr) * 8, 8)) + offset;
 }
 
 // 查看是否需要进行转换
