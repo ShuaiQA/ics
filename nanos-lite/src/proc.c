@@ -62,6 +62,7 @@ Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
                        char *const envp[]) {
   protect(&pcb->as); // 用户初始化页目录
   Log("create pagetable %p", pcb->as.ptr);
+  sleep(5);
   uintptr_t entry = naive_uload(pcb, pathname);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(&pcb->as, area, (void *)entry);
