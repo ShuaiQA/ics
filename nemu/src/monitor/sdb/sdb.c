@@ -185,9 +185,10 @@ static int cmd_pp(char *args){
   }
   assert(cnt != -1);
   // 获取当前的进程的cte指针的地址
-  word_t ctx_add = paddr_read(CONTEXT_BASE + cnt * CONTEXT_SIZE, 8);
+  word_t ctx_addr = paddr_read(CONTEXT_BASE + cnt * CONTEXT_SIZE, 8);
+  Log("ctx addr is "FMT_WORD  ,ctx_addr);
   for(int i=0;i<36;i++){
-    word_t reg = paddr_read(ctx_add + i * 8, 8);
+    word_t reg = paddr_read(ctx_addr + i * 8, 8);
     printf(FMT_WORD  "  ",reg);
     if((i+1) %4 == 0){
       printf("\n");
