@@ -1,3 +1,6 @@
+ENTRY(_start)   /* 指定入口地址函数为 _start */
+
+
 SECTIONS
 {
  . = 0x0;
