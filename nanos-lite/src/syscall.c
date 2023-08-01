@@ -38,8 +38,9 @@ uintptr_t sys_brk(uintptr_t size) {
     re -= PGSIZE;
     mall_size += PGSIZE;
     map(&current->as, (char *)sz, mem, 0);
-    sz+=PGSIZE;
+    sz += PGSIZE;
   }
+  Log("change max_brk is %p",sz);
   current->max_brk = sz;
   return 0;
 }
