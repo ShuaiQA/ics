@@ -19,7 +19,7 @@ int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
 }
 
 uintptr_t sys_exit() {
-  halt(0);
+  // halt(0);
   return (uintptr_t)context_uload(current, "/bin/nterm", NULL, NULL);
 }
 
@@ -27,7 +27,7 @@ uintptr_t sys_exit() {
 uintptr_t sys_brk(uintptr_t size) {
   uintptr_t sz = current->max_brk;
   assert(sz % PGSIZE == 0);
-  Log("pre size is %p malloc size is %p",sz,size);
+  // Log("pre size is %p malloc size is %p",sz,size);
   if(size <= sz){ // 因为分配字节大小是4096个字节的所以新的大小可能会小于当前的大小
     return 0;
   }
@@ -37,11 +37,11 @@ uintptr_t sys_brk(uintptr_t size) {
     void *mem = new_page(1);
     mall_size += PGSIZE;
     map(&current->as, (char *)sz, mem, 0);
-    Log("map %p vaddr",sz);
+    // Log("map %p vaddr",sz);
     sz += PGSIZE;
     re -= PGSIZE;
   }
-  Log("change max_brk is %p",sz);
+  // Log("change max_brk is %p",sz);
   current->max_brk = sz;
   return 0;
 }

@@ -58,7 +58,7 @@ uintptr_t load_segement(PCB *pcb, char *date) {
   }
   // 记录当前进程的最大的虚拟地址空间大小
   pcb->max_brk = sz;
-  Log("loader max size is %p",sz);
+  // Log("loader max size is %p",sz);
   return entry;
 }
 
