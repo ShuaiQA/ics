@@ -44,6 +44,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr) {
     if (pte & PTE_V) {
       pagetable = PTE2PA(pte);
     } else {
+      IFDEF(CONFIG_IRINGBUF, printIringBuf());
       Assert(0, "PTE_V error");
     }
   }
