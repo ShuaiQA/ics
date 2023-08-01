@@ -24,6 +24,7 @@ enum {
   TK_EQ,   // "=="
   TK_NEQ,  // "!="
   TK_YUYU, // "&&"
+  TK_LESS, // <
   // 算术运算
   TK_ADD, // "+"   262
   TK_SUB, // "-"
@@ -46,6 +47,7 @@ static struct rule {
     {" ", TK_NOTYPE},       {"0x([0-9a-f]+)", TK_0XNUM},
     {"\\$([^ ]*)", TK_REG}, {"&&", TK_YUYU},
     {"==", TK_EQ},          {"!=", TK_NEQ},
+    {"<",TK_LESS},
     {"\\+", TK_ADD},        {"-", TK_SUB},
     {"\\*", TK_MUL},        {"/", TK_DIV},
     {"\\(", TK_ZUO},        {"\\)", TK_YOU},
@@ -115,6 +117,9 @@ static bool make_token(char *e) {
           break;
         case TK_NEQ: //"!="
           tokens[nr_token++].type = TK_NEQ;
+          break;
+        case TK_LESS: // "<"
+          tokens[nr_token++].type = TK_LESS;
           break;
         case TK_DIV: //"/"
           tokens[nr_token++].type = TK_DIV;
@@ -206,7 +211,7 @@ int find_main(int l, int r) {
     if (tokens[i].type == TK_ADD || tokens[i].type == TK_SUB) {
       you[1] = i;
     }
-    if (tokens[i].type == TK_EQ || tokens[i].type == TK_NEQ) {
+    if (tokens[i].type == TK_EQ || tokens[i].type == TK_NEQ || tokens[i].type == TK_LESS) {
       you[2] = i;
     }
     if (tokens[i].type == TK_YUYU) {
@@ -281,6 +286,8 @@ word_t eval(int l, int r) {
       return val1 == val2;
     case TK_NEQ:
       return val1 != val2;
+    case TK_LESS:
+      return val1 < val2;
     case TK_YUYU:
       return val1 && val2;
     default:
