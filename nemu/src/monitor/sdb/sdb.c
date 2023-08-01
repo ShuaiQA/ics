@@ -178,9 +178,10 @@ static int cmd_info(char *args) {
 #define CONTEXT_BASE 0x8020d0000
 #define CONTEXT_SIZE 288
 static int cmd_pp(char *args){
+  char *token = strtok(args, " ");
   int cnt = -1;
   if (args != NULL) {
-    sscanf(args, "%d", &cnt);
+    sscanf(token, "%d", &cnt);
   }
   assert(cnt == -1);
   // 获取当前的进程的cte指针的地址
