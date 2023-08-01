@@ -23,6 +23,7 @@ uintptr_t load_segement(PCB *pcb, char *date) {
   // printf("entry is %x num is %d offset is %x\n", entry, hd->e_phnum,
   //        hd->e_phoff);
   Elf_Phdr *phs = (Elf_Phdr *)(date + hd->e_phoff);
+  uintptr_t sz = 0;
   for (int i = 0; i < hd->e_phnum; i++) {
     Elf_Phdr ph = phs[i];
     if (ph.p_type == PT_LOAD) {
@@ -47,6 +48,7 @@ uintptr_t load_segement(PCB *pcb, char *date) {
         } else { // 直接copy
           memmove(page, pos, PGSIZE);
         }
+        sz += PGSIZE;
         map(&pcb->as, (char *)vaddr, page, 0);
         pos += PGSIZE;
         vaddr += PGSIZE;
@@ -54,6 +56,9 @@ uintptr_t load_segement(PCB *pcb, char *date) {
       }
     }
   }
+  // 记录当前进程的最大的虚拟地址空间大小
+  pcb->max_brk = sz;
+  Log("loader max size is %p",sz);
   return entry;
 }
 

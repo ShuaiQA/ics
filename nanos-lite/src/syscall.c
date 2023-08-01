@@ -23,7 +23,26 @@ uintptr_t sys_exit() {
   return (uintptr_t)context_uload(current, "/bin/nterm", NULL, NULL);
 }
 
-uintptr_t sys_brk(uintptr_t size) { return 0; }
+// 传入的参数是新的地址,获取当前的进程的max_brk的地址空间
+uintptr_t sys_brk(uintptr_t size) {
+  uintptr_t sz = current->max_brk;
+  assert(sz % PGSIZE == 0);
+  Log("pre size is %p malloc size is %p",sz,size);
+  if(size <= sz){ // 因为分配字节大小是4096个字节的所以新的大小可能会小于当前的大小
+    return 0;
+  }
+  uintptr_t re = size - sz;
+  uintptr_t mall_size = 0;
+  while(re > 0){
+    void *mem = new_page(1);
+    re -= PGSIZE;
+    mall_size += PGSIZE;
+    map(&current->as, (char *)sz, mem, 0);
+    sz+=PGSIZE;
+  }
+  current->max_brk = sz;
+  return 0;
+}
 
 uintptr_t sys_execve(const char *pathname, char *const argv[],
                      char *const envp[]) {
