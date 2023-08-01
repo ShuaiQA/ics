@@ -77,7 +77,7 @@ void init_proc() {
   // context_uload(&pcb[0], "/bin/nterm", NULL, NULL);
   context_uload(&pcb[1], "/bin/hello", NULL, NULL);
   switch_boot_pcb();
-  Log("Initializing processes...");
+  Log("Initializing processes... %p",pcb );
   // naive_uload(NULL, "/bin/nterm");
 
   // load program here
