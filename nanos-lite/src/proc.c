@@ -62,12 +62,11 @@ Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
                        char *const envp[]) {
   protect(&pcb->as); // 用户初始化页目录
   Log("create pagetable %p", pcb->as.ptr);
-  sleep(5);
   uintptr_t entry = naive_uload(pcb, pathname);
   Area area = {.start = pcb->stack, .end = pcb->stack + STACK_SIZE};
   pcb->cp = ucontext(&pcb->as, area, (void *)entry);
   // 用户程序的约定,先将栈指针放到寄存器a0上,在用户空间初始的_start上在进行将a0转移到sp寄存器上
-  pcb->cp->GPRx = 0x80000000;
+  pcb->cp->GPRx = 0x80000000 - sizeof(Context);
   return pcb->cp;
 }
 
