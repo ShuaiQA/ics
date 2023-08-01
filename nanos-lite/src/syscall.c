@@ -31,9 +31,9 @@ uintptr_t sys_brk(uintptr_t size) {
   if(size <= sz){ // 因为分配字节大小是4096个字节的所以新的大小可能会小于当前的大小
     return 0;
   }
-  uintptr_t re = size - sz;
+  intptr_t re = size - sz;
   uintptr_t mall_size = 0;
-  while(re > 0){
+  while(re > 0){   // re是uintptr_t的不可能会小于0
     void *mem = new_page(1);
     mall_size += PGSIZE;
     map(&current->as, (char *)sz, mem, 0);
