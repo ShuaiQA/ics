@@ -75,7 +75,7 @@ void init_proc() {
   // context_kload(&pcb[1], hello_fun, (void *)20);
   context_uload(&pcb[0], "/bin/hello", NULL, NULL);
   // context_uload(&pcb[0], "/bin/nterm", NULL, NULL);
-  context_uload(&pcb[1], "/bin/hello", NULL, NULL);
+  // context_uload(&pcb[1], "/bin/hello", NULL, NULL);
   switch_boot_pcb();
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/nterm");
@@ -86,7 +86,7 @@ void init_proc() {
 Context *schedule(Context *prev) {
   // 将当前的上下文保存到current指向的pcb数组下标中
   current->cp = prev;
-  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
-  // current = &pcb[0];
+  // current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+  current = &pcb[0];
   return current->cp;
 }
