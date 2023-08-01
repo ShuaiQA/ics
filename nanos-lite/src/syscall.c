@@ -35,10 +35,11 @@ uintptr_t sys_brk(uintptr_t size) {
   uintptr_t mall_size = 0;
   while(re > 0){
     void *mem = new_page(1);
-    re -= PGSIZE;
     mall_size += PGSIZE;
     map(&current->as, (char *)sz, mem, 0);
+    Log("map %p vaddr",sz);
     sz += PGSIZE;
+    re -= PGSIZE;
   }
   Log("change max_brk is %p",sz);
   current->max_brk = sz;
