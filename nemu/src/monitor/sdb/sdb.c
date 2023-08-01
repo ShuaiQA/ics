@@ -180,10 +180,10 @@ static int cmd_info(char *args) {
 static int cmd_pp(char *args){
   char *token = strtok(args, " ");
   int cnt = -1;
-  if (args != NULL) {
+  if (token != NULL) {
     sscanf(token, "%d", &cnt);
   }
-  assert(cnt == -1);
+  assert(cnt != -1);
   // 获取当前的进程的cte指针的地址
   word_t ctx_add = paddr_read(CONTEXT_BASE + cnt * CONTEXT_SIZE, 8);
   for(int i=0;i<36;i++){
