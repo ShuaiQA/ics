@@ -175,6 +175,27 @@ static int cmd_info(char *args) {
   return 0;
 }
 
+#define CONTEXT_BASE 0x8020d0000
+#define CONTEXT_SIZE 288
+static int cmd_pp(char *args){
+  int cnt = -1;
+  if (args != NULL) {
+    sscanf(args, "%d", &cnt);
+  }
+  assert(cnt == -1);
+  // 获取当前的进程的cte指针的地址
+  word_t ctx_add = paddr_read(CONTEXT_BASE + cnt * CONTEXT_SIZE, 8);
+  for(int i=0;i<36;i++){
+    word_t reg = paddr_read(ctx_add + i * 8, 8);
+    printf(FMT_WORD  "  ",reg);
+    if((i+1) %4 == 0){
+      printf("\n");
+    }
+  }
+  printf("\n");
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -190,6 +211,7 @@ static struct {
     {"x", "look memory", cmd_x},
     {"w", "watchpoint", cmd_w},
     {"d", "删除监测点", cmd_d},
+    {"pp","debug context",cmd_pp},
     {"info", "打印寄存器状态或打印监视点信息", cmd_info},
 
     /* TODO: Add more commands */
