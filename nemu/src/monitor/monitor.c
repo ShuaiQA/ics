@@ -15,7 +15,6 @@
 
 #include "macro.h"
 #include "sdb/sdb.h"
-#include <bits/getopt_core.h>
 #include <isa.h>
 #include <memory/paddr.h>
 

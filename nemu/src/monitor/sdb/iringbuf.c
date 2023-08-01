@@ -11,6 +11,7 @@ static word_t pos = 0;
 
 void new_isa(char *isa) {
   memcpy(buf[pos].logbuf, isa, strlen(isa));
+  buf[pos].logbuf[strlen(isa)] = '\0';
   pos = (pos + 1) % SIZE_ISA_BUF;
 }
 
