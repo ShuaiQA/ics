@@ -65,6 +65,5 @@ __am_asm_trap:
 
 	# 恢复sp的值
 	ld	sp,16(sp)
-  wfi   
   addi sp, sp, CONTEXT_SIZE
   mret
