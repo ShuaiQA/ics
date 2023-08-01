@@ -179,18 +179,16 @@ static int cmd_info(char *args) {
 #define CONTEXT_STACK 8*4096
 static int cmd_pp(char *args){
   char *token = strtok(args, " ");
-  word_t ctx;
+  paddr_t ctx;
   if (token != NULL) {
-    sscanf(token, "%ld", &ctx);
+    sscanf(token, "%u", &ctx);
   }
   // 获取当前的进程的cte指针的地址
   ctx = CONTEXT_BASE + ctx * CONTEXT_STACK;
-  Log(FMT_WORD ,ctx );
   word_t ctx_addr = paddr_read(ctx , 8);
-  Log("ctx addr is "FMT_WORD  ,ctx_addr);
   for(int i=0;i<36;i++){
-    word_t reg = paddr_read(ctx_addr + i * 8, 8);
-    printf(FMT_WORD  "  ",reg);
+    paddr_t reg = paddr_read(ctx_addr + i * 8, 8);
+    printf(FMT_PADDR  "  ",reg);
     if((i+1) %4 == 0){
       printf("\n");
     }
