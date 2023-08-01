@@ -72,9 +72,9 @@ enum {
 
 // imm -> rd , rs1 -> imm
 void csrrw(word_t imm, word_t src1, word_t rd) {
-//   if (imm == satp) {
-//     Log(" write satp " FMT_WORD, src1);
-//   }
+  if (imm == satp) {
+    Log(" write satp " FMT_WORD, src1);
+  }
   if (rd != 0) {
     R(rd) = RM(imm);
   }
