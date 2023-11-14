@@ -24,6 +24,7 @@ word_t paddr_read(paddr_t addr, int len);
 
 // ftrace.c
 void set_elf_file(char *elf);
+void set_disk_file(char *disk);
 void print_fun_buf();
 
 #endif

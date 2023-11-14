@@ -56,14 +56,14 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
 
 // 如果偏移量在前面的三个寄存器需要设置相应的初始化
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
-  if (offset == 0x10 && is_write) { // 进行初始化
+  if (offset == reg_init * 4 && is_write) { // 进行初始化
     loaded_wav_spec.freq = audio_base[reg_freq];
     loaded_wav_spec.channels = audio_base[reg_channels];
     loaded_wav_spec.samples = audio_base[reg_samples];
     loaded_wav_spec.callback = audio_callback;
     loaded_wav_spec.userdata = sbuf;
     SDL_OpenAudio(&loaded_wav_spec, NULL);
-  } else if (offset == 0x0c) {
+  } else if (offset == reg_sbuf_size * 4) {
     SDL_PauseAudio(0);
   }
 }

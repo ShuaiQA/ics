@@ -15,6 +15,7 @@
 
 #include "macro.h"
 #include "sdb/sdb.h"
+#include <bits/getopt_core.h>
 #include <isa.h>
 #include <memory/paddr.h>
 
@@ -78,6 +79,7 @@ static int parse_args(int argc, char *argv[]) {
       {"diff", required_argument, NULL, 'd'},
       {"port", required_argument, NULL, 'p'},
       {"elf", required_argument, NULL, 'e'},
+      {"disk", required_argument, NULL, 'k'},
       {"help", no_argument, NULL, 'h'},
       {0, 0, NULL, 0},
   };
@@ -99,6 +101,9 @@ static int parse_args(int argc, char *argv[]) {
     case 'e':
       IFDEF(CONFIG_FTRACE, set_elf_file(optarg));
       break;
+    case 'k':
+      
+			break;
     case 1:
       img_file = optarg;
       return 0;

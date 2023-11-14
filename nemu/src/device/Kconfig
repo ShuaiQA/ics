@@ -131,6 +131,10 @@ config DISK_CTL_MMIO
   hex "MMIO address of the disk controller"
   default 0xa0000300
 
+config DISK_BLOCK_SIZE
+  hex "the disk block size"
+  default 0x200
+
 config DISK_IMG_PATH
   string "The path of disk image"
   default ""
