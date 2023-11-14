@@ -1,7 +1,7 @@
 menuconfig DEVICE
   depends on !TARGET_SHARE
   bool "Devices"
-  default n
+  default y
   help
     Provide device support for NEMU.
 
@@ -48,7 +48,7 @@ endif # HAS_TIMER
 
 menuconfig HAS_KEYBOARD
   bool "Enable keyboard"
-  default y
+  default n
 
 if HAS_KEYBOARD
 config I8042_DATA_PORT
@@ -63,7 +63,7 @@ endif # HAS_KEYBOARD
 
 menuconfig HAS_VGA
   bool "Enable VGA"
-  default y
+  default n
 
 if HAS_VGA
 config FB_ADDR
@@ -81,7 +81,7 @@ config VGA_CTL_MMIO
 
 config VGA_SHOW_SCREEN
   bool "Enable SDL SCREEN"
-  default y
+  default n
 
 choice
   prompt "Screen Size"
@@ -96,7 +96,7 @@ endif # HAS_VGA
 if !TARGET_AM
 menuconfig HAS_AUDIO
   bool "Enable audio"
-  default y
+  default n
 
 if HAS_AUDIO
 config SB_ADDR
