@@ -30,6 +30,7 @@ enum {
   cnt,
   rw,
   config,
+  bl_reg,
 };
 
 // 根据传入的字符串进行文件查找
@@ -56,7 +57,7 @@ static void disk_io_handler(uint32_t offset, int len, bool is_write) {
 void init_disk() {
   int len = lseek(fd, 0, SEEK_END);
   int bs = len / CONFIG_DISK_BLOCK_SIZE;
-  uint32_t space_size = sizeof(uint32_t) * config;
+  uint32_t space_size = sizeof(uint32_t) * bl_reg;
   disk_base = (uint32_t *)new_space(space_size);
   disk_base[block_size] = CONFIG_DISK_BLOCK_SIZE;
   disk_base[block_count] = bs;
