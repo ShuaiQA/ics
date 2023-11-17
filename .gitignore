@@ -10,5 +10,5 @@
 !.gitignore
 !init.sh
 /fceux-am
-/am-kernels
 !*/compile_commands.json
+/am-kernels
