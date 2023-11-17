@@ -84,7 +84,7 @@ static int parse_args(int argc, char *argv[]) {
       {0, 0, NULL, 0},
   };
   int o;
-  while ((o = getopt_long(argc, argv, "-bhe:l:d:p:", table, NULL)) != -1) {
+  while ((o = getopt_long(argc, argv, "-bhe:l:d:p:k:", table, NULL)) != -1) {
     switch (o) {
     case 'b':
       sdb_set_batch_mode();
@@ -102,8 +102,8 @@ static int parse_args(int argc, char *argv[]) {
       IFDEF(CONFIG_FTRACE, set_elf_file(optarg));
       break;
     case 'k':
-      
-			break;
+      IFDEF(CONFIG_HAS_DISK, set_disk_file(optarg));
+      break;
     case 1:
       img_file = optarg;
       return 0;
@@ -114,6 +114,7 @@ static int parse_args(int argc, char *argv[]) {
       printf("\t-d,--diff=REF_SO        run DiffTest with reference REF_SO\n");
       printf("\t-e,--elf=FILE           input elf FILE\n");
       printf("\t-p,--port=PORT          run DiffTest with port PORT\n");
+      printf("\t-d,--disk=disk_file     input disk file\n");
       printf("\n");
       exit(0);
     }

@@ -67,3 +67,5 @@ void init_disk() {
   add_mmio_map("disk block", CONFIG_DISK_ADDR, block, CONFIG_DISK_BLOCK_SIZE,
                NULL);
 }
+
+void set_disk_file(char *disk) { fd = open(disk, O_RDWR); }
