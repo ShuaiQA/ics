@@ -28,7 +28,7 @@ int main() {
   Log("Finish initialization");
 
   io_write(AM_DISK_BLKIO, 0, buf, 0);
-  Log("%s\n", buf);
+  Log("read block no 0 %s\n", buf);
 
 #ifdef HAS_CTE
   yield();
