@@ -60,5 +60,5 @@ void init_disk() {
                disk_io_handler);
 
   block = new_space(CONFIG_DISK_BLOCK_SIZE);
-  add_mmio_map("vmem", CONFIG_DISK_ADDR, block, CONFIG_DISK_BLOCK_SIZE, NULL);
+  add_mmio_map("disk block", CONFIG_DISK_ADDR, block, CONFIG_DISK_BLOCK_SIZE, NULL);
 }
