@@ -81,10 +81,10 @@ void set_disk_file(char *disk) {
   int fd = open(disk, O_RDWR);
   Assert(fd >= 3, "open fail fd is %d", fd);
   int len = read(fd, buf, 512);
-  Log("%d\n", len);
-  Log("%d\n", len);
-  Log("%d\n", len);
-  Log("%d\n", len);
+  printf("%d\n", len);
+  printf("%d\n", len);
+  printf("%d\n", len);
+  printf("%d\n", len);
   for (int i = 0; i < len; i++) {
     Log("%c", buf[i]);
   }
