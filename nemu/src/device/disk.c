@@ -56,7 +56,7 @@ void init_disk() {
   disk_base = (uint32_t *)new_space(space_size);
   disk_base[block_size] = CONFIG_DISK_BLOCK_SIZE;
   disk_base[block_count] = bs;
-  add_mmio_map("disk", CONFIG_SERIAL_MMIO, disk_base, space_size,
+  add_mmio_map("disk", CONFIG_DISK_CTL_MMIO, disk_base, space_size,
                disk_io_handler);
 
   block = new_space(CONFIG_DISK_BLOCK_SIZE);
