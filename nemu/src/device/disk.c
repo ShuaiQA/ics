@@ -86,7 +86,7 @@ void set_disk_file(char *disk) {
   printf("%d\n", len);
   printf("%d\n", len);
   for (int i = 0; i < len; i++) {
-    Log("%c", buf[i]);
+    printf("%c", buf[i]);
   }
   Log("over");
 }
