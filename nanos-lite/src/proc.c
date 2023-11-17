@@ -73,12 +73,12 @@ Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
 void init_proc() {
   // context_kload(&pcb[0], hello_fun, (void *)10);
   // context_kload(&pcb[1], hello_fun, (void *)20);
-  /* context_uload(&pcb[0], "/bin/hello", NULL, NULL); */
-  /* Log("%p %p",pcb[0].cp,&pcb[0].cp); */
-  /* // context_uload(&pcb[0], "/bin/nterm", NULL, NULL); */
-  /* context_uload(&pcb[1], "/bin/hello", NULL, NULL); */
-  /* switch_boot_pcb(); */
-  Log("Initializing processes... %p ",pcb );
+  /* context_uload(&pcb[0], "/bin/hello", null, null); */
+  /* log("%p %p",pcb[0].cp,&pcb[0].cp); */
+  context_uload(&pcb[0], "/bin/nterm", NULL, NULL);
+  /* context_uload(&pcb[1], "/bin/hello", null, null); */
+  switch_boot_pcb();
+  Log("Initializing processes... %p ", pcb);
   // naive_uload(NULL, "/bin/nterm");
 
   // load program here
@@ -87,7 +87,7 @@ void init_proc() {
 Context *schedule(Context *prev) {
   // 将当前的上下文保存到current指向的pcb数组下标中
   current->cp = prev;
-  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+  current = &pcb[0];
   // current = &pcb[0];
   return current->cp;
 }
