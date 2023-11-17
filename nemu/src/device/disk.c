@@ -76,15 +76,14 @@ void init_disk() {
                NULL);
 }
 
-
 void set_disk_file(char *disk) {
-/* static char buf[512]; */
-  /* int fd = open(disk, O_RDWR); */
-  /* Assert(fd >= 3, "open fail fd is %d", fd); */
-  /* int len = read(fd, buf, 512); */
-  /* Log("%d", len); */
-  /* for (int i = 0; i < len; i++) { */
-  /*   Log("%c", buf[i]); */
-  /* } */
-  /* Log("over"); */
+  char buf[512];
+  int fd = open(disk, O_RDWR);
+  Assert(fd >= 3, "open fail fd is %d", fd);
+  int len = read(fd, buf, 512);
+  Log("%d", len);
+  for (int i = 0; i < len; i++) {
+    Log("%c", buf[i]);
+  }
+  Log("over");
 }
