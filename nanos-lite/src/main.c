@@ -1,11 +1,16 @@
+#include "debug.h"
+#include "klib-macros.h"
 #include <common.h>
 
+#include "amdev.h"
 void init_mm(void);
 void init_device(void);
 void init_ramdisk(void);
 void init_irq(void);
 void init_fs(void);
 void init_proc(void);
+
+char buf[512];
 
 int main() {
   extern const char logo[];
@@ -21,6 +26,9 @@ int main() {
   init_fs();
   init_proc();
   Log("Finish initialization");
+
+  io_write(AM_DISK_BLKIO, 0, buf, 0);
+  Log("%s\n", buf);
 
 #ifdef HAS_CTE
   yield();
