@@ -80,6 +80,7 @@ static char buf[512];
 
 void set_disk_file(char *disk) {
   Log("disk file is %s", disk);
+  Log("Hello");
   int fd = open(disk, O_RDWR);
   Assert(fd >= 3, "open fail fd is %d", fd);
   int len = read(fd, buf, 512);
