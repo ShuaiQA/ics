@@ -76,7 +76,8 @@ void init_disk() {
                NULL);
 }
 
-char buf[512];
+static char buf[512];
+
 void set_disk_file(char *disk) {
   Log("disk file is %s", disk);
   fd = open(disk, O_RDWR);
