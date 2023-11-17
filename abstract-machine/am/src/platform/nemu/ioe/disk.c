@@ -26,8 +26,6 @@ void __am_disk_status(AM_DISK_STATUS_T *stat) { stat->ready = inw(CONFIG); }
 
 /* AM_DEVREG(20, DISK_BLKIO,   WR, bool write; void *buf; int blkno); */
 void __am_disk_blkio(AM_DISK_BLKIO_T *io) {
-  printf("am io blkno %d\n", io->blkno);
-  printf("rw io %d\n", io->write);
   outl(NO, io->blkno);
   outl(RW, io->write);
   outl(CONFIG, 1);

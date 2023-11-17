@@ -45,16 +45,17 @@ static void disk_io_handler(uint32_t offset, int len, bool is_write) {
       int len = write(fd, block, CONFIG_DISK_BLOCK_SIZE);
       Assert(len != CONFIG_DISK_BLOCK_SIZE, "写入磁盘失败");
     } else { // 读取磁盘的数据
+			Log("duqucaozuo ");
       lseek(fd, CONFIG_DISK_BLOCK_SIZE * disk_base[no], SEEK_SET);
       int len = read(fd, block, CONFIG_DISK_BLOCK_SIZE);
       Assert(len != CONFIG_DISK_BLOCK_SIZE, "读取磁盘失败");
     }
   }
-  if (offset == no) {
+  if (offset == no * 4) {
     Log("no is %d", disk_base[no]);
-  } else if (offset == rw) {
+  } else if (offset == rw * 4) {
     Log("rw is %d", disk_base[rw]);
-  } else {
+  } else if(offset == config * 4) {
     Log("config is %d", disk_base[config]);
   }
 }
