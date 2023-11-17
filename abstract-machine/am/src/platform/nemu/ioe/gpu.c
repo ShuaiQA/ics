@@ -6,13 +6,12 @@
 
 static uint32_t height, width;
 
-void __am_gpu_init() {
+void __am_gpu_init() {}
+
+void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
   uint32_t f1 = inl(VGACTL_ADDR);
   height = f1 & 0xffff;
   width = f1 >> 16;
-}
-
-void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
   *cfg = (AM_GPU_CONFIG_T){
       .width = width,
       .height = height,
