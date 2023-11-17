@@ -82,4 +82,5 @@ void set_disk_file(char *disk) {
   char buf[512];
   int len = read(fd, buf, 512);
   Log("nemu %d %s  %d\n", fd, buf, len);
+	Log("over");
 }
