@@ -8,9 +8,8 @@
 #define DISK_SIZE (DISK_ADDR + 0x00)
 #define DISK_COUNT (DISK_ADDR + 0x04)
 #define NO (DISK_ADDR + 0x08)
-#define CNT (DISK_ADDR + 0x0c)
-#define RW (DISK_ADDR + 0x10)
-#define CONFIG (DISK_ADDR + 0x14)
+#define RW (DISK_ADDR + 0x0c)
+#define CONFIG (DISK_ADDR + 0x10)
 
 #define DISK_BLOCK_SIZE 512
 
