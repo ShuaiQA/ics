@@ -28,6 +28,7 @@ void __am_disk_blkio(AM_DISK_BLKIO_T *io) {
   outl(NO, io->blkno);
   outl(RW, io->write);
   outl(CONFIG, 1);
+	printf("nemu over");
   if (io->write) {
     memcpy((void *)DISK_BUF_ADDR, io->buf, DISK_BLOCK_SIZE);
   } else {
