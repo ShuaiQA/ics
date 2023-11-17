@@ -27,7 +27,6 @@ enum {
   block_size,
   block_count,
   no,
-  cnt,
   rw,
   config,
   bl_reg,
@@ -50,6 +49,13 @@ static void disk_io_handler(uint32_t offset, int len, bool is_write) {
       int len = read(fd, block, CONFIG_DISK_BLOCK_SIZE);
       Assert(len != CONFIG_DISK_BLOCK_SIZE, "读取磁盘失败");
     }
+  }
+  if (offset == no) {
+    Log("no is %d", disk_base[no]);
+  } else if (offset == rw) {
+    Log("rw is %d", disk_base[rw]);
+  } else {
+    Log("config is %d", disk_base[config]);
   }
 }
 
