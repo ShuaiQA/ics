@@ -26,7 +26,7 @@ AM_DEVREG(16, AUDIO_STATUS, RD, int count);
 AM_DEVREG(17, AUDIO_PLAY,   WR, Area buf);
 AM_DEVREG(18, DISK_CONFIG,  RD, bool present; int blksz, blkcnt);
 AM_DEVREG(19, DISK_STATUS,  RD, bool ready);
-AM_DEVREG(20, DISK_BLKIO,   WR, bool write; void *buf; int blkno, blkcnt);
+AM_DEVREG(20, DISK_BLKIO,   WR, bool write; void *buf; int blkno);
 AM_DEVREG(21, NET_CONFIG,   RD, bool present);
 AM_DEVREG(22, NET_STATUS,   RD, int rx_len, tx_len);
 AM_DEVREG(23, NET_TX,       WR, Area buf);

@@ -122,6 +122,10 @@ menuconfig HAS_DISK
   default y
 
 if HAS_DISK
+config DISK_ADDR
+  hex "Physical address of the disk frame buffer"
+  default 0xa1400000
+
 config DISK_CTL_PORT
   depends on HAS_PORT_IO
   hex "Port address of the disk controller"

@@ -1,6 +1,7 @@
 #include "riscv/riscv.h"
 #include <am.h>
 #include <nemu.h>
+#include <stdint.h>
 
 #define DISK_SIZE (DISK_ADDR + 0x00)
 #define DISK_COUNT (DISK_ADDR + 0x04)
@@ -10,17 +11,14 @@
 #define CONFIG (DISK_ADDR + 0x14)
 
 // 初始化disk是否虚拟化以及有多少块和每块的大小
-void __am_disk_config(AM_DISK_CONFIG_T *cfg) { 
-	cfg->present = true;
-}
+void __am_disk_config(AM_DISK_CONFIG_T *cfg) { cfg->present = true; }
 
 // 获取当前的磁盘寄存器的状态,规定0是读写完毕,1正在读写中
 void __am_disk_status(AM_DISK_STATUS_T *stat) { stat->ready = inw(CONFIG); }
 
-/* AM_DEVREG(20, DISK_BLKIO,   WR, bool write; void *buf; int blkno, blkcnt); */
+/* AM_DEVREG(20, DISK_BLKIO,   WR, bool write; void *buf; int blkno); */
 void __am_disk_blkio(AM_DISK_BLKIO_T *io) {
-  outl(CONFIG, 1);
   outl(NO, io->blkno);
-  outl(CNT, io->blkcnt);
   outl(RW, io->write);
+  outl(CONFIG, 1);
 }

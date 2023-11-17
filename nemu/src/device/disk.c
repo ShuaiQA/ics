@@ -26,21 +26,23 @@
 enum {
   block_size,
   block_count,
+  no,
   cnt,
+  rw,
   config,
-  mem,
 };
 
 // 根据传入的字符串进行文件查找
 int fd;
 uint32_t *disk_base;
+uint8_t *block;
 
 static void disk_io_handler(uint32_t offset, int len, bool is_write) {
   switch (offset) {
   /* We bind the serial port with the host stderr in NEMU. */
-  case cnt * 4:
-		disk_base[cnt] = ;
   case config * 4:
+    if (is_write) {
+    }
   default:
     panic("do not support offset = %d", offset);
   }
@@ -50,23 +52,13 @@ static void disk_io_handler(uint32_t offset, int len, bool is_write) {
 void init_disk() {
   int len = lseek(fd, 0, SEEK_END);
   int bs = len / CONFIG_DISK_BLOCK_SIZE;
-  uint32_t space_size = sizeof(uint32_t) * mem;
+  uint32_t space_size = sizeof(uint32_t) * config;
   disk_base = (uint32_t *)new_space(space_size);
   disk_base[block_size] = CONFIG_DISK_BLOCK_SIZE;
   disk_base[block_count] = bs;
   add_mmio_map("disk", CONFIG_SERIAL_MMIO, disk_base, space_size,
                disk_io_handler);
-}
 
-void set_disk_file(char *disk) {
-  fd = open(disk, O_RDWR);
-  Assert(fd, "failed to open disk %s", disk);
-  char buf[512];
-  read(fd, buf, 512);
-  printf("%s", buf);
-  char bu[512];
-  memset(bu, 'x', sizeof(bu));
-  lseek(fd, 0, SEEK_SET);
-  write(fd, bu, 512);
-  close(fd);
+  block = new_space(CONFIG_DISK_BLOCK_SIZE);
+  add_mmio_map("vmem", CONFIG_DISK_ADDR, block, CONFIG_DISK_BLOCK_SIZE, NULL);
 }
