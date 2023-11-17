@@ -81,8 +81,9 @@ void set_disk_file(char *disk) {
   fd = open(disk, O_RDWR);
   Assert(fd >= 3, "open fail fd is %d", fd);
   int len = read(fd, buf, 512);
-	for(int i = 0;i<len;i++){
-		Log("%c",buf[i]);
-	}
+  Log("%d", len);
+  for (int i = 0; i < len; i++) {
+    Log("%c", buf[i]);
+  }
   Log("over");
 }
