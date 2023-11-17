@@ -27,7 +27,7 @@ int main() {
   init_proc();
   Log("Finish initialization");
 
-  /* io_write(AM_DISK_BLKIO, 0, buf, 0); */
+  io_write(AM_DISK_BLKIO, 0, buf, 0);
 
 #ifdef HAS_CTE
   yield();

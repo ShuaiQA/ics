@@ -76,6 +76,8 @@ void init_disk() {
                NULL);
 }
 
+// 此处使用LOG出现了段错误？
+// 问题是当前的日记文件并没有进行初始化
 void set_disk_file(char *disk) {
   char buf[512];
   int fd = open(disk, O_RDWR);
@@ -84,5 +86,4 @@ void set_disk_file(char *disk) {
   for (int i = 0; i < len; i++) {
     printf("%c", buf[i]);
   }
-  Log("over");
 }
