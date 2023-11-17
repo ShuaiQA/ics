@@ -33,6 +33,6 @@ void __am_disk_blkio(AM_DISK_BLKIO_T *io) {
   } else {
     memcpy(io->buf, (void *)DISK_BUF_ADDR, DISK_BLOCK_SIZE);
   }
-	printf("am over");
+	printf("am over\n");
   outl(CONFIG, 0);
 }
