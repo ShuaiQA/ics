@@ -84,7 +84,8 @@ Context *schedule(Context *prev) {
   current->cp = prev;
   if (current == &pcb[0]) {
     current = &pcb[1];
-    Log("schedule 1");
+    Log("schedule 1 context addr is %p mepc is %p", current->cp,
+        current->cp->mepc);
   } else {
     current = &pcb[0];
     Log("schedule 0");
