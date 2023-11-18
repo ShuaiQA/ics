@@ -80,10 +80,12 @@ void init_disk() {
 // 问题是当前的日记文件并没有进行初始化
 void set_disk_file(char *disk) {
   char buf[512];
-  int fd = open(disk, O_RDWR);
+  fd = open(disk, O_RDWR);
   Assert(fd >= 3, "open fail fd is %d", fd);
+  printf("disk");
   int len = read(fd, buf, 512);
   for (int i = 0; i < len; i++) {
     printf("%c", buf[i]);
   }
+  lseek(fd, 0, SEEK_SET);
 }
