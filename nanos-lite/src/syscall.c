@@ -11,6 +11,7 @@
 uintptr_t sys_yield(Context *c) { return (uintptr_t)schedule(c); }
 
 int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
+	yield();
   AM_TIMER_UPTIME_T rtc;
   rtc = io_read(AM_TIMER_UPTIME);
   tv->tv_sec = rtc.us / 1000000;
@@ -19,7 +20,6 @@ int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
 }
 
 uintptr_t sys_exit() {
-  // halt(0);
   return (uintptr_t)context_uload(current, "/bin/nterm", NULL, NULL);
 }
 
