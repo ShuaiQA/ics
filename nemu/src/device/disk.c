@@ -40,15 +40,15 @@ uint8_t *block;
 static void disk_io_handler(uint32_t offset, int len, bool is_write) {
   // 等待中且对于config有操作的时候才执行宿主机处理
   if (offset == config * 4 && disk_base[config] == 1) {
-    if (disk_base[rw] == 0) { // 磁盘写操作
-      lseek(fd, CONFIG_DISK_BLOCK_SIZE * disk_base[no], SEEK_SET);
-      int len = write(fd, block, CONFIG_DISK_BLOCK_SIZE);
-      Assert(len != CONFIG_DISK_BLOCK_SIZE, "写入磁盘失败");
-    } else { // 读取磁盘的数据
+    if (disk_base[rw] == 0) { // 磁盘读操作
       Log("duqucaozuo ");
       lseek(fd, CONFIG_DISK_BLOCK_SIZE * disk_base[no], SEEK_SET);
       int len = read(fd, block, CONFIG_DISK_BLOCK_SIZE);
       Assert(len != CONFIG_DISK_BLOCK_SIZE, "读取磁盘失败");
+    } else {
+      lseek(fd, CONFIG_DISK_BLOCK_SIZE * disk_base[no], SEEK_SET);
+      int len = write(fd, block, CONFIG_DISK_BLOCK_SIZE);
+      Assert(len != CONFIG_DISK_BLOCK_SIZE, "写入磁盘失败");
     }
   }
   if (offset == no * 4) {
