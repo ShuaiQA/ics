@@ -51,13 +51,6 @@ static void disk_io_handler(uint32_t offset, int len, bool is_write) {
       Assert(len == CONFIG_DISK_BLOCK_SIZE, "写入磁盘失败");
     }
   }
-  if (offset == no * 4) {
-    Log("no is %d", disk_base[no]);
-  } else if (offset == rw * 4) {
-    Log("rw is %d", disk_base[rw]);
-  } else if (offset == config * 4) {
-    Log("config is %d", disk_base[config]);
-  }
 }
 
 // 初始化磁盘块大小和多少块
@@ -79,13 +72,6 @@ void init_disk() {
 // 此处使用LOG出现了段错误？
 // 问题是当前的日记文件并没有进行初始化
 void set_disk_file(char *disk) {
-  char buf[512];
   fd = open(disk, O_RDWR);
   Assert(fd >= 3, "open fail fd is %d", fd);
-  printf("disk");
-  int len = read(fd, buf, 512);
-  for (int i = 0; i < len; i++) {
-    printf("%c", buf[i]);
-  }
-  lseek(fd, 0, SEEK_SET);
 }
