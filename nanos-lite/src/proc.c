@@ -72,7 +72,7 @@ Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
 
 void init_proc() {
   context_uload(&pcb[0], "/bin/nterm", NULL, NULL);
-  context_uload(&pcb[1], "/bin/hello", NULL, NULL);
+  /* context_uload(&pcb[1], "/bin/hello", NULL, NULL); */
   switch_boot_pcb();
   Log("Initializing processes... %p ", pcb);
   // load program here
@@ -81,12 +81,13 @@ void init_proc() {
 Context *schedule(Context *prev) {
   // 将当前的上下文保存到current指向的pcb数组下标中
   current->cp = prev;
-  if (current == &pcb[0]) {
-    current = &pcb[1];
-    Log("schedule 1");
-  } else {
-    current = &pcb[0];
-    Log("schedule 0");
-  }
+  /* if (current == &pcb[0]) { */
+  /*   current = &pcb[1]; */
+  /*   Log("schedule 1"); */
+  /* } else { */
+  /*   current = &pcb[0]; */
+  /*   Log("schedule 0"); */
+  /* } */
+	current = &pcb[0];
   return current->cp;
 }

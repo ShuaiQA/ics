@@ -42,10 +42,10 @@ __am_asm_trap:
   STORE t1, OFFSET_STATUS(sp)
   STORE t2, OFFSET_EPC(sp)
 
-  # set mstatus.MPRV to pass difftest
-  li a0, (1 << 17)
-  or t1, t1, a0
-  csrw mstatus, t1
+  ; # set mstatus.MPRV to pass difftest
+  ; li a0, (1 << 17)
+  ; or t1, t1, a0
+  ; csrw mstatus, t1
 
 	# 保存sp寄存器的值
 	sd	sp,16(sp)
