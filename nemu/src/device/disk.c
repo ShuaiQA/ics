@@ -44,6 +44,10 @@ static void disk_io_handler(uint32_t offset, int len, bool is_write) {
       Log("duqucaozuo ");
       lseek(fd, CONFIG_DISK_BLOCK_SIZE * disk_base[no], SEEK_SET);
       int len = read(fd, block, CONFIG_DISK_BLOCK_SIZE);
+      printf("len is %d", len);
+      for (int i = 0; i < len; i++) {
+        printf("%c", block[i]);
+      }
       Assert(len != CONFIG_DISK_BLOCK_SIZE, "读取磁盘失败");
     } else {
       lseek(fd, CONFIG_DISK_BLOCK_SIZE * disk_base[no], SEEK_SET);
