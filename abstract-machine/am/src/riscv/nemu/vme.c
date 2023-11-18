@@ -98,7 +98,7 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   cte->mepc = (uintptr_t)entry;
   // 映射用户栈空间kstack到用户地址空间的末尾
   uintptr_t f = (uintptr_t)kstack.start;
-  uintptr_t va = 0x80000000 - 32 * 1024;
+  uintptr_t va = 0x80000000 - (kstack.end - kstack.start);
   while (f < (uintptr_t)kstack.end) {
     map(as, (void *)va, (void *)f, 0);
     f += PGSIZE;
