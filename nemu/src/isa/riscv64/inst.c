@@ -75,6 +75,9 @@ void csrrw(word_t imm, word_t src1, word_t rd) {
   if (rd != 0) {
     R(rd) = RM(imm);
   }
+  if (imm == satp) {
+    Log("change satp is " FMT_WORD, src1);
+  }
   RM(imm) = src1;
 }
 
