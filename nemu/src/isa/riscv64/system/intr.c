@@ -26,6 +26,8 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   // cpu.gpr[1]);
   MCSR(mcause) = 0xb;
   IFDEF(CONFIG_ETRACE, new_etrace());
+  IFDEF(CONFIG_CONTEXT, Log("ecall context"));
+  IFDEF(CONFIG_CONTEXT, isa_reg_display());
   return MCSR(mtvec);
 }
 

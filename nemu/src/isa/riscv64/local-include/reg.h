@@ -41,6 +41,7 @@ enum {
 #define gpr(idx) (cpu.gpr[check_reg_idx(idx)])
 
 size_t mcsrpos(word_t num);
+// get num pos the value of a mcsr
 #define MCSR(num) (cpu.mcsr[check_mcsreg(mcsrpos(num))])
 
 static inline const char *reg_name(int idx, int width) {

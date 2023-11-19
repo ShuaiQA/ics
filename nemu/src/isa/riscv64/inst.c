@@ -279,6 +279,8 @@ static int decode_exec(Decode *s) {
           csrrs(imm, src1, rd));
   INSTPAT("0011000 00010 00000 000 00000 1110011", mret, I,
           IFDEF(CONFIG_ETRACE, new_ret());
+          IFDEF(CONFIG_CONTEXT, Log("mret context"));
+          IFDEF(CONFIG_CONTEXT, isa_reg_display());
           // Log("mret " FMT_WORD, RM(mepc));
           s->dnpc = RM(mepc););
   // 使用wfi节能的指令用于debug,用户暂停程序
