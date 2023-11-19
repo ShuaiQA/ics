@@ -30,8 +30,8 @@ uintptr_t load_segement(PCB *pcb, char *date) {
       // memmove((void *)ph.p_vaddr, date + ph.p_offset, ph.p_filesz);
       // memset((void *)(ph.p_vaddr + ph.p_filesz), 0, ph.p_memsz -
       // ph.p_filesz);
-      Log("load %x  %x  %x  %x", ph.p_vaddr, ph.p_memsz, ph.p_offset,
-          ph.p_filesz);
+      /* Log("load %x  %x  %x  %x", ph.p_vaddr, ph.p_memsz, ph.p_offset, */
+      /*     ph.p_filesz); */
       // 分别记录着当前段的虚拟地址,虚拟地址大小,文件的偏移量,加载数据的大小
       uintptr_t vaddr = ph.p_vaddr, vsize = ph.p_memsz, f_offset = ph.p_offset,
                 f_size = ph.p_filesz;
@@ -58,7 +58,7 @@ uintptr_t load_segement(PCB *pcb, char *date) {
   }
   // 记录当前进程的最大的虚拟地址空间大小
   pcb->max_brk = sz;
-  Log("loader max size is %p",sz);
+  /* Log("loader max size is %p",sz); */
   return entry;
 }
 

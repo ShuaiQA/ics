@@ -166,6 +166,11 @@ config IRINGBUF
   bool "enabled iringbuf"
   default y
 
+config CONTEXT
+	depends on ITRACE
+	bool "enabled context log"
+	default y
+
 config DIFFTEST
   depends on TARGET_NATIVE_ELF
   bool "Enable differential testing"
