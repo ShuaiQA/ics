@@ -72,13 +72,15 @@ Context *context_uload(PCB *pcb, const char *pathname, char *const argv[],
 
 void init_proc() {
   context_uload(&pcb[0], "/bin/nterm", NULL, NULL);
-  context_kload(&pcb[1], hello_fun, NULL);
-  /* context_uload(&pcb[1], "/bin/hello", NULL, NULL); */
+  /* context_kload(&pcb[1], hello_fun, NULL); */
+  context_uload(&pcb[1], "/bin/hello", NULL, NULL);
   switch_boot_pcb();
   Log("Initializing processes... %p ", pcb);
   // load program here
 }
 
+
+// 为什么在执行两个用户进程中会发生:进程pcb[1]schedule执行完毕没有mret指令?
 Context *schedule(Context *prev) {
   // 将当前的上下文保存到current指向的pcb数组下标中
   current->cp = prev;
