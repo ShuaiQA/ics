@@ -79,7 +79,6 @@ void init_proc() {
   // load program here
 }
 
-
 // 为什么在执行两个用户进程中会发生:进程pcb[1]schedule执行完毕没有mret指令?
 Context *schedule(Context *prev) {
   // 将当前的上下文保存到current指向的pcb数组下标中
@@ -88,6 +87,7 @@ Context *schedule(Context *prev) {
     current = &pcb[1];
     Log("schedule 1 context addr is %p mepc is %p", current->cp,
         current->cp->mepc);
+    __asm__ volatile("wfi");
   } else {
     current = &pcb[0];
     Log("schedule 0 context addr is %p mepc is %p", current->cp,
